@@ -31,7 +31,7 @@
     }
     .container {
       width: 100%;
-      max-width: 540px;
+      max-width: 580px;
       background: var(--card);
       border-radius: 20px;
       padding: 24px;
@@ -157,6 +157,15 @@
       cursor: pointer;
       font-weight: 600;
     }
+    .btn-danger-sm {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
     .auth-card {
       background: #f8fafc;
       border: 1px solid var(--border);
@@ -175,7 +184,7 @@
     }
     th, td {
       border: 1px solid var(--border);
-      padding: 8px 5px;
+      padding: 8px 4px;
       text-align: center;
     }
     th { background: #f1f5f9; color: var(--text-muted); }
@@ -189,6 +198,26 @@
     .tag-ada { background: #dcfce7; color: #15803d; }
     .tag-qad { background: #fef3c7; color: #b45309; }
     .tag-nil { background: #fee2e2; color: #b91c1c; }
+    .sub-tabs {
+      display: flex;
+      gap: 4px;
+      margin: 12px 0;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+    .sub-tab-btn {
+      padding: 6px 10px;
+      border: none;
+      background: #e2e8f0;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .sub-tab-btn.active {
+      background: var(--primary);
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -205,7 +234,7 @@
     <button class="tab-btn" onclick="switchTab('adminTab')">അഡ്മിൻ</button>
   </div>
 
-  <!-- വിദ്യാർത്ഥികൾ മാർക്ക് ചെയ്യുന്ന പേജ് -->
+  <!-- 1. വിദ്യാർത്ഥി എൻട്രി -->
   <div id="trackerTab" class="section active">
     <div class="form-group">
       <label>തീയതി</label>
@@ -228,7 +257,6 @@
     </div>
 
     <div id="prayerFields">
-      <!-- സുബ്ഹ്, ളുഹ്ർ, അസ്വർ, മഗ്‌രിബ്, ഇശാ -->
       <div class="prayer-card"><div style="font-weight:700; margin-bottom:6px;">സുബ്ഹ്</div>
         <div class="status-group">
           <label><input type="radio" name="subh" value="ജമാഅത്ത്" checked><span class="status-btn">ജമാഅത്ത്</span></label>
@@ -273,15 +301,13 @@
     <button class="btn-submit" onclick="submitPrayerEntry()" style="margin-top:10px;">സേവ് ചെയ്യുക</button>
   </div>
 
-  <!-- അധ്യാപക പേജ് -->
+  <!-- 2. അധ്യാപക പോർട്ടൽ -->
   <div id="teacherTab" class="section">
     <div id="teacherAuth" class="auth-card">
       <h3 style="margin-bottom: 8px;">അധ്യാപക ലോഗിൻ</h3>
       <div class="form-group">
         <label>അധ്യാപകനെ തിരഞ്ഞെടുക്കുക</label>
-        <select id="tLoginSelect">
-          <option value="">-- തിരഞ്ഞെടുക്കുക --</option>
-        </select>
+        <select id="tLoginSelect"><option value="">-- തിരഞ്ഞെടുക്കുക --</option></select>
       </div>
       <div class="form-group">
         <input type="password" id="teacherPassInput" placeholder="പാസ്‌വേഡ് ടൈപ്പ് ചെയ്യുക">
@@ -317,7 +343,7 @@
     </div>
   </div>
 
-  <!-- അഡ്മിൻ പേജ് -->
+  <!-- 3. അഡ്മിൻ പോർട്ടൽ -->
   <div id="adminTab" class="section">
     <div id="adminAuth" class="auth-card">
       <h3 style="margin-bottom: 4px;">അഡ്മിൻ ലോഗിൻ</h3>
@@ -329,7 +355,7 @@
     </div>
 
     <div id="adminContent" style="display: none;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <div>
           <h3 style="color:var(--primary);">RASHIDALI FAIZY</h3>
           <p style="font-size:12px; color:var(--text-muted);">Admin Portal</p>
@@ -337,47 +363,94 @@
         <button class="btn-danger" onclick="logoutAdmin()">ലോഗൗട്ട്</button>
       </div>
 
-      <!-- പാസ്‌വേഡ് മാറ്റാനുള്ള സെക്ഷൻ -->
-      <div class="prayer-card">
-        <h4 style="margin-bottom: 8px;">അഡ്മിൻ പാസ്‌വേഡ് മാറ്റുക</h4>
-        <input type="password" id="oldPass" placeholder="പഴയ പാസ്‌വേഡ്" style="margin-bottom: 6px;">
-        <input type="password" id="newPass" placeholder="പുതിയ പാസ്‌വേഡ്" style="margin-bottom: 8px;">
-        <button class="btn-submit" style="background:#0284c7;" onclick="changeAdminPassword()">പാസ്‌വേഡ് അപ്ഡേറ്റ് ചെയ്യുക</button>
+      <div class="sub-tabs">
+        <button class="sub-tab-btn active" onclick="switchAdminSection('secReport')">ഡെയിലി റിപ്പോർട്ട്</button>
+        <button class="sub-tab-btn" onclick="switchAdminSection('secStudents')">കുട്ടികളെ നിയന്ത്രിക്കുക</button>
+        <button class="sub-tab-btn" onclick="switchAdminSection('secTeachers')">അധ്യാപകർ</button>
+        <button class="sub-tab-btn" onclick="switchAdminSection('secSettings')">സെറ്റിംഗ്സ്</button>
       </div>
 
-      <!-- അധ്യാപകരെ ചേർക്കുന്ന സെക്ഷൻ -->
-      <div class="prayer-card">
-        <h4 style="margin-bottom: 8px;">അധ്യാപകരെ ചേർക്കുക</h4>
-        <input type="text" id="tName" placeholder="അധ്യാപകന്റെ പേര്" style="margin-bottom: 6px;">
-        <select id="tAssignedClass" style="margin-bottom: 6px;">
-          <option value="">ക്ലാസ് നൽകുക</option>
-          <script>
-            for(let i=1; i<=10; i++) document.write(`<option value="${i}">ക്ലാസ് ${i}</option>`);
-          </script>
-        </select>
-        <input type="password" id="tPass" placeholder="അധ്യാപകന്റെ പാസ്‌വേഡ്" style="margin-bottom: 8px;">
-        <button class="btn-submit" onclick="addTeacherByAdmin()">അധ്യാപകനെ സേവ് ചെയ്യുക</button>
+      <!-- അഡ്മിൻ സബ് സെക്ഷൻ: റിപ്പോർട്ട് -->
+      <div id="secReport" class="admin-sub-sec">
+        <input type="date" id="adminDate" onchange="renderAdminReport()" style="margin-bottom: 8px;">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>ക്ലാസ്</th><th>പേര്</th><th>സു</th><th>ളു</th><th>അ</th><th>മ</th><th>ഇ</th><th>റീസെറ്റ്</th></tr>
+            </thead>
+            <tbody id="adminReportTable">
+              <tr><td colspan="8">ഡാറ്റ ലഭ്യമല്ല</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <!-- മൊത്തം റിപ്പോർട്ട് -->
-      <h4 style="margin: 14px 0 8px;">സ്കൂൾ റിപ്പോർട്ട്</h4>
-      <input type="date" id="adminDate" onchange="renderAdminReport()" style="margin-bottom: 8px;">
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr><th>ക്ലാസ്</th><th>പേര്</th><th>സു</th><th>ളു</th><th>അ</th><th>മ</th><th>ഇ</th></tr>
-          </thead>
-          <tbody id="adminReportTable">
-            <tr><td colspan="7">ഡാറ്റ ലഭ്യമല്ല</td></tr>
-          </tbody>
-        </table>
+      <!-- അഡ്മിൻ സബ് സെക്ഷൻ: വിദ്യാർത്ഥികളെ മാനേജ് ചെയ്യുക -->
+      <div id="secStudents" class="admin-sub-sec" style="display: none;">
+        <div class="form-group">
+          <label>ഫിൽട്ടർ ക്ലാസ്</label>
+          <select id="filterStudentClass" onchange="renderAdminStudentManageList()">
+            <option value="ALL">എല്ലാ ക്ലാസുകളും</option>
+            <script>
+              for(let i=1; i<=10; i++) document.write(`<option value="${i}">ക്ലാസ് ${i}</option>`);
+            </script>
+          </select>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>ക്ലാസ്</th><th>റോൾ</th><th>പേര്</th><th>ഡിലീറ്റ്</th></tr>
+            </thead>
+            <tbody id="adminStudentManageTable"></tbody>
+          </table>
+        </div>
       </div>
+
+      <!-- അഡ്മിൻ സബ് സെക്ഷൻ: അധ്യാപകരെ മാനേജ് ചെയ്യുക -->
+      <div id="secTeachers" class="admin-sub-sec" style="display: none;">
+        <div class="prayer-card">
+          <h4 style="margin-bottom: 8px;">പുതിയ അധ്യാപകനെ ചേർക്കുക</h4>
+          <input type="text" id="tName" placeholder="അധ്യാപകന്റെ പേര്" style="margin-bottom: 6px;">
+          <select id="tAssignedClass" style="margin-bottom: 6px;">
+            <option value="">ക്ലാസ് നൽകുക</option>
+            <script>
+              for(let i=1; i<=10; i++) document.write(`<option value="${i}">ക്ലാസ് ${i}</option>`);
+            </script>
+          </select>
+          <input type="password" id="tPass" placeholder="പാസ്‌വേഡ്" style="margin-bottom: 8px;">
+          <button class="btn-submit" onclick="addTeacherByAdmin()">സേവ് ചെയ്യുക</button>
+        </div>
+
+        <h4 style="margin: 12px 0 6px;">നിലവിലുള്ള അധ്യാപകർ</h4>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>പേര്</th><th>ക്ലാസ്</th><th>പാസ്‌വേഡ്</th><th>ഡിലീറ്റ്</th></tr>
+            </thead>
+            <tbody id="adminTeacherManageTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- അഡ്മിൻ സബ് സെക്ഷൻ: സെറ്റിംഗ്സ് -->
+      <div id="secSettings" class="admin-sub-sec" style="display: none;">
+        <div class="prayer-card">
+          <h4 style="margin-bottom: 8px;">അഡ്മിൻ പാസ്‌വേഡ് മാറ്റുക</h4>
+          <input type="password" id="oldPass" placeholder="പഴയ പാസ്‌വേഡ്" style="margin-bottom: 6px;">
+          <input type="password" id="newPass" placeholder="പുതിയ പാസ്‌വേഡ്" style="margin-bottom: 8px;">
+          <button class="btn-submit" style="background:#0284c7;" onclick="changeAdminPassword()">പാസ്‌വേഡ് അപ്ഡേറ്റ് ചെയ്യുക</button>
+        </div>
+        <div style="margin-top: 16px; padding: 12px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 10px;">
+          <p style="font-size: 12px; color: #9f1239; margin-bottom: 8px;">എല്ലാ വിവരങ്ങളും ഒന്നിച്ച് ഡിലീറ്റ് ചെയ്യാൻ:</p>
+          <button class="btn-danger" style="width: 100%;" onclick="clearAllData()">മുഴുവൻ ഡാറ്റയും മായ്‌ക്കുക (Factory Reset)</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
 <script>
-  // അഡ്മിൻ സ്ഥിരസ്ഥിതി പാസ്‌വേഡ് സെറ്റിംഗ്
   if (!localStorage.getItem('mum_admin_pass')) {
     localStorage.setItem('mum_admin_pass', '772625');
   }
@@ -396,10 +469,23 @@
     document.getElementById(tabId).classList.add('active');
     
     if(tabId === 'teacherTab') loadTeacherDropdown();
-    if(tabId === 'adminTab' && document.getElementById('adminContent').style.display === 'block') renderAdminReport();
+    if(tabId === 'adminTab' && document.getElementById('adminContent').style.display === 'block') {
+      renderAdminReport();
+    }
   }
 
-  // അഡ്മിൻ ഫംഗ്ഷനുകൾ
+  function switchAdminSection(secId) {
+    document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.admin-sub-sec').forEach(sec => sec.style.display = 'none');
+    event.target.classList.add('active');
+    document.getElementById(secId).style.display = 'block';
+
+    if(secId === 'secReport') renderAdminReport();
+    if(secId === 'secStudents') renderAdminStudentManageList();
+    if(secId === 'secTeachers') renderAdminTeacherManageList();
+  }
+
+  // അഡ്മിൻ Auth
   function loginAdmin() {
     const entered = document.getElementById('adminPassInput').value;
     const actual = localStorage.getItem('mum_admin_pass');
@@ -428,16 +514,17 @@
       return;
     }
     if(!newP || newP.length < 4) {
-      alert("പുതിയ പാസ്‌വേഡ് കുറഞ്ഞത് 4 അക്ഷരങ്ങൾ വേണം!");
+      alert("കുറഞ്ഞത് 4 അക്ഷരങ്ങൾ വേണം!");
       return;
     }
 
     localStorage.setItem('mum_admin_pass', newP);
-    alert("അഡ്മിൻ പാസ്‌വേഡ് വിജയകരമായി മാറ്റി!");
+    alert("അഡ്മിൻ പാസ്‌വേഡ് മാറ്റി!");
     document.getElementById('oldPass').value = '';
     document.getElementById('newPass').value = '';
   }
 
+  // അധ്യാപക മാനേജ്മെന്റ്
   function addTeacherByAdmin() {
     const name = document.getElementById('tName').value.trim();
     const cls = document.getElementById('tAssignedClass').value;
@@ -452,13 +539,98 @@
     teachers.push({ id: Date.now().toString(), name, class: cls, pass });
     localStorage.setItem('mum_teachers', JSON.stringify(teachers));
 
-    alert("അധ്യാപകന്റെ അക്കൗണ്ട് വിജയകരമായി ചേർത്തു!");
+    alert("അധ്യാപകനെ ചേർത്തു!");
     document.getElementById('tName').value = '';
     document.getElementById('tAssignedClass').value = '';
     document.getElementById('tPass').value = '';
+    renderAdminTeacherManageList();
   }
 
-  // അധ്യാപകരുടെ ഫംഗ്ഷനുകൾ
+  function deleteTeacher(tId) {
+    if(confirm("ഈ അധ്യാപക അക്കൗണ്ട് നീക്കം ചെയ്യണമെന്നുറപ്പാണോ?")) {
+      let teachers = JSON.parse(localStorage.getItem('mum_teachers')) || [];
+      teachers = teachers.filter(t => t.id !== tId);
+      localStorage.setItem('mum_teachers', JSON.stringify(teachers));
+      renderAdminTeacherManageList();
+    }
+  }
+
+  function renderAdminTeacherManageList() {
+    const tbody = document.getElementById('adminTeacherManageTable');
+    tbody.innerHTML = '';
+    const teachers = JSON.parse(localStorage.getItem('mum_teachers')) || [];
+    if(teachers.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4">അധ്യാപകരെ ചേർത്തിട്ടില്ല</td></tr>';
+      return;
+    }
+    teachers.forEach(t => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="text-align:left;">${t.name}</td>
+        <td>ക്ലാസ് ${t.class}</td>
+        <td>${t.pass}</td>
+        <td><button class="btn-danger-sm" onclick="deleteTeacher('${t.id}')">ഡിലീറ്റ്</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // വിദ്യാർത്ഥി മാനേജ്മെന്റ് & ഡിലീറ്റ്
+  function deleteStudent(studentId) {
+    if(confirm("ഈ വിദ്യാർത്ഥിയെയും അനുബന്ധ നിസ്കാര ഡാറ്റയും നീക്കം ചെയ്യണമെന്നുറപ്പാണോ?")) {
+      let students = JSON.parse(localStorage.getItem('mum_students')) || [];
+      students = students.filter(s => s.id !== studentId);
+      localStorage.setItem('mum_students', JSON.stringify(students));
+
+      let entries = JSON.parse(localStorage.getItem('mum_prayers')) || [];
+      entries = entries.filter(e => e.studentId !== studentId);
+      localStorage.setItem('mum_prayers', JSON.stringify(entries));
+
+      renderAdminStudentManageList();
+      populateStudentsDropdown();
+    }
+  }
+
+  function renderAdminStudentManageList() {
+    const tbody = document.getElementById('adminStudentManageTable');
+    tbody.innerHTML = '';
+    const filterCls = document.getElementById('filterStudentClass').value;
+    let students = JSON.parse(localStorage.getItem('mum_students')) || [];
+
+    if(filterCls !== 'ALL') {
+      students = students.filter(s => s.class === filterCls);
+    }
+
+    if(students.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4">കുട്ടികളെ ചേർത്തിട്ടില്ല</td></tr>';
+      return;
+    }
+
+    students.sort((a,b) => parseInt(a.class) - parseInt(b.class) || parseInt(a.roll) - parseInt(b.roll));
+
+    students.forEach(s => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>ക്ലാസ് ${s.class}</td>
+        <td>${s.roll}</td>
+        <td style="text-align:left;">${s.name}</td>
+        <td><button class="btn-danger-sm" onclick="deleteStudent('${s.id}')">ഡിലീറ്റ്</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ഒരു കുട്ടിയുടെ ഒരു ദിവസത്തെ നിസ്കാര രേഖ റീസെറ്റ് ചെയ്യുക
+  function resetPrayerRecord(date, studentId) {
+    if(confirm("ഈ വിദ്യാർത്ഥിയുടെ ഈ ദിവസത്തെ നിസ്കാര വിവരങ്ങൾ റീസെറ്റ് ചെയ്യണോ?")) {
+      let entries = JSON.parse(localStorage.getItem('mum_prayers')) || [];
+      entries = entries.filter(e => !(e.date === date && e.studentId === studentId));
+      localStorage.setItem('mum_prayers', JSON.stringify(entries));
+      renderAdminReport();
+    }
+  }
+
+  // അധ്യാപക ലോഗിൻ & പോർട്ടൽ
   function loadTeacherDropdown() {
     const select = document.getElementById('tLoginSelect');
     select.innerHTML = '<option value="">-- തിരഞ്ഞെടുക്കുക --</option>';
@@ -550,7 +722,7 @@
     entries = entries.filter(e => !(e.date === date && e.studentId === studentId));
     entries.push(record);
     localStorage.setItem('mum_prayers', JSON.stringify(entries));
-    alert("വിവരങ്ങൾ രേഖപ്പെടുത്തി!");
+    alert("വിവരങ്ങൾ സേവ് ചെയ്തു!");
   }
 
   function getBadge(status) {
@@ -600,11 +772,11 @@
     const entries = JSON.parse(localStorage.getItem('mum_prayers')) || [];
 
     if(students.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7">വിദ്യാർത്ഥികളുടെ വിവരങ്ങൾ ലഭ്യമല്ല</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8">വിദ്യാർത്ഥികളുടെ വിവരങ്ങൾ ലഭ്യമല്ല</td></tr>';
       return;
     }
 
-    students.sort((a,b) => parseInt(a.class) - parseInt(b.class));
+    students.sort((a,b) => parseInt(a.class) - parseInt(b.class) || parseInt(a.roll) - parseInt(b.roll));
 
     students.forEach(s => {
       const rec = entries.find(e => e.date === date && e.studentId === s.id);
@@ -617,9 +789,20 @@
         <td>${rec ? getBadge(rec.asr) : '-'}</td>
         <td>${rec ? getBadge(rec.maghrib) : '-'}</td>
         <td>${rec ? getBadge(rec.isha) : '-'}</td>
+        <td>${rec ? `<button class="btn-danger-sm" onclick="resetPrayerRecord('${date}', '${s.id}')">റീസെറ്റ്</button>` : '-'}</td>
       `;
       tbody.appendChild(tr);
     });
+  }
+
+  function clearAllData() {
+    if(confirm("ശ്രദ്ധിക്കുക: മുഴുവൻ കുട്ടികളുടെ വിവരങ്ങളും നിസ്കാര ലിസ്റ്റും അധ്യാപക അക്കൗണ്ടുകളും നഷ്ടപ്പെടും. തുടരണോ?")) {
+      localStorage.removeItem('mum_students');
+      localStorage.removeItem('mum_prayers');
+      localStorage.removeItem('mum_teachers');
+      alert("എല്ലാ ഡാറ്റയും പൂർണ്ണമായി മായ്‌ച്ചു.");
+      location.reload();
+    }
   }
 </script>
 </body>
