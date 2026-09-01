@@ -39,7 +39,6 @@
       flex-direction: column;
       position: relative;
     }
-    /* Top Bar */
     .top-bar {
       background: var(--primary-dark);
       color: #fff;
@@ -60,7 +59,6 @@
       font-weight: 700;
       cursor: pointer;
     }
-    /* Content Layout */
     .main-body { padding: 18px; overflow-y: auto; max-height: 90vh; }
     .hero {
       text-align: center;
@@ -80,7 +78,6 @@
     }
     .hero h1 { font-size: 15px; color: var(--primary-dark); font-weight: 800; line-height: 1.3; }
     .hero p { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-    /* Pulsing Action Button */
     @keyframes pulse-glow {
       0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
       70% { transform: scale(1.03); box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
@@ -104,7 +101,6 @@
       margin-bottom: 20px;
       border: 2px solid #a7f3d0;
     }
-    /* Cards */
     .card {
       background: #fff;
       border-radius: 16px;
@@ -122,7 +118,25 @@
       align-items: center;
       justify-content: space-between;
     }
-    /* Forms */
+    .rank-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #f8fafc;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+    .rank-badge {
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; font-size: 11px; color: #fff; margin-right: 8px;
+    }
+    .rank-1 { background: #f59e0b; }
+    .rank-2 { background: #94a3b8; }
+    .rank-3 { background: #d97706; }
+    
     .form-group { margin-bottom: 12px; }
     label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 4px; }
     input, select {
@@ -149,9 +163,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 4px;
     }
-    .status-grid.girls {
-      grid-template-columns: repeat(5, 1fr);
-    }
+    .status-grid.girls { grid-template-columns: repeat(5, 1fr); }
     .status-grid input { display: none; }
     .status-lbl {
       text-align: center;
@@ -202,7 +214,7 @@
   <!-- Top Navigation -->
   <div class="top-bar">
     <h3 id="appHeaderTitle">MUM TRACKER</h3>
-    <button class="btn-top" id="authBtn" onclick="openLoginModal()">Login</button>
+    <button class="btn-top" id="authBtn" onclick="toggleAuthAction()">ലോഗിൻ</button>
   </div>
 
   <div class="main-body" id="mainBody">
@@ -214,7 +226,7 @@
         <p>നിസ്കാര നിരീക്ഷണ പോർട്ടൽ</p>
       </div>
 
-      <!-- Action Button -->
+      <!-- Pulsing Action Button -->
       <button class="pulse-btn" onclick="openPrayerEntryModal()">
         <span>🕌</span> എന്റെ ഇന്നത്തെ നിസ്കാരം
       </button>
@@ -230,18 +242,18 @@
         </div>
       </div>
 
-      <!-- Search My Record -->
+      <!-- Search Record -->
       <div class="card">
         <div class="card-title">🔍 സ്വന്തം നിസ്കാര വിവരങ്ങൾ പരിശോധിക്കുക</div>
         <div class="form-group">
-          <input type="text" id="srchAdm" placeholder="അഡ്മിഷൻ നമ്പർ നൽകുക...">
+          <input type="text" id="srchAdm" placeholder="അഡ്മിഷൻ നമ്പറോ പേരോ നൽകുക...">
         </div>
         <button class="btn-main" onclick="searchStudentHistory()">പരിശോധിക്കുക</button>
         <div id="srchResult" style="margin-top:12px;"></div>
       </div>
 
       <div class="footer">
-        അഡ്മിൻ കോൺടാക്റ്റ്: <b></b><br>
+        അഡ്മിൻ കോൺടാക്റ്റ്: <span id="admContactSpan">_________________</span><br>
         MUM Kaloor © 2026
       </div>
     </div>
@@ -285,7 +297,7 @@
         </div>
       </div>
 
-      <!-- Monthly Report & PDF -->
+      <!-- Reports & PDF -->
       <div class="card">
         <div class="card-title">📊 പ്രതിമാസ റിപ്പോർട്ട് & PDF</div>
         <div class="form-group"><label>ക്ലാസ്</label><select id="tRepClass"></select></div>
@@ -305,21 +317,21 @@
 
       <!-- Teacher Management -->
       <div class="card">
-        <div class="card-title">👨‍🏫 അധ്യാപകരെ ചേർക്കുക / മാനേജ് ചെയ്യുക</div>
+        <div class="card-title">👨‍🏫 അധ്യാപകരെ ചേർക്കുക / മാറ്റുക</div>
         <div class="form-group"><label>പേര്</label><input type="text" id="admTName"></div>
         <div class="form-group"><label>പാസ്‌വേഡ്</label><input type="password" id="admTPass"></div>
-        <div class="form-group"><label>ചുമതലയുള്ള ക്ലാസുകൾ (ഉദാ: 1,2)</label><input type="text" id="admTClasses" placeholder="1,2,3"></div>
+        <div class="form-group"><label>ചുമതലയുള്ള ക്ലാസുകൾ (കോമ ഇട്ട് നൽകുക: ഉദാ: 1,2)</label><input type="text" id="admTClasses" placeholder="1,2,3"></div>
         <button class="btn-main" onclick="saveTeacherByAdmin()">അധ്യാപകനെ ചേർക്കുക</button>
         
         <div style="overflow-x:auto; margin-top:12px;">
           <table>
-            <thead><tr><th>പേര്</th><th>ക്ലാസുകൾ</th><th>ഡിലീറ്റ്</th></tr></thead>
+            <thead><tr><th>പേര്</th><th>ക്ലാസുകൾ</th><th>പാസ്‌വേഡ്</th><th>ഡിലീറ്റ്</th></tr></thead>
             <tbody id="admTeacherTable"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- Admin PDF -->
+      <!-- Admin PDF & Stats -->
       <div class="card">
         <div class="card-title">📊 സ്കൂൾ റിപ്പോർട്ട് & PDF</div>
         <div class="form-group"><label>ക്ലാസ്</label>
@@ -332,7 +344,7 @@
         <button class="btn-main" style="background:#0284c7;" onclick="downloadClassPDF('admin')">📄 PDF ഡൗൺലോഡ് ചെയ്യുക</button>
       </div>
 
-      <!-- Admin Security -->
+      <!-- Security -->
       <div class="card">
         <div class="card-title">🔑 അഡ്മിൻ പാസ്‌വേഡ് മാറ്റുക</div>
         <div class="form-group"><input type="password" id="admOldPass" placeholder="പഴയ പാസ്‌വേഡ്"></div>
@@ -344,9 +356,9 @@
 </div>
 
 <!-- MODAL: LOGIN -->
-<div id="loginModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:16px; z-index:99;">
-  <div style="background:#fff; width:100%; max-width:360px; border-radius:18px; padding:20px; text-align:center;">
-    <h3 style="margin-bottom:12px; color:var(--primary);">പോർട്ടൽ ലോഗിൻ</h3>
+<div id="loginModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:16px; z-index:999;">
+  <div style="background:#fff; width:100%; max-width:360px; border-radius:18px; padding:20px; text-align:center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+    <h3 style="margin-bottom:14px; color:var(--primary);">പോർട്ടൽ ലോഗിൻ</h3>
     <div class="form-group">
       <select id="loginRole" onchange="toggleLoginInputs()">
         <option value="teacher">അധ്യാപകർ (Teacher)</option>
@@ -359,24 +371,33 @@
     <div class="form-group">
       <input type="password" id="loginPass" placeholder="പാസ്‌വേഡ് നൽകുക">
     </div>
-    <button class="btn-main" onclick="handleLogin()">ലോഗിൻ</button>
+    <button class="btn-main" onclick="handleLogin()">ലോഗിൻ ചെയ്യുക</button>
     <button class="btn-main" style="background:#94a3b8; margin-top:8px;" onclick="closeModal('loginModal')">റദ്ദാക്കുക</button>
   </div>
 </div>
 
 <!-- MODAL: DAILY PRAYER ENTRY -->
-<div id="prayerModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:16px; z-index:99; overflow-y:auto;">
+<div id="prayerModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:16px; z-index:999; overflow-y:auto;">
   <div style="background:#fff; width:100%; max-width:440px; border-radius:18px; padding:20px; max-height:90vh; overflow-y:auto;">
-    <h3 style="color:var(--primary); margin-bottom:10px;">ഇന്നത്തെ നിസ്കാരം രേഖപ്പെടുത്തുക</h3>
+    <h3 style="color:var(--primary); margin-bottom:12px;">ഇന്നത്തെ നിസ്കാരം രേഖപ്പെടുത്തുക</h3>
+    
     <div class="form-group">
       <label>അഡ്മിഷൻ നമ്പർ</label>
-      <input type="text" id="pAdmInput" placeholder="അഡ്മിഷൻ നമ്പർ നൽകുക" oninput="autoFetchStudent()">
+      <input type="text" id="pAdmInput" list="admDatalist" placeholder="അഡ്മിഷൻ നമ്പർ ടൈപ്പ് ചെയ്യുക" oninput="onAdmChange()">
+      <datalist id="admDatalist"></datalist>
     </div>
+
+    <div class="form-group">
+      <label>അല്ലെങ്കിൽ വിദ്യാർത്ഥിയുടെ പേര്</label>
+      <input type="text" id="pNameInput" list="nameDatalist" placeholder="പേര് ടൈപ്പ് ചെയ്യുക" oninput="onNameChange()">
+      <datalist id="nameDatalist"></datalist>
+    </div>
+
     <div id="pStudentInfo" style="display:none; font-size:12px; background:#dcfce7; padding:8px; border-radius:8px; margin-bottom:10px;"></div>
 
     <div id="prayerCardsContainer" style="display:none;">
       <div id="prayersMarkup"></div>
-      <button class="btn-main" onclick="saveDailyPrayer()">സേവ് ചെയ്യുക</button>
+      <button class="btn-main" onclick="saveDailyPrayer()" style="margin-top:10px;">സേവ് ചെയ്യുക</button>
     </div>
     <button class="btn-main" style="background:#94a3b8; margin-top:8px;" onclick="closeModal('prayerModal')">റദ്ദാക്കുക</button>
   </div>
@@ -391,16 +412,29 @@
   document.getElementById('admRepMonth').value = currMonth;
 
   let currentUser = null;
+  let activeStudentForEntry = null;
 
   function getDB(key) { return JSON.parse(localStorage.getItem(key)) || []; }
   function setDB(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
-  function openLoginModal() {
+  updateLeaderboard();
+
+  function toggleAuthAction() {
     if (currentUser) {
-      logout();
-      return;
+      currentUser = null;
+      document.getElementById('authBtn').innerText = 'ലോഗിൻ';
+      document.getElementById('publicView').style.display = 'block';
+      document.getElementById('teacherView').style.display = 'none';
+      document.getElementById('adminView').style.display = 'none';
+    } else {
+      openLoginModal();
     }
+  }
+
+  function openLoginModal() {
     loadTeacherSelect();
+    toggleLoginInputs();
+    document.getElementById('loginPass').value = '';
     document.getElementById('loginModal').style.display = 'flex';
   }
 
@@ -426,18 +460,18 @@
     if (role === 'admin') {
       if (pass === localStorage.getItem('mum_admin_pass')) {
         currentUser = { role: 'admin' };
-        document.getElementById('authBtn').innerText = 'Logout';
+        document.getElementById('authBtn').innerText = 'പബ്ലിക് സൈറ്റ്';
         document.getElementById('publicView').style.display = 'none';
         document.getElementById('adminView').style.display = 'block';
         renderAdminTeachers();
         closeModal('loginModal');
-      } else alert("അഡ്മിൻ പാസ്‌വേഡ് തെറ്റാണ്! (Default: 772625)");
+      } else alert("അഡ്മിൻ പാസ്‌വേഡ് തെറ്റാണ്!");
     } else {
       const tId = document.getElementById('loginTeacherSelect').value;
       const t = getDB('mum_teachers').find(x => x.id === tId && x.pass === pass);
       if (t) {
         currentUser = { role: 'teacher', data: t };
-        document.getElementById('authBtn').innerText = 'Logout';
+        document.getElementById('authBtn').innerText = 'പബ്ലിക് സൈറ്റ്';
         document.getElementById('publicView').style.display = 'none';
         document.getElementById('teacherView').style.display = 'block';
         document.getElementById('teacherNameDisplay').innerText = t.name;
@@ -455,12 +489,13 @@
 
   function logout() {
     currentUser = null;
-    document.getElementById('authBtn').innerText = 'Login';
+    document.getElementById('authBtn').innerText = 'ലോഗിൻ';
     document.getElementById('publicView').style.display = 'block';
     document.getElementById('teacherView').style.display = 'none';
     document.getElementById('adminView').style.display = 'none';
   }
 
+  // Teacher actions
   function saveStudentByTeacher() {
     const cls = document.getElementById('tRegClass').value;
     const adm = document.getElementById('tRegAdm').value.trim();
@@ -468,6 +503,7 @@
     const gender = document.getElementById('tRegGender').value;
 
     if (!adm || !name) return alert("അഡ്മിഷൻ നമ്പറും പേരും നൽകുക!");
+
     let students = getDB('mum_students');
     if (students.some(s => s.adm === adm)) return alert("ഈ അഡ്മിഷൻ നമ്പർ നിലവിലുണ്ട്!");
 
@@ -483,29 +519,34 @@
     const cls = document.getElementById('tFilterClass').value;
     const students = getDB('mum_students').filter(s => s.class === cls);
     const tbody = document.getElementById('tStudentTable');
-    tbody.innerHTML = students.map(s => `
-      <tr>
-        <td>${s.adm}</td>
-        <td>${s.name}</td>
-        <td><button class="btn-del" onclick="deleteStudent('${s.id}')">ഡിലീറ്റ്</button></td>
-      </tr>
-    `).join('') || '<tr><td colspan="3">വിദ്യാർത്ഥികൾ ഇല്ല</td></tr>';
+    tbody.innerHTML = '';
+    students.forEach(s => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${s.adm}</td>
+          <td style="text-align:left;">${s.name} (${s.gender === 'Female' ? 'F' : 'M'})</td>
+          <td><button class="btn-del" onclick="deleteStudent('${s.id}')">ഡിലീറ്റ്</button></td>
+        </tr>
+      `;
+    });
   }
 
   function deleteStudent(id) {
-    if (confirm("ഈ വിദ്യാർത്ഥിയെ ഒഴിവാക്കണോ?")) {
+    if (confirm("ഈ വിദ്യാർത്ഥിയെയും മുഴുവൻ നിസ്കാര ഡാറ്റയും ഡിലീറ്റ് ചെയ്യണോ?")) {
       setDB('mum_students', getDB('mum_students').filter(s => s.id !== id));
-      renderTeacherStudentList();
+      setDB('mum_prayers', getDB('mum_prayers').filter(p => p.studentId !== id));
+      if (currentUser?.role === 'teacher') renderTeacherStudentList();
     }
   }
 
+  // Admin actions
   function saveTeacherByAdmin() {
     const name = document.getElementById('admTName').value.trim();
     const pass = document.getElementById('admTPass').value.trim();
-    const classes = document.getElementById('admTClasses').value.split(',').map(c => c.trim()).filter(Boolean);
+    const clsInput = document.getElementById('admTClasses').value.trim();
+    if (!name || !pass || !clsInput) return alert("വിവരങ്ങൾ പൂർണ്ണമായി നൽകുക!");
 
-    if (!name || !pass || classes.length === 0) return alert("എല്ലാ വിവരങ്ങളും നൽകുക!");
-
+    const classes = clsInput.split(',').map(c => c.trim()).filter(Boolean);
     let teachers = getDB('mum_teachers');
     teachers.push({ id: Date.now().toString(), name, pass, classes });
     setDB('mum_teachers', teachers);
@@ -517,19 +558,22 @@
   }
 
   function renderAdminTeachers() {
-    const teachers = getDB('mum_teachers');
     const tbody = document.getElementById('admTeacherTable');
-    tbody.innerHTML = teachers.map(t => `
-      <tr>
-        <td>${t.name}</td>
-        <td>${t.classes.join(', ')}</td>
-        <td><button class="btn-del" onclick="deleteTeacher('${t.id}')">ഡിലീറ്റ്</button></td>
-      </tr>
-    `).join('') || '<tr><td colspan="3">അധ്യാപകർ ഇല്ല</td></tr>';
+    tbody.innerHTML = '';
+    getDB('mum_teachers').forEach(t => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${t.name}</td>
+          <td>${t.classes.join(', ')}</td>
+          <td>${t.pass}</td>
+          <td><button class="btn-del" onclick="deleteTeacher('${t.id}')">ഡിലീറ്റ്</button></td>
+        </tr>
+      `;
+    });
   }
 
   function deleteTeacher(id) {
-    if (confirm("അധ്യാപകനെ നീക്കം ചെയ്യണോ?")) {
+    if (confirm("അധ്യാപക അക്കൗണ്ട് ഒഴിവാക്കണോ?")) {
       setDB('mum_teachers', getDB('mum_teachers').filter(t => t.id !== id));
       renderAdminTeachers();
     }
@@ -541,172 +585,220 @@
     if (oldP !== localStorage.getItem('mum_admin_pass')) return alert("പഴയ പാസ്‌വേഡ് തെറ്റാണ്!");
     if (!newP) return alert("പുതിയ പാസ്‌വേഡ് നൽകുക!");
     localStorage.setItem('mum_admin_pass', newP);
-    alert("പാസ്‌വേഡ് വിജയകരമായി മാറ്റി!");
-    document.getElementById('admOldPass').value = '';
-    document.getElementById('admNewPass').value = '';
+    alert("അഡ്മിൻ പാസ്‌വേഡ് മാറ്റി!");
+  }
+
+  // Auto Search Datalists for Students
+  function populateDatalists() {
+    const students = getDB('mum_students');
+    const admDl = document.getElementById('admDatalist');
+    const nameDl = document.getElementById('nameDatalist');
+    admDl.innerHTML = '';
+    nameDl.innerHTML = '';
+
+    students.forEach(s => {
+      admDl.innerHTML += `<option value="${s.adm}">${s.name} (ക്ലാസ് ${s.class})</option>`;
+      nameDl.innerHTML += `<option value="${s.name}">${s.adm} (ക്ലാസ് ${s.class})</option>`;
+    });
   }
 
   function openPrayerEntryModal() {
     document.getElementById('pAdmInput').value = '';
+    document.getElementById('pNameInput').value = '';
     document.getElementById('pStudentInfo').style.display = 'none';
     document.getElementById('prayerCardsContainer').style.display = 'none';
+    populateDatalists();
     document.getElementById('prayerModal').style.display = 'flex';
   }
 
-  let activeStudent = null;
-  function autoFetchStudent() {
+  function onAdmChange() {
     const adm = document.getElementById('pAdmInput').value.trim();
-    activeStudent = getDB('mum_students').find(s => s.adm === adm);
-    const info = document.getElementById('pStudentInfo');
-    const cont = document.getElementById('prayerCardsContainer');
-
-    if (activeStudent) {
-      info.style.display = 'block';
-      info.innerHTML = `<b>${activeStudent.name}</b> (ക്ലാസ്: ${activeStudent.class}, ${activeStudent.gender})`;
-      renderPrayerFields(activeStudent.gender === 'Female');
-      cont.style.display = 'block';
-    } else {
-      info.style.display = 'none';
-      cont.style.display = 'none';
+    const student = getDB('mum_students').find(s => s.adm.toLowerCase() === adm.toLowerCase());
+    if (student) {
+      document.getElementById('pNameInput').value = student.name;
+      loadPrayerFormForStudent(student);
     }
   }
 
-  const prayerNames = ['സുബ്ഹ്', 'ദുഹ്ർ', 'അസ്വർ', 'മഗ്രിബ്', 'ഇശാഅ്'];
-  function renderPrayerFields(isFemale) {
-    const opts = ['ജമാഅത്ത്', 'അദാഅ്', 'ഖളാഅ്', 'നിസ്കരിച്ചില്ല'];
-    if (isFemale) opts.push('ഇളവ്');
+  function onNameChange() {
+    const name = document.getElementById('pNameInput').value.trim();
+    const student = getDB('mum_students').find(s => s.name.toLowerCase() === name.toLowerCase());
+    if (student) {
+      document.getElementById('pAdmInput').value = student.adm;
+      loadPrayerFormForStudent(student);
+    }
+  }
 
+  function loadPrayerFormForStudent(student) {
+    const entries = getDB('mum_prayers');
+    const existing = entries.find(e => e.studentId === student.id && e.date === todayStr);
+    if (existing) {
+      alert("ഈ വിദ്യാർത്ഥി ഇന്ന് ഇതിനകം നിസ്കാരം രേഖപ്പെടുത്തിയിട്ടുണ്ട്!");
+      closeModal('prayerModal');
+      return;
+    }
+
+    activeStudentForEntry = student;
+    document.getElementById('pStudentInfo').style.display = 'block';
+    document.getElementById('pStudentInfo').innerHTML = `<b>${student.name}</b> (Adm: ${student.adm} | ക്ലാസ്: ${student.class})`;
+    
+    const prayers = ['സുബ്ഹ്', 'ളുഹ്ർ', 'അസ്വർ', 'മഗ്‌രിബ്', 'ഇശാ'];
+    const pKeys = ['subh', 'dhuhr', 'asr', 'maghrib', 'isha'];
     let html = '';
-    prayerNames.forEach(p => {
+    const isGirl = student.gender === 'Female';
+
+    prayers.forEach((p, idx) => {
       html += `
         <div class="prayer-box">
           <div class="prayer-name">${p}</div>
-          <div class="status-grid ${isFemale ? 'girls' : ''}">
-            ${opts.map((opt, i) => `
-              <label>
-                <input type="radio" name="${p}" value="${opt}" ${i === 1 ? 'checked' : ''}>
-                <div class="status-lbl">${opt}</div>
-              </label>
-            `).join('')}
+          <div class="status-grid ${isGirl ? 'girls' : ''}">
+            <label><input type="radio" name="${pKeys[idx]}" value="ജമാഅത്ത്" checked><span class="status-lbl">ജമാഅത്ത്</span></label>
+            <label><input type="radio" name="${pKeys[idx]}" value="അദാഅ്"><span class="status-lbl">അദാഅ്</span></label>
+            <label><input type="radio" name="${pKeys[idx]}" value="ഖളാഅ്"><span class="status-lbl">ഖളാഅ്</span></label>
+            <label><input type="radio" name="${pKeys[idx]}" value="നിസ്കരിച്ചില്ല"><span class="status-lbl">ഇല്ല</span></label>
+            ${isGirl ? `<label><input type="radio" name="${pKeys[idx]}" value="ഇളവ്"><span class="status-lbl" style="color:#7c3aed;">ഇളവ്</span></label>` : ''}
           </div>
         </div>
       `;
     });
     document.getElementById('prayersMarkup').innerHTML = html;
+    document.getElementById('prayerCardsContainer').style.display = 'block';
   }
 
   function saveDailyPrayer() {
-    if (!activeStudent) return;
-    const entries = getDB('mum_records');
-    const record = {
-      id: Date.now().toString(),
-      adm: activeStudent.adm,
-      name: activeStudent.name,
-      class: activeStudent.class,
+    if (!activeStudentForEntry) return;
+    const entry = {
       date: todayStr,
-      prayers: {}
+      studentId: activeStudentForEntry.id,
+      subh: document.querySelector('input[name="subh"]:checked').value,
+      dhuhr: document.querySelector('input[name="dhuhr"]:checked').value,
+      asr: document.querySelector('input[name="asr"]:checked').value,
+      maghrib: document.querySelector('input[name="maghrib"]:checked').value,
+      isha: document.querySelector('input[name="isha"]:checked').value
     };
-
-    prayerNames.forEach(p => {
-      const selected = document.querySelector(`input[name="${p}"]:checked`);
-      record.prayers[p] = selected ? selected.value : 'നിസ്കരിച്ചില്ല';
-    });
-
-    const existingIdx = entries.findIndex(e => e.adm === activeStudent.adm && e.date === todayStr);
-    if (existingIdx >= 0) entries[existingIdx] = record;
-    else entries.push(record);
-
-    setDB('mum_records', entries);
-    alert("നിസ്കാരം രേഖപ്പെടുത്തി!");
+    let entries = getDB('mum_prayers');
+    entries.push(entry);
+    setDB('mum_prayers', entries);
+    alert("വിജയകരമായി രേഖപ്പെടുത്തി! അല്ലാഹു സ്വീകരിക്കട്ടെ.");
     closeModal('prayerModal');
     updateLeaderboard();
   }
 
   function updateLeaderboard() {
-    const records = getDB('mum_records').filter(r => r.date === todayStr);
-    const scoreMap = { 'ജമാഅത്ത്': 10, 'അദാഅ്': 8, 'ഇളവ്': 8, 'ഖളാഅ്': 4, 'നിസ്കരിച്ചില്ല': 0 };
+    const entries = getDB('mum_prayers').filter(e => e.date === todayStr);
+    const students = getDB('mum_students');
+    if (entries.length === 0) return;
 
-    const rankList = records.map(r => {
-      let score = 0;
-      Object.values(r.prayers).forEach(st => { score += (scoreMap[st] || 0); });
-      return { name: r.name, class: r.class, score };
-    }).sort((a,b) => b.score - a.score).slice(0, 3);
+    const scores = entries.map(e => {
+      const s = students.find(x => x.id === e.studentId);
+      if (!s) return null;
+      let jam = 0, ada = 0;
+      [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
+        if (st === 'ജമാഅത്ത്') jam++;
+        if (st === 'അദാഅ്') ada++;
+      });
+      return { name: s.name, class: s.class, jam, ada, totalScore: (jam * 2) + ada };
+    }).filter(Boolean);
 
-    const container = document.getElementById('leaderboardList');
-    if (rankList.length === 0) {
-      container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center;">ഇന്ന് എൻട്രികൾ ലഭ്യമല്ല</p>';
-      return;
-    }
+    scores.sort((a,b) => b.totalScore - a.totalScore || b.jam - a.jam);
 
-    container.innerHTML = rankList.map((r, i) => `
-      <div class="rank-item">
-        <div style="display:flex; align-items:center;">
-          <div class="rank-badge rank-${i+1}">${i+1}</div>
-          <div><b>${r.name}</b> (ക്ലാസ് ${r.class})</div>
+    let html = '';
+    scores.slice(0, 3).forEach((item, idx) => {
+      html += `
+        <div class="rank-item">
+          <div style="display:flex; align-items:center;">
+            <div class="rank-badge rank-${idx+1}">${idx+1}</div>
+            <div>
+              <b>${item.name}</b> (ക്ലാസ് ${item.class})<br>
+              <span style="font-size:10px; color:var(--text-muted);">ജമാഅത്ത്: ${item.jam} | അദാഅ്: ${item.ada}</span>
+            </div>
+          </div>
+          <span style="font-weight:bold; color:var(--primary);">${item.totalScore} pts</span>
         </div>
-        <div><b>${r.score} pts</b></div>
-      </div>
-    `).join('');
+      `;
+    });
+    document.getElementById('leaderboardList').innerHTML = html || '<p style="font-size:12px; color:var(--text-muted); text-align:center;">വിവരങ്ങൾ ലഭ്യമല്ല</p>';
   }
 
   function searchStudentHistory() {
-    const adm = document.getElementById('srchAdm').value.trim();
-    if (!adm) return alert("അഡ്മിഷൻ നമ്പർ നൽകുക!");
-    const recs = getDB('mum_records').filter(r => r.adm === adm);
+    const term = document.getElementById('srchAdm').value.trim().toLowerCase();
+    const student = getDB('mum_students').find(s => s.adm.toLowerCase() === term || s.name.toLowerCase() === term);
     const div = document.getElementById('srchResult');
-
-    if (recs.length === 0) {
-      div.innerHTML = '<p style="font-size:12px; color:red; text-align:center;">റെക്കോർഡുകൾ കണ്ടെത്തിയില്ല!</p>';
+    if (!student) {
+      div.innerHTML = '<p style="font-size:12px; color:red;">വിദ്യാർത്ഥിയെ കണ്ടെത്തിയില്ല.</p>';
       return;
     }
 
+    const entries = getDB('mum_prayers').filter(e => e.studentId === student.id);
+    let totals = { jam: 0, ada: 0, qad: 0, nil: 0, exc: 0 };
+    entries.forEach(e => {
+      [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
+        if (st === 'ജമാഅത്ത്') totals.jam++;
+        else if (st === 'അദാഅ്') totals.ada++;
+        else if (st === 'ഖളാഅ്') totals.qad++;
+        else if (st === 'ഇളവ്') totals.exc++;
+        else totals.nil++;
+      });
+    });
+
     div.innerHTML = `
-      <table>
-        <thead><tr><th>തിയതി</th><th>സുബ്ഹ്</th><th>ദുഹ്ർ</th><th>അസ്വർ</th><th>മഗ്രിബ്</th><th>ഇശാഅ്</th></tr></thead>
-        <tbody>
-          ${recs.map(r => `
-            <tr>
-              <td>${r.date}</td>
-              <td>${r.prayers['സുബ്ഹ്'] || '-'}</td>
-              <td>${r.prayers['ദുഹ്ർ'] || '-'}</td>
-              <td>${r.prayers['അസ്വർ'] || '-'}</td>
-              <td>${r.prayers['മഗ്രിബ്'] || '-'}</td>
-              <td>${r.prayers['ഇശാഅ്'] || '-'}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
+      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:10px; font-size:12px;">
+        <div style="font-weight:bold; font-size:14px; color:var(--primary);">${student.name} (Adm: ${student.adm} | ക്ലാസ്: ${student.class})</div>
+        <p style="margin:4px 0 8px;">ആകെ രേഖപ്പെടുത്തിയ ദിവസങ്ങൾ: ${entries.length}</p>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; text-align:center;">
+          <div style="background:#d1fae5; padding:6px; border-radius:6px;">ജമാഅത്ത്: <b>${totals.jam}</b></div>
+          <div style="background:#dcfce7; padding:6px; border-radius:6px;">അദാഅ്: <b>${totals.ada}</b></div>
+          <div style="background:#fef3c7; padding:6px; border-radius:6px;">ഖളാഅ്: <b>${totals.qad}</b></div>
+          <div style="background:#fee2e2; padding:6px; border-radius:6px;">നിസ്കരിക്കാത്തത്: <b>${totals.nil}</b></div>
+          ${student.gender === 'Female' ? `<div style="background:#ede9fe; padding:6px; border-radius:6px;">ഇളവ്: <b>${totals.exc}</b></div>` : ''}
+        </div>
+      </div>
     `;
   }
 
-  function downloadClassPDF(role) {
-    const cls = role === 'teacher' ? document.getElementById('tRepClass').value : document.getElementById('admRepClass').value;
-    const month = role === 'teacher' ? document.getElementById('tRepMonth').value : document.getElementById('admRepMonth').value;
+  function downloadClassPDF(source) {
+    const cls = source === 'teacher' ? document.getElementById('tRepClass').value : document.getElementById('admRepClass').value;
+    const month = source === 'teacher' ? document.getElementById('tRepMonth').value : document.getElementById('admRepMonth').value;
 
-    const records = getDB('mum_records').filter(r => {
-      const matchCls = cls === 'ALL' || r.class === cls;
-      const matchMonth = r.date.startsWith(month);
-      return matchCls && matchMonth;
-    });
+    if (!month) return alert("മാസം തിരഞ്ഞെടുക്കുക!");
 
-    if (records.length === 0) return alert("ഡൗൺലോഡ് ചെയ്യാൻ വിവരങ്ങൾ ഇല്ല!");
+    let students = getDB('mum_students');
+    if (cls !== 'ALL') students = students.filter(s => s.class === cls);
+    const allEntries = getDB('mum_prayers').filter(e => e.date.startsWith(month));
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    doc.text(`Prayer Report - Class ${cls} (${month})`, 14, 15);
 
-    const rows = records.map(r => [
-      r.date, r.adm, r.name, r.class,
-      r.prayers['സുബ്ഹ്'], r.prayers['ദുഹ്ർ'], r.prayers['അസ്വർ'], r.prayers['മഗ്രിബ്'], r.prayers['ഇശാഅ്']
-    ]);
+    doc.setFontSize(14);
+    doc.text("MALHARUL ULOOM MADRASA KALLOOR", 14, 15);
+    doc.setFontSize(10);
+    doc.text(`Prayer Report - Class: ${cls} | Month: ${month}`, 14, 22);
 
-    doc.autoTable({
-      head: [['Date', 'Adm', 'Name', 'Class', 'Subh', 'Zuhr', 'Asr', 'Maghrib', 'Isha']],
-      body: rows,
-      startY: 20
+    const tableData = [];
+    students.forEach(s => {
+      const sEntries = allEntries.filter(e => e.studentId === s.id);
+      let jam = 0, ada = 0, qad = 0, nil = 0, exc = 0;
+      sEntries.forEach(e => {
+        [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
+          if (st === 'ജമാഅത്ത്') jam++;
+          else if (st === 'അദാഅ്') ada++;
+          else if (st === 'ഖളാഅ്') qad++;
+          else if (st === 'ഇളവ്') exc++;
+          else nil++;
+        });
+      });
+      tableData.push([s.adm, s.name, `Class ${s.class}`, jam, ada, qad, nil, exc]);
     });
 
-    doc.save(`Prayer_Report_${cls}_${month}.pdf`);
+    doc.autoTable({
+      startY: 28,
+      head: [['Adm', 'Name', 'Class', 'Jamaat', 'Adaa', 'Qada', 'Missed', 'Excuse']],
+      body: tableData,
+      theme: 'grid',
+      headStyles: { fillColor: [4, 120, 87] }
+    });
+
+    doc.save(`MUM_Prayer_Report_${cls}_${month}.pdf`);
   }
 </script>
 </body>
