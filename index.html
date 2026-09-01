@@ -50,12 +50,12 @@
     }
     .top-bar h3 { font-size: 14px; font-weight: 800; letter-spacing: 0.5px; }
     .btn-top {
-      background: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.2);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.3);
-      padding: 6px 12px;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 8px 14px;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
     }
@@ -205,7 +205,17 @@
     table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px; }
     th, td { border: 1px solid #e2e8f0; padding: 6px 4px; text-align: center; }
     th { background: #f1f5f9; }
-    .footer { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 16px; padding: 10px; }
+    .footer { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 16px; padding: 10px; line-height: 1.6; }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 9999;
+    }
   </style>
 </head>
 <body>
@@ -254,6 +264,7 @@
 
       <div class="footer">
         അഡ്മിൻ കോൺടാക്റ്റ്: <span id="admContactSpan">_________________</span><br>
+        <b style="color:var(--primary);">mum Kalloor-koothali</b><br>
         MUM Kaloor © 2026
       </div>
     </div>
@@ -356,7 +367,7 @@
 </div>
 
 <!-- MODAL: LOGIN -->
-<div id="loginModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:16px; z-index:999;">
+<div id="loginModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:360px; border-radius:18px; padding:20px; text-align:center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
     <h3 style="margin-bottom:14px; color:var(--primary);">പോർട്ടൽ ലോഗിൻ</h3>
     <div class="form-group">
@@ -377,7 +388,7 @@
 </div>
 
 <!-- MODAL: DAILY PRAYER ENTRY -->
-<div id="prayerModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; padding:16px; z-index:999; overflow-y:auto;">
+<div id="prayerModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:440px; border-radius:18px; padding:20px; max-height:90vh; overflow-y:auto;">
     <h3 style="color:var(--primary); margin-bottom:12px;">ഇന്നത്തെ നിസ്കാരം രേഖപ്പെടുത്തുക</h3>
     
@@ -404,6 +415,7 @@
 </div>
 
 <script>
+  // Initial Setup & Defaults
   if (!localStorage.getItem('mum_admin_pass')) localStorage.setItem('mum_admin_pass', '772625');
   const todayStr = new Date().toISOString().split('T')[0];
   document.getElementById('todayDateLabel').innerText = todayStr;
@@ -414,7 +426,13 @@
   let currentUser = null;
   let activeStudentForEntry = null;
 
-  function getDB(key) { return JSON.parse(localStorage.getItem(key)) || []; }
+  function getDB(key) { 
+    try {
+      return JSON.parse(localStorage.getItem(key)) || []; 
+    } catch(e) {
+      return [];
+    }
+  }
   function setDB(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
   updateLeaderboard();
@@ -448,8 +466,10 @@
   function loadTeacherSelect() {
     const s = document.getElementById('loginTeacherSelect');
     s.innerHTML = '<option value="">-- അധ്യാപകനെ തിരഞ്ഞെടുക്കുക --</option>';
-    getDB('mum_teachers').forEach(t => {
-      s.innerHTML += `<option value="${t.id}">${t.name} (ക്ലാസ്: ${t.classes.join(',')})</option>`;
+    const teachers = getDB('mum_teachers');
+    teachers.forEach(t => {
+      const clsList = Array.isArray(t.classes) ? t.classes.join(', ') : (t.class || '');
+      s.innerHTML += `<option value="${t.id}">${t.name} (ക്ലാസ്: ${clsList})</option>`;
     });
   }
 
@@ -465,25 +485,32 @@
         document.getElementById('adminView').style.display = 'block';
         renderAdminTeachers();
         closeModal('loginModal');
-      } else alert("അഡ്മിൻ പാസ്‌വേഡ് തെറ്റാണ്!");
+      } else {
+        alert("അഡ്മിൻ പാസ്‌വേഡ് തെറ്റാണ്!");
+      }
     } else {
       const tId = document.getElementById('loginTeacherSelect').value;
-      const t = getDB('mum_teachers').find(x => x.id === tId && x.pass === pass);
+      const teachers = getDB('mum_teachers');
+      const t = teachers.find(x => x.id === tId && x.pass === pass);
       if (t) {
         currentUser = { role: 'teacher', data: t };
+        const classesArr = Array.isArray(t.classes) ? t.classes : (t.class ? [t.class] : ['1']);
+        
         document.getElementById('authBtn').innerText = 'പബ്ലിക് സൈറ്റ്';
         document.getElementById('publicView').style.display = 'none';
         document.getElementById('teacherView').style.display = 'block';
         document.getElementById('teacherNameDisplay').innerText = t.name;
-        document.getElementById('tClassListDisplay').innerText = `ചുമതലയുള്ള ക്ലാസുകൾ: ${t.classes.join(', ')}`;
+        document.getElementById('tClassListDisplay').innerText = `ചുമതലയുള്ള ക്ലാസുകൾ: ${classesArr.join(', ')}`;
         
-        const clsOpts = t.classes.map(c => `<option value="${c}">ക്ലാസ് ${c}</option>`).join('');
+        const clsOpts = classesArr.map(c => `<option value="${c}">ക്ലാസ് ${c}</option>`).join('');
         document.getElementById('tRegClass').innerHTML = clsOpts;
         document.getElementById('tFilterClass').innerHTML = clsOpts;
         document.getElementById('tRepClass').innerHTML = clsOpts;
         renderTeacherStudentList();
         closeModal('loginModal');
-      } else alert("അധ്യാപകനെയോ പാസ്‌വേഡോ ശരിയായി നൽകുക!");
+      } else {
+        alert("അധ്യാപകനെയോ പാസ്‌വേഡോ ശരിയായി നൽകുക!");
+      }
     }
   }
 
@@ -561,10 +588,11 @@
     const tbody = document.getElementById('admTeacherTable');
     tbody.innerHTML = '';
     getDB('mum_teachers').forEach(t => {
+      const clsList = Array.isArray(t.classes) ? t.classes.join(', ') : (t.class || '');
       tbody.innerHTML += `
         <tr>
           <td>${t.name}</td>
-          <td>${t.classes.join(', ')}</td>
+          <td>${clsList}</td>
           <td>${t.pass}</td>
           <td><button class="btn-del" onclick="deleteTeacher('${t.id}')">ഡിലീറ്റ്</button></td>
         </tr>
