@@ -8,6 +8,11 @@
   <!-- jsPDF & AutoTable for PDF Generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Firebase App & Cloud Firestore SDKs (v8) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
   <style>
     :root {
       --primary: #047857;
@@ -131,7 +136,7 @@
     .rank-badge {
       width: 24px; height: 24px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-weight: bold; font-size: 11px; color: #fff; margin-right: 8px;
+      font-weight: bold; font-size: 11px; color: #fff; margin-right: 8px; flex-shrink: 0;
     }
     .rank-1 { background: #f59e0b; }
     .rank-2 { background: #94a3b8; }
@@ -216,6 +221,37 @@
       padding: 16px;
       z-index: 9999;
     }
+
+    /* Avatars & Photo Upload */
+    .avatar-sm {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 8px;
+      border: 1px solid #cbd5e1;
+      background: #e2e8f0;
+      flex-shrink: 0;
+    }
+    .avatar-lg {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 12px;
+      border: 2px solid var(--primary);
+      background: #e2e8f0;
+      flex-shrink: 0;
+    }
+    .photo-preview {
+      width: 70px;
+      height: 70px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px dashed #94a3b8;
+      display: none;
+      margin-top: 6px;
+    }
   </style>
 </head>
 <body>
@@ -273,7 +309,10 @@
     <div id="teacherView" style="display: none;">
       <div class="card">
         <div class="card-title">
-          <span id="teacherNameDisplay">അധ്യാപക പോർട്ടൽ</span>
+          <div style="display:flex; align-items:center;">
+            <img id="tProfileImg" class="avatar-sm" src="" style="display:none;">
+            <span id="teacherNameDisplay">അധ്യാപക പോർട്ടൽ</span>
+          </div>
           <button class="btn-del" onclick="logout()">Logout</button>
         </div>
         <p style="font-size:12px; color:var(--text-muted);" id="tClassListDisplay"></p>
@@ -290,6 +329,11 @@
             <option value="Female">പെൺകുട്ടി (Female)</option>
           </select>
         </div>
+        <div class="form-group">
+          <label>വിദ്യാർത്ഥിയുടെ ഫോട്ടോ (ക്യാമറ / ഫയൽ)</label>
+          <input type="file" id="tRegPhoto" accept="image/*" capture="environment" onchange="previewSelectedImage(this, 'tPhotoPreview')">
+          <img id="tPhotoPreview" class="photo-preview">
+        </div>
         <button class="btn-main" onclick="saveStudentByTeacher()">സേവ് ചെയ്യുക</button>
       </div>
 
@@ -302,7 +346,7 @@
         </div>
         <div style="overflow-x:auto;">
           <table>
-            <thead><tr><th>Adm</th><th>പേര്</th><th>ആക്ഷൻ</th></tr></thead>
+            <thead><tr><th>ഫോട്ടോ</th><th>Adm</th><th>പേര്</th><th>ആക്ഷൻ</th></tr></thead>
             <tbody id="tStudentTable"></tbody>
           </table>
         </div>
@@ -332,11 +376,16 @@
         <div class="form-group"><label>പേര്</label><input type="text" id="admTName"></div>
         <div class="form-group"><label>പാസ്‌വേഡ്</label><input type="password" id="admTPass"></div>
         <div class="form-group"><label>ചുമതലയുള്ള ക്ലാസുകൾ (കോമ ഇട്ട് നൽകുക: ഉദാ: 1,2)</label><input type="text" id="admTClasses" placeholder="1,2,3"></div>
+        <div class="form-group">
+          <label>അധ്യാപകന്റെ ഫോട്ടോ (ക്യാമറ / ഫയൽ)</label>
+          <input type="file" id="admTPhoto" accept="image/*" capture="user" onchange="previewSelectedImage(this, 'admPhotoPreview')">
+          <img id="admPhotoPreview" class="photo-preview">
+        </div>
         <button class="btn-main" onclick="saveTeacherByAdmin()">അധ്യാപകനെ ചേർക്കുക</button>
         
         <div style="overflow-x:auto; margin-top:12px;">
           <table>
-            <thead><tr><th>പേര്</th><th>ക്ലാസുകൾ</th><th>പാസ്‌വേഡ്</th><th>ഡിലീറ്റ്</th></tr></thead>
+            <thead><tr><th>ഫോട്ടോ</th><th>പേര്</th><th>ക്ലാസുകൾ</th><th>പാസ്‌വേഡ്</th><th>ഡിലീറ്റ്</th></tr></thead>
             <tbody id="admTeacherTable"></tbody>
           </table>
         </div>
@@ -404,7 +453,7 @@
       <datalist id="nameDatalist"></datalist>
     </div>
 
-    <div id="pStudentInfo" style="display:none; font-size:12px; background:#dcfce7; padding:8px; border-radius:8px; margin-bottom:10px;"></div>
+    <div id="pStudentInfo" style="display:none; font-size:12px; background:#dcfce7; padding:10px; border-radius:10px; margin-bottom:10px; align-items:center;"></div>
 
     <div id="prayerCardsContainer" style="display:none;">
       <div id="prayersMarkup"></div>
@@ -415,8 +464,28 @@
 </div>
 
 <script>
-  // Initial Setup & Defaults
-  if (!localStorage.getItem('mum_admin_pass')) localStorage.setItem('mum_admin_pass', '772625');
+  // --- FIREBASE INITIALIZATION ---
+  const firebaseConfig = {
+    apiKey: "AIzaSyAFsoGr2bUuNuN8HpkV3pjfG6_bHAQzaUY",
+    authDomain: "mum-kalloor-koothali.firebaseapp.com",
+    projectId: "mum-kalloor-koothali",
+    storageBucket: "mum-kalloor-koothali.firebasestorage.app",
+    messagingSenderId: "1067273465346",
+    appId: "1:1067273465346:web:9699968605c7869f2d011b",
+    measurementId: "G-LED49NYSS1"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // State Variables
+  let dbStudents = [];
+  let dbTeachers = [];
+  let dbPrayers = [];
+  let adminPassword = "mumadminpass";
+
+  const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+
   const todayStr = new Date().toISOString().split('T')[0];
   document.getElementById('todayDateLabel').innerText = todayStr;
   const currMonth = todayStr.substring(0, 7);
@@ -426,24 +495,86 @@
   let currentUser = null;
   let activeStudentForEntry = null;
 
-  function getDB(key) { 
-    try {
-      return JSON.parse(localStorage.getItem(key)) || []; 
-    } catch(e) {
-      return [];
+  // Real-time Firestore Listeners
+  db.collection("students").onSnapshot(snapshot => {
+    dbStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    populateDatalists();
+    if (currentUser?.role === 'teacher') renderTeacherStudentList();
+  });
+
+  db.collection("teachers").onSnapshot(snapshot => {
+    dbTeachers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    if (currentUser?.role === 'admin') renderAdminTeachers();
+  });
+
+  db.collection("prayers").onSnapshot(snapshot => {
+    dbPrayers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    updateLeaderboard();
+  });
+
+  db.collection("settings").doc("config").onSnapshot(doc => {
+    if (doc.exists && doc.data().adminPass) {
+      adminPassword = doc.data().adminPass;
+    } else {
+      db.collection("settings").doc("config").set({ adminPass: "772625" }, { merge: true });
+      adminPassword = "772625";
+    }
+  });
+
+  // Image Processing Helper (Compress to lightweight Base64)
+  function compressImage(file, maxWidth = 250, maxHeight = 250, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+      if (!file) return resolve('');
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = event => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = error => reject(error);
+      };
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  function previewSelectedImage(input, previewId) {
+    const preview = document.getElementById(previewId);
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      preview.style.display = 'none';
     }
   }
-  function setDB(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
-
-  updateLeaderboard();
 
   function toggleAuthAction() {
     if (currentUser) {
-      currentUser = null;
-      document.getElementById('authBtn').innerText = 'ലോഗിൻ';
-      document.getElementById('publicView').style.display = 'block';
-      document.getElementById('teacherView').style.display = 'none';
-      document.getElementById('adminView').style.display = 'none';
+      logout();
     } else {
       openLoginModal();
     }
@@ -466,8 +597,7 @@
   function loadTeacherSelect() {
     const s = document.getElementById('loginTeacherSelect');
     s.innerHTML = '<option value="">-- അധ്യാപകനെ തിരഞ്ഞെടുക്കുക --</option>';
-    const teachers = getDB('mum_teachers');
-    teachers.forEach(t => {
+    dbTeachers.forEach(t => {
       const clsList = Array.isArray(t.classes) ? t.classes.join(', ') : (t.class || '');
       s.innerHTML += `<option value="${t.id}">${t.name} (ക്ലാസ്: ${clsList})</option>`;
     });
@@ -478,7 +608,7 @@
     const pass = document.getElementById('loginPass').value.trim();
 
     if (role === 'admin') {
-      if (pass === localStorage.getItem('mum_admin_pass')) {
+      if (pass === adminPassword) {
         currentUser = { role: 'admin' };
         document.getElementById('authBtn').innerText = 'പബ്ലിക് സൈറ്റ്';
         document.getElementById('publicView').style.display = 'none';
@@ -490,8 +620,7 @@
       }
     } else {
       const tId = document.getElementById('loginTeacherSelect').value;
-      const teachers = getDB('mum_teachers');
-      const t = teachers.find(x => x.id === tId && x.pass === pass);
+      const t = dbTeachers.find(x => x.id === tId && x.pass === pass);
       if (t) {
         currentUser = { role: 'teacher', data: t };
         const classesArr = Array.isArray(t.classes) ? t.classes : (t.class ? [t.class] : ['1']);
@@ -502,6 +631,14 @@
         document.getElementById('teacherNameDisplay').innerText = t.name;
         document.getElementById('tClassListDisplay').innerText = `ചുമതലയുള്ള ക്ലാസുകൾ: ${classesArr.join(', ')}`;
         
+        const profileImg = document.getElementById('tProfileImg');
+        if (t.photo) {
+          profileImg.src = t.photo;
+          profileImg.style.display = 'inline-block';
+        } else {
+          profileImg.style.display = 'none';
+        }
+
         const clsOpts = classesArr.map(c => `<option value="${c}">ക്ലാസ് ${c}</option>`).join('');
         document.getElementById('tRegClass').innerHTML = clsOpts;
         document.getElementById('tFilterClass').innerHTML = clsOpts;
@@ -522,34 +659,46 @@
     document.getElementById('adminView').style.display = 'none';
   }
 
-  // Teacher actions
-  function saveStudentByTeacher() {
+  // Teacher Actions
+  async function saveStudentByTeacher() {
     const cls = document.getElementById('tRegClass').value;
     const adm = document.getElementById('tRegAdm').value.trim();
     const name = document.getElementById('tRegName').value.trim();
     const gender = document.getElementById('tRegGender').value;
+    const photoFile = document.getElementById('tRegPhoto').files[0];
 
     if (!adm || !name) return alert("അഡ്മിഷൻ നമ്പറും പേരും നൽകുക!");
+    if (dbStudents.some(s => s.adm === adm)) return alert("ഈ അഡ്മിഷൻ നമ്പർ നിലവിലുണ്ട്!");
 
-    let students = getDB('mum_students');
-    if (students.some(s => s.adm === adm)) return alert("ഈ അഡ്മിഷൻ നമ്പർ നിലവിലുണ്ട്!");
-
-    students.push({ id: Date.now().toString(), adm, name, class: cls, gender });
-    setDB('mum_students', students);
-    alert("വിദ്യാർത്ഥിയെ ചേർത്തു!");
-    document.getElementById('tRegAdm').value = '';
-    document.getElementById('tRegName').value = '';
-    renderTeacherStudentList();
+    try {
+      const photoBase64 = await compressImage(photoFile);
+      await db.collection("students").add({
+        adm,
+        name,
+        class: cls,
+        gender,
+        photo: photoBase64,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      alert("വിദ്യാർത്ഥിയെ ചേർത്തു!");
+      document.getElementById('tRegAdm').value = '';
+      document.getElementById('tRegName').value = '';
+      document.getElementById('tRegPhoto').value = '';
+      document.getElementById('tPhotoPreview').style.display = 'none';
+    } catch (e) {
+      alert("സേവ് ചെയ്യാൻ സാധിച്ചില്ല: " + e.message);
+    }
   }
 
   function renderTeacherStudentList() {
     const cls = document.getElementById('tFilterClass').value;
-    const students = getDB('mum_students').filter(s => s.class === cls);
+    const students = dbStudents.filter(s => s.class === cls);
     const tbody = document.getElementById('tStudentTable');
     tbody.innerHTML = '';
     students.forEach(s => {
       tbody.innerHTML += `
         <tr>
+          <td><img src="${s.photo || defaultAvatar}" class="avatar-sm" style="margin:0 auto;"></td>
           <td>${s.adm}</td>
           <td style="text-align:left;">${s.name} (${s.gender === 'Female' ? 'F' : 'M'})</td>
           <td><button class="btn-del" onclick="deleteStudent('${s.id}')">ഡിലീറ്റ്</button></td>
@@ -558,39 +707,50 @@
     });
   }
 
-  function deleteStudent(id) {
-    if (confirm("ഈ വിദ്യാർത്ഥിയെയും മുഴുവൻ നിസ്കാര ഡാറ്റയും ഡിലീറ്റ് ചെയ്യണോ?")) {
-      setDB('mum_students', getDB('mum_students').filter(s => s.id !== id));
-      setDB('mum_prayers', getDB('mum_prayers').filter(p => p.studentId !== id));
-      if (currentUser?.role === 'teacher') renderTeacherStudentList();
+  async function deleteStudent(id) {
+    if (confirm("ഈ വിദ്യാർത്ഥിയെയും അനുബന്ധ നിസ്കാര ഡാറ്റയും ഡിലീറ്റ് ചെയ്യണോ?")) {
+      try {
+        await db.collection("students").doc(id).delete();
+        const pDocs = await db.collection("prayers").where("studentId", "==", id).get();
+        pDocs.forEach(d => d.ref.delete());
+      } catch (e) {
+        alert("ഡിലീറ്റ് ചെയ്യാൻ സാധിച്ചില്ല: " + e.message);
+      }
     }
   }
 
-  // Admin actions
-  function saveTeacherByAdmin() {
+  // Admin Actions
+  async function saveTeacherByAdmin() {
     const name = document.getElementById('admTName').value.trim();
     const pass = document.getElementById('admTPass').value.trim();
     const clsInput = document.getElementById('admTClasses').value.trim();
+    const photoFile = document.getElementById('admTPhoto').files[0];
+
     if (!name || !pass || !clsInput) return alert("വിവരങ്ങൾ പൂർണ്ണമായി നൽകുക!");
 
     const classes = clsInput.split(',').map(c => c.trim()).filter(Boolean);
-    let teachers = getDB('mum_teachers');
-    teachers.push({ id: Date.now().toString(), name, pass, classes });
-    setDB('mum_teachers', teachers);
-    alert("അധ്യാപകനെ ചേർത്തു!");
-    document.getElementById('admTName').value = '';
-    document.getElementById('admTPass').value = '';
-    document.getElementById('admTClasses').value = '';
-    renderAdminTeachers();
+    try {
+      const photoBase64 = await compressImage(photoFile);
+      await db.collection("teachers").add({ name, pass, classes, photo: photoBase64 });
+      alert("അധ്യാപകനെ ചേർത്തു!");
+      document.getElementById('admTName').value = '';
+      document.getElementById('admTPass').value = '';
+      document.getElementById('admTClasses').value = '';
+      document.getElementById('admTPhoto').value = '';
+      document.getElementById('admPhotoPreview').style.display = 'none';
+    } catch (e) {
+      alert("സേവ് ചെയ്യാൻ സാധിച്ചില്ല: " + e.message);
+    }
   }
 
   function renderAdminTeachers() {
     const tbody = document.getElementById('admTeacherTable');
     tbody.innerHTML = '';
-    getDB('mum_teachers').forEach(t => {
+    dbTeachers.forEach(t => {
       const clsList = Array.isArray(t.classes) ? t.classes.join(', ') : (t.class || '');
       tbody.innerHTML += `
         <tr>
+          <td><img src="${t.photo || defaultAvatar}" class="avatar-sm" style="margin:0 auto;"></td>
           <td>${t.name}</td>
           <td>${clsList}</td>
           <td>${t.pass}</td>
@@ -600,31 +760,41 @@
     });
   }
 
-  function deleteTeacher(id) {
+  async function deleteTeacher(id) {
     if (confirm("അധ്യാപക അക്കൗണ്ട് ഒഴിവാക്കണോ?")) {
-      setDB('mum_teachers', getDB('mum_teachers').filter(t => t.id !== id));
-      renderAdminTeachers();
+      try {
+        await db.collection("teachers").doc(id).delete();
+      } catch (e) {
+        alert("ഡിലീറ്റ് ചെയ്യാൻ സാധിച്ചില്ല: " + e.message);
+      }
     }
   }
 
-  function changeAdminPass() {
+  async function changeAdminPass() {
     const oldP = document.getElementById('admOldPass').value;
     const newP = document.getElementById('admNewPass').value;
-    if (oldP !== localStorage.getItem('mum_admin_pass')) return alert("പഴയ പാസ്‌വേഡ് തെറ്റാണ്!");
+    if (oldP !== adminPassword) return alert("പഴയ പാസ്‌വേഡ് തെറ്റാണ്!");
     if (!newP) return alert("പുതിയ പാസ്‌വേഡ് നൽകുക!");
-    localStorage.setItem('mum_admin_pass', newP);
-    alert("അഡ്മിൻ പാസ്‌വേഡ് മാറ്റി!");
+
+    try {
+      await db.collection("settings").doc("config").set({ adminPass: newP }, { merge: true });
+      alert("അഡ്മിൻ പാസ്‌വേഡ് മാറ്റി!");
+      document.getElementById('admOldPass').value = '';
+      document.getElementById('admNewPass').value = '';
+    } catch (e) {
+      alert("മാറ്റം വരുത്താൻ സാധിച്ചില്ല: " + e.message);
+    }
   }
 
-  // Auto Search Datalists for Students
+  // Auto Search Datalists
   function populateDatalists() {
-    const students = getDB('mum_students');
     const admDl = document.getElementById('admDatalist');
     const nameDl = document.getElementById('nameDatalist');
+    if (!admDl || !nameDl) return;
     admDl.innerHTML = '';
     nameDl.innerHTML = '';
 
-    students.forEach(s => {
+    dbStudents.forEach(s => {
       admDl.innerHTML += `<option value="${s.adm}">${s.name} (ക്ലാസ് ${s.class})</option>`;
       nameDl.innerHTML += `<option value="${s.name}">${s.adm} (ക്ലാസ് ${s.class})</option>`;
     });
@@ -641,7 +811,7 @@
 
   function onAdmChange() {
     const adm = document.getElementById('pAdmInput').value.trim();
-    const student = getDB('mum_students').find(s => s.adm.toLowerCase() === adm.toLowerCase());
+    const student = dbStudents.find(s => s.adm.toLowerCase() === adm.toLowerCase());
     if (student) {
       document.getElementById('pNameInput').value = student.name;
       loadPrayerFormForStudent(student);
@@ -650,7 +820,7 @@
 
   function onNameChange() {
     const name = document.getElementById('pNameInput').value.trim();
-    const student = getDB('mum_students').find(s => s.name.toLowerCase() === name.toLowerCase());
+    const student = dbStudents.find(s => s.name.toLowerCase() === name.toLowerCase());
     if (student) {
       document.getElementById('pAdmInput').value = student.adm;
       loadPrayerFormForStudent(student);
@@ -658,8 +828,7 @@
   }
 
   function loadPrayerFormForStudent(student) {
-    const entries = getDB('mum_prayers');
-    const existing = entries.find(e => e.studentId === student.id && e.date === todayStr);
+    const existing = dbPrayers.find(e => e.studentId === student.id && e.date === todayStr);
     if (existing) {
       alert("ഈ വിദ്യാർത്ഥി ഇന്ന് ഇതിനകം നിസ്കാരം രേഖപ്പെടുത്തിയിട്ടുണ്ട്!");
       closeModal('prayerModal');
@@ -667,8 +836,12 @@
     }
 
     activeStudentForEntry = student;
-    document.getElementById('pStudentInfo').style.display = 'block';
-    document.getElementById('pStudentInfo').innerHTML = `<b>${student.name}</b> (Adm: ${student.adm} | ക്ലാസ്: ${student.class})`;
+    const pInfo = document.getElementById('pStudentInfo');
+    pInfo.style.display = 'flex';
+    pInfo.innerHTML = `
+      <img src="${student.photo || defaultAvatar}" class="avatar-sm">
+      <div><b>${student.name}</b> (Adm: ${student.adm} | ക്ലാസ്: ${student.class})</div>
+    `;
     
     const prayers = ['സുബ്ഹ്', 'ളുഹ്ർ', 'അസ്വർ', 'മഗ്‌രിബ്', 'ഇശാ'];
     const pKeys = ['subh', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -693,7 +866,7 @@
     document.getElementById('prayerCardsContainer').style.display = 'block';
   }
 
-  function saveDailyPrayer() {
+  async function saveDailyPrayer() {
     if (!activeStudentForEntry) return;
     const entry = {
       date: todayStr,
@@ -702,30 +875,35 @@
       dhuhr: document.querySelector('input[name="dhuhr"]:checked').value,
       asr: document.querySelector('input[name="asr"]:checked').value,
       maghrib: document.querySelector('input[name="maghrib"]:checked').value,
-      isha: document.querySelector('input[name="isha"]:checked').value
+      isha: document.querySelector('input[name="isha"]:checked').value,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
     };
-    let entries = getDB('mum_prayers');
-    entries.push(entry);
-    setDB('mum_prayers', entries);
-    alert("വിജയകരമായി രേഖപ്പെടുത്തി! അല്ലാഹു സ്വീകരിക്കട്ടെ.");
-    closeModal('prayerModal');
-    updateLeaderboard();
+
+    try {
+      await db.collection("prayers").add(entry);
+      alert("വിജയകരമായി രേഖപ്പെടുത്തി! അല്ലാഹു സ്വീകരിക്കട്ടെ.");
+      closeModal('prayerModal');
+    } catch (e) {
+      alert("ഡാറ്റ സേവ് ചെയ്യാൻ കഴിഞ്ഞില്ല: " + e.message);
+    }
   }
 
   function updateLeaderboard() {
-    const entries = getDB('mum_prayers').filter(e => e.date === todayStr);
-    const students = getDB('mum_students');
-    if (entries.length === 0) return;
+    const entries = dbPrayers.filter(e => e.date === todayStr);
+    if (entries.length === 0) {
+      document.getElementById('leaderboardList').innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center;">വിവരങ്ങൾ ലഭ്യമല്ല</p>';
+      return;
+    }
 
     const scores = entries.map(e => {
-      const s = students.find(x => x.id === e.studentId);
+      const s = dbStudents.find(x => x.id === e.studentId);
       if (!s) return null;
       let jam = 0, ada = 0;
       [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
         if (st === 'ജമാഅത്ത്') jam++;
         if (st === 'അദാഅ്') ada++;
       });
-      return { name: s.name, class: s.class, jam, ada, totalScore: (jam * 2) + ada };
+      return { name: s.name, class: s.class, photo: s.photo, jam, ada, totalScore: (jam * 2) + ada };
     }).filter(Boolean);
 
     scores.sort((a,b) => b.totalScore - a.totalScore || b.jam - a.jam);
@@ -736,6 +914,7 @@
         <div class="rank-item">
           <div style="display:flex; align-items:center;">
             <div class="rank-badge rank-${idx+1}">${idx+1}</div>
+            <img src="${item.photo || defaultAvatar}" class="avatar-sm">
             <div>
               <b>${item.name}</b> (ക്ലാസ് ${item.class})<br>
               <span style="font-size:10px; color:var(--text-muted);">ജമാഅത്ത്: ${item.jam} | അദാഅ്: ${item.ada}</span>
@@ -750,14 +929,14 @@
 
   function searchStudentHistory() {
     const term = document.getElementById('srchAdm').value.trim().toLowerCase();
-    const student = getDB('mum_students').find(s => s.adm.toLowerCase() === term || s.name.toLowerCase() === term);
+    const student = dbStudents.find(s => s.adm.toLowerCase() === term || s.name.toLowerCase() === term);
     const div = document.getElementById('srchResult');
     if (!student) {
       div.innerHTML = '<p style="font-size:12px; color:red;">വിദ്യാർത്ഥിയെ കണ്ടെത്തിയില്ല.</p>';
       return;
     }
 
-    const entries = getDB('mum_prayers').filter(e => e.studentId === student.id);
+    const entries = dbPrayers.filter(e => e.studentId === student.id);
     let totals = { jam: 0, ada: 0, qad: 0, nil: 0, exc: 0 };
     entries.forEach(e => {
       [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
@@ -770,8 +949,14 @@
     });
 
     div.innerHTML = `
-      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:10px; font-size:12px;">
-        <div style="font-weight:bold; font-size:14px; color:var(--primary);">${student.name} (Adm: ${student.adm} | ക്ലാസ്: ${student.class})</div>
+      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:12px; font-size:12px;">
+        <div style="display:flex; align-items:center; margin-bottom:10px;">
+          <img src="${student.photo || defaultAvatar}" class="avatar-lg">
+          <div>
+            <div style="font-weight:bold; font-size:14px; color:var(--primary);">${student.name}</div>
+            <div style="color:var(--text-muted);">Adm: ${student.adm} | ക്ലാസ്: ${student.class}</div>
+          </div>
+        </div>
         <p style="margin:4px 0 8px;">ആകെ രേഖപ്പെടുത്തിയ ദിവസങ്ങൾ: ${entries.length}</p>
         <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; text-align:center;">
           <div style="background:#d1fae5; padding:6px; border-radius:6px;">ജമാഅത്ത്: <b>${totals.jam}</b></div>
@@ -790,9 +975,9 @@
 
     if (!month) return alert("മാസം തിരഞ്ഞെടുക്കുക!");
 
-    let students = getDB('mum_students');
+    let students = dbStudents;
     if (cls !== 'ALL') students = students.filter(s => s.class === cls);
-    const allEntries = getDB('mum_prayers').filter(e => e.date.startsWith(month));
+    const allEntries = dbPrayers.filter(e => e.date && e.date.startsWith(month));
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
