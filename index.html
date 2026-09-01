@@ -4,12 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MUM - Prayer Tracker</title>
+  
   <meta name="theme-color" content="#064e3b">
-  <!-- jsPDF & AutoTable for PDF Generation -->
+  <meta name="apple-mobile-web-app-title" content="MUM">
+  <meta name="application-name" content="MUM">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='mumGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23047857;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23064e3b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23mumGrad)' stroke='%2310b981' stroke-width='16'/%3E%3Ctext x='50%25' y='54%25' font-family='system-ui, -apple-system, sans-serif' font-weight='900' font-size='140' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='mumGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23047857;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23064e3b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23mumGrad)' stroke='%2310b981' stroke-width='16'/%3E%3Ctext x='50%25' y='54%25' font-family='system-ui, -apple-system, sans-serif' font-weight='900' font-size='140' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3C/svg%3E">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
-  <!-- Firebase App & Cloud Firestore SDKs (v8) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -35,7 +40,7 @@
     }
     .app-shell {
       width: 100%;
-      max-width: 540px;
+      max-width: 580px;
       background: var(--bg);
       border-radius: 24px;
       overflow: hidden;
@@ -222,7 +227,6 @@
       z-index: 9999;
     }
 
-    /* Avatars & Photo Upload */
     .avatar-sm {
       width: 34px;
       height: 34px;
@@ -252,19 +256,30 @@
       display: none;
       margin-top: 6px;
     }
+    .badge-status {
+      display: inline-block;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: bold;
+    }
+    .st-jam { background: #d1fae5; color: #047857; }
+    .st-ada { background: #dcfce7; color: #15803d; }
+    .st-qad { background: #fef3c7; color: #b45309; }
+    .st-nil { background: #fee2e2; color: #b91c1c; }
+    .st-exc { background: #f3e8ff; color: #6b21a8; }
+    .st-na { background: #f1f5f9; color: #64748b; }
   </style>
 </head>
 <body>
 
 <div class="app-shell">
-  <!-- Top Navigation -->
   <div class="top-bar">
     <h3 id="appHeaderTitle">MUM TRACKER</h3>
     <button class="btn-top" id="authBtn" onclick="toggleAuthAction()">ലോഗിൻ</button>
   </div>
 
   <div class="main-body" id="mainBody">
-    <!-- PUBLIC VIEW -->
     <div id="publicView">
       <div class="hero">
         <div class="arabic-greeting">السلام عليكم</div>
@@ -272,12 +287,10 @@
         <p>നിസ്കാര നിരീക്ഷണ പോർട്ടൽ</p>
       </div>
 
-      <!-- Pulsing Action Button -->
       <button class="pulse-btn" onclick="openPrayerEntryModal()">
         <span>🕌</span> എന്റെ ഇന്നത്തെ നിസ്കാരം
       </button>
 
-      <!-- Leaderboard -->
       <div class="card">
         <div class="card-title">
           <span>🏆 ഇന്നത്തെ ടോപ്പ് വിദ്യാർത്ഥികൾ</span>
@@ -288,7 +301,6 @@
         </div>
       </div>
 
-      <!-- Search Record -->
       <div class="card">
         <div class="card-title">🔍 സ്വന്തം നിസ്കാര വിവരങ്ങൾ പരിശോധിക്കുക</div>
         <div class="form-group">
@@ -305,7 +317,6 @@
       </div>
     </div>
 
-    <!-- TEACHER PORTAL -->
     <div id="teacherView" style="display: none;">
       <div class="card">
         <div class="card-title">
@@ -316,6 +327,30 @@
           <button class="btn-del" onclick="logout()">Logout</button>
         </div>
         <p style="font-size:12px; color:var(--text-muted);" id="tClassListDisplay"></p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📅 ദിവസേനയുള്ള നിസ്കാര പരിശോധന</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label>ക്ലാസ്</label>
+            <select id="tDailyClass" onchange="renderDailyTeacherView()"></select>
+          </div>
+          <div class="form-group">
+            <label>തീയതി</label>
+            <input type="date" id="tDailyDate" onchange="renderDailyTeacherView()">
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Adm</th><th>പേര്</th><th>സുബ്ഹ്</th><th>ളുഹ്ർ</th><th>അസ്വർ</th><th>മഗ്‌രിബ്</th><th>ഇശാ</th>
+              </tr>
+            </thead>
+            <tbody id="tDailyPrayerTable"></tbody>
+          </table>
+        </div>
       </div>
 
       <div class="card">
@@ -337,7 +372,6 @@
         <button class="btn-main" onclick="saveStudentByTeacher()">സേവ് ചെയ്യുക</button>
       </div>
 
-      <!-- Manage Students -->
       <div class="card">
         <div class="card-title">📝 വിദ്യാർത്ഥി മാനേജ്മെന്റ്</div>
         <div class="form-group">
@@ -352,16 +386,17 @@
         </div>
       </div>
 
-      <!-- Reports & PDF -->
       <div class="card">
-        <div class="card-title">📊 പ്രതിമാസ റിപ്പോർട്ട് & PDF</div>
+        <div class="card-title">📊 പ്രതിമാസ റിപ്പോർട്ട് (Total & PDF)</div>
         <div class="form-group"><label>ക്ലാസ്</label><select id="tRepClass"></select></div>
         <div class="form-group"><label>മാസം</label><input type="month" id="tRepMonth"></div>
-        <button class="btn-main" style="background:#0284c7;" onclick="downloadClassPDF('teacher')">📄 PDF ഡൗൺലോഡ് ചെയ്യുക</button>
+        <div style="display:flex; gap: 8px;">
+          <button class="btn-main" style="background:#0284c7;" onclick="downloadClassPDF('teacher')">📄 PDF ഡൗൺലോഡ്</button>
+          <button class="btn-main" style="background:#047857;" onclick="printClassReport('teacher')">🖨️ പ്രിന്റ് ചെയ്യുക</button>
+        </div>
       </div>
     </div>
 
-    <!-- ADMIN PORTAL -->
     <div id="adminView" style="display: none;">
       <div class="card">
         <div class="card-title">
@@ -370,7 +405,33 @@
         </div>
       </div>
 
-      <!-- Teacher Management -->
+      <div class="card">
+        <div class="card-title">📅 സ്കൂൾ നിസ്കാര ഡെയ്‌ലി മോണിറ്ററിംഗ്</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label>ക്ലാസ്</label>
+            <select id="admDailyClass" onchange="renderDailyAdminView()">
+              <option value="ALL">എല്ലാ ക്ലാസുകളും</option>
+              <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">ക്ലാസ് ${i}</option>`);</script>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>തീയതി</label>
+            <input type="date" id="admDailyDate" onchange="renderDailyAdminView()">
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>ക്ലാസ്</th><th>Adm</th><th>പേര്</th><th>സുബ്ഹ്</th><th>ളുഹ്ർ</th><th>അസ്വർ</th><th>മഗ്‌രിബ്</th><th>ഇശാ</th>
+              </tr>
+            </thead>
+            <tbody id="admDailyPrayerTable"></tbody>
+          </table>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-title">👨‍🏫 അധ്യാപകരെ ചേർക്കുക / മാറ്റുക</div>
         <div class="form-group"><label>പേര്</label><input type="text" id="admTName"></div>
@@ -391,9 +452,8 @@
         </div>
       </div>
 
-      <!-- Admin PDF & Stats -->
       <div class="card">
-        <div class="card-title">📊 സ്കൂൾ റിപ്പോർട്ട് & PDF</div>
+        <div class="card-title">📊 സ്കൂൾ റിപ്പോർട്ട് (Total & PDF)</div>
         <div class="form-group"><label>ക്ലാസ്</label>
           <select id="admRepClass">
             <option value="ALL">എല്ലാ ക്ലാസുകളും</option>
@@ -401,10 +461,12 @@
           </select>
         </div>
         <div class="form-group"><label>മാസം</label><input type="month" id="admRepMonth"></div>
-        <button class="btn-main" style="background:#0284c7;" onclick="downloadClassPDF('admin')">📄 PDF ഡൗൺലോഡ് ചെയ്യുക</button>
+        <div style="display:flex; gap: 8px;">
+          <button class="btn-main" style="background:#0284c7;" onclick="downloadClassPDF('admin')">📄 PDF ഡൗൺലോഡ്</button>
+          <button class="btn-main" style="background:#047857;" onclick="printClassReport('admin')">🖨️ പ്രിന്റ് ചെയ്യുക</button>
+        </div>
       </div>
 
-      <!-- Security -->
       <div class="card">
         <div class="card-title">🔑 അഡ്മിൻ പാസ്‌വേഡ് മാറ്റുക</div>
         <div class="form-group"><input type="password" id="admOldPass" placeholder="പഴയ പാസ്‌വേഡ്"></div>
@@ -415,7 +477,6 @@
   </div>
 </div>
 
-<!-- MODAL: LOGIN -->
 <div id="loginModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:360px; border-radius:18px; padding:20px; text-align:center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
     <h3 style="margin-bottom:14px; color:var(--primary);">പോർട്ടൽ ലോഗിൻ</h3>
@@ -436,7 +497,6 @@
   </div>
 </div>
 
-<!-- MODAL: DAILY PRAYER ENTRY -->
 <div id="prayerModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:440px; border-radius:18px; padding:20px; max-height:90vh; overflow-y:auto;">
     <h3 style="color:var(--primary); margin-bottom:12px;">ഇന്നത്തെ നിസ്കാരം രേഖപ്പെടുത്തുക</h3>
@@ -491,6 +551,8 @@
   const currMonth = todayStr.substring(0, 7);
   document.getElementById('tRepMonth').value = currMonth;
   document.getElementById('admRepMonth').value = currMonth;
+  document.getElementById('tDailyDate').value = todayStr;
+  document.getElementById('admDailyDate').value = todayStr;
 
   let currentUser = null;
   let activeStudentForEntry = null;
@@ -499,7 +561,11 @@
   db.collection("students").onSnapshot(snapshot => {
     dbStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     populateDatalists();
-    if (currentUser?.role === 'teacher') renderTeacherStudentList();
+    if (currentUser?.role === 'teacher') {
+      renderTeacherStudentList();
+      renderDailyTeacherView();
+    }
+    if (currentUser?.role === 'admin') renderDailyAdminView();
   });
 
   db.collection("teachers").onSnapshot(snapshot => {
@@ -510,6 +576,8 @@
   db.collection("prayers").onSnapshot(snapshot => {
     dbPrayers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     updateLeaderboard();
+    if (currentUser?.role === 'teacher') renderDailyTeacherView();
+    if (currentUser?.role === 'admin') renderDailyAdminView();
   });
 
   db.collection("settings").doc("config").onSnapshot(doc => {
@@ -521,7 +589,7 @@
     }
   });
 
-  // Image Processing Helper (Compress to lightweight Base64)
+  // Image Processing Helper
   function compressImage(file, maxWidth = 250, maxHeight = 250, quality = 0.7) {
     return new Promise((resolve, reject) => {
       if (!file) return resolve('');
@@ -614,6 +682,7 @@
         document.getElementById('publicView').style.display = 'none';
         document.getElementById('adminView').style.display = 'block';
         renderAdminTeachers();
+        renderDailyAdminView();
         closeModal('loginModal');
       } else {
         alert("അഡ്മിൻ പാസ്‌വേഡ് തെറ്റാണ്!");
@@ -643,7 +712,10 @@
         document.getElementById('tRegClass').innerHTML = clsOpts;
         document.getElementById('tFilterClass').innerHTML = clsOpts;
         document.getElementById('tRepClass').innerHTML = clsOpts;
+        document.getElementById('tDailyClass').innerHTML = clsOpts;
+
         renderTeacherStudentList();
+        renderDailyTeacherView();
         closeModal('loginModal');
       } else {
         alert("അധ്യാപകനെയോ പാസ്‌വേഡോ ശരിയായി നൽകുക!");
@@ -657,6 +729,80 @@
     document.getElementById('publicView').style.display = 'block';
     document.getElementById('teacherView').style.display = 'none';
     document.getElementById('adminView').style.display = 'none';
+  }
+
+  // --- DAILY INSPECTION VIEWS ---
+  function getBadgeHTML(st) {
+    if (!st) return `<span class="badge-status st-na">-</span>`;
+    if (st === 'ജമാഅത്ത്') return `<span class="badge-status st-jam">ജമാ</span>`;
+    if (st === 'അദാഅ്') return `<span class="badge-status st-ada">അദാ</span>`;
+    if (st === 'ഖളാഅ്') return `<span class="badge-status st-qad">ഖളാ</span>`;
+    if (st === 'ഇളവ്') return `<span class="badge-status st-exc">ഇളവ്</span>`;
+    return `<span class="badge-status st-nil">ഇല്ല</span>`;
+  }
+
+  function renderDailyTeacherView() {
+    const cls = document.getElementById('tDailyClass').value;
+    const date = document.getElementById('tDailyDate').value;
+    if (!cls || !date) return;
+
+    const students = dbStudents.filter(s => s.class === cls);
+    const dayPrayers = dbPrayers.filter(p => p.date === date);
+    const tbody = document.getElementById('tDailyPrayerTable');
+    tbody.innerHTML = '';
+
+    if (students.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="color:var(--text-muted);">ഈ ക്ലാസിൽ കുട്ടികളില്ല</td></tr>`;
+      return;
+    }
+
+    students.forEach(s => {
+      const rec = dayPrayers.find(p => p.studentId === s.id);
+      tbody.innerHTML += `
+        <tr>
+          <td><b>${s.adm}</b></td>
+          <td style="text-align:left;">${s.name}</td>
+          <td>${getBadgeHTML(rec?.subh)}</td>
+          <td>${getBadgeHTML(rec?.dhuhr)}</td>
+          <td>${getBadgeHTML(rec?.asr)}</td>
+          <td>${getBadgeHTML(rec?.maghrib)}</td>
+          <td>${getBadgeHTML(rec?.isha)}</td>
+        </tr>
+      `;
+    });
+  }
+
+  function renderDailyAdminView() {
+    const cls = document.getElementById('admDailyClass').value;
+    const date = document.getElementById('admDailyDate').value;
+    if (!date) return;
+
+    let students = dbStudents;
+    if (cls !== 'ALL') students = students.filter(s => s.class === cls);
+    const dayPrayers = dbPrayers.filter(p => p.date === date);
+    const tbody = document.getElementById('admDailyPrayerTable');
+    tbody.innerHTML = '';
+
+    if (students.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="color:var(--text-muted);">കുട്ടികളില്ല</td></tr>`;
+      return;
+    }
+
+    students.forEach(s => {
+      const rec = dayPrayers.find(p => p.studentId === s.id);
+      tbody.innerHTML += `
+        <tr>
+          <td>${s.class}</td>
+          <td><b>${s.adm}</b></td>
+          <td style="text-align:left;">${s.name}</td>
+          <td>${getBadgeHTML(rec?.subh)}</td>
+          <td>${getBadgeHTML(rec?.dhuhr)}</td>
+          <td>${getBadgeHTML(rec?.asr)}</td>
+          <td>${getBadgeHTML(rec?.maghrib)}</td>
+          <td>${getBadgeHTML(rec?.isha)}</td>
+        </tr>
+      `;
+    });
   }
 
   // Teacher Actions
@@ -948,6 +1094,8 @@
       });
     });
 
+    const totalPrayed = totals.jam + totals.ada + totals.qad;
+
     div.innerHTML = `
       <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:12px; font-size:12px;">
         <div style="display:flex; align-items:center; margin-bottom:10px;">
@@ -957,7 +1105,7 @@
             <div style="color:var(--text-muted);">Adm: ${student.adm} | ക്ലാസ്: ${student.class}</div>
           </div>
         </div>
-        <p style="margin:4px 0 8px;">ആകെ രേഖപ്പെടുത്തിയ ദിവസങ്ങൾ: ${entries.length}</p>
+        <p style="margin:4px 0 8px;">രേഖപ്പെടുത്തിയ ദിവസങ്ങൾ: <b>${entries.length}</b> | ആകെ നിസ്കരിച്ചത്: <b style="color:var(--primary);">${totalPrayed} വഖ്ത്</b></p>
         <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; text-align:center;">
           <div style="background:#d1fae5; padding:6px; border-radius:6px;">ജമാഅത്ത്: <b>${totals.jam}</b></div>
           <div style="background:#dcfce7; padding:6px; border-radius:6px;">അദാഅ്: <b>${totals.ada}</b></div>
@@ -969,23 +1117,19 @@
     `;
   }
 
-  function downloadClassPDF(source) {
+  // --- REPORT GENERATOR HELPER ---
+  function getProcessedMonthlyData(source) {
     const cls = source === 'teacher' ? document.getElementById('tRepClass').value : document.getElementById('admRepClass').value;
     const month = source === 'teacher' ? document.getElementById('tRepMonth').value : document.getElementById('admRepMonth').value;
 
-    if (!month) return alert("മാസം തിരഞ്ഞെടുക്കുക!");
+    if (!month) {
+      alert("മാസം തിരഞ്ഞെടുക്കുക!");
+      return null;
+    }
 
     let students = dbStudents;
     if (cls !== 'ALL') students = students.filter(s => s.class === cls);
     const allEntries = dbPrayers.filter(e => e.date && e.date.startsWith(month));
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    doc.setFontSize(14);
-    doc.text("MALHARUL ULOOM MADRASA KALLOOR", 14, 15);
-    doc.setFontSize(10);
-    doc.text(`Prayer Report - Class: ${cls} | Month: ${month}`, 14, 22);
 
     const tableData = [];
     students.forEach(s => {
@@ -1000,18 +1144,131 @@
           else nil++;
         });
       });
-      tableData.push([s.adm, s.name, `Class ${s.class}`, jam, ada, qad, nil, exc]);
+      const totalScore = (jam * 2) + ada;
+      tableData.push({
+        adm: s.adm,
+        name: s.name,
+        cls: s.class,
+        days: sEntries.length,
+        jam, ada, qad, nil, exc,
+        totalPrayed: (jam + ada + qad),
+        totalScore
+      });
     });
+
+    return { cls, month, tableData };
+  }
+
+  // PDF Export
+  function downloadClassPDF(source) {
+    const data = getProcessedMonthlyData(source);
+    if (!data) return;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(14);
+    doc.text("MALHARUL ULOOM MADRASA KALLOOR", 14, 15);
+    doc.setFontSize(10);
+    doc.text(`Prayer Monthly Report - Class: ${data.cls} | Month: ${data.month}`, 14, 22);
+
+    const rows = data.tableData.map(r => [
+      r.adm, r.name, `Cls ${r.cls}`, r.days, r.jam, r.ada, r.qad, r.nil, r.exc, r.totalPrayed, r.totalScore
+    ]);
 
     doc.autoTable({
-      startY: 28,
-      head: [['Adm', 'Name', 'Class', 'Jamaat', 'Adaa', 'Qada', 'Missed', 'Excuse']],
-      body: tableData,
+      startY: 26,
+      head: [['Adm', 'Name', 'Class', 'Days', 'Jam', 'Ada', 'Qad', 'Nil', 'Exc', 'Total', 'Score']],
+      body: rows,
       theme: 'grid',
-      headStyles: { fillColor: [4, 120, 87] }
+      headStyles: { fillColor: [4, 120, 87] },
+      styles: { fontSize: 8, cellPadding: 2, halign: 'center' },
+      columnStyles: { 1: { halign: 'left' } }
     });
 
-    doc.save(`MUM_Prayer_Report_${cls}_${month}.pdf`);
+    doc.save(`MUM_Report_${data.cls}_${data.month}.pdf`);
+  }
+
+  // Print Window & Preview
+  function printClassReport(source) {
+    const data = getProcessedMonthlyData(source);
+    if (!data) return;
+
+    let rowsHtml = '';
+    data.tableData.forEach((r, idx) => {
+      rowsHtml += `
+        <tr>
+          <td>${idx + 1}</td>
+          <td><b>${r.adm}</b></td>
+          <td style="text-align:left;">${r.name}</td>
+          <td>Class ${r.cls}</td>
+          <td>${r.days}</td>
+          <td>${r.jam}</td>
+          <td>${r.ada}</td>
+          <td>${r.qad}</td>
+          <td>${r.nil}</td>
+          <td>${r.exc}</td>
+          <td><b>${r.totalPrayed}</b></td>
+          <td style="font-weight:bold; color:#047857;">${r.totalScore}</td>
+        </tr>
+      `;
+    });
+
+    const printWin = window.open('', '', 'width=900,height=700');
+    printWin.document.write(`
+      <html>
+      <head>
+        <title>MUM Prayer Monthly Report - ${data.month}</title>
+        <style>
+          body { font-family: system-ui, sans-serif; padding: 20px; color: #111; }
+          .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #047857; padding-bottom: 10px; }
+          .header h2 { margin: 0; color: #047857; }
+          .header p { margin: 4px 0 0; font-size: 13px; }
+          table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
+          th, td { border: 1px solid #cbd5e1; padding: 6px 4px; text-align: center; }
+          th { background: #f1f5f9; }
+          .footer { margin-top: 30px; display: flex; justify-content: space-between; font-size: 12px; }
+          @media print {
+            .no-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="no-print" style="margin-bottom: 16px;">
+          <button onclick="window.print()" style="background:#047857; color:#fff; border:none; padding:10px 18px; border-radius:6px; font-weight:bold; cursor:pointer;">🖨️ പ്രിന്റ് ചെയ്യുക / Save PDF</button>
+        </div>
+        <div class="header">
+          <h2>MALHARUL ULOOM MADRASA KALLOOR</h2>
+          <p>നിസ്കാര നിരീക്ഷണ പ്രതിമാസ റിപ്പോർട്ട് (Prayer Monthly Report)</p>
+          <p><b>ക്ലാസ്:</b> ${data.cls} | <b>മാസം:</b> ${data.month}</p>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Sl</th>
+              <th>Adm</th>
+              <th>പേര്</th>
+              <th>ക്ലാസ്</th>
+              <th>ദിവസങ്ങൾ</th>
+              <th>ജമാഅത്ത്</th>
+              <th>അദാഅ്</th>
+              <th>ഖളാഅ്</th>
+              <th>ഇല്ല</th>
+              <th>ഇളവ്</th>
+              <th>ആകെ വഖ്ത്</th>
+              <th>സ്കോർ</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+        <div class="footer">
+          <div>ക്ലാസ് ഉസ്താദ്: .....................</div>
+          <div>സദർ മുഅല്ലിം: .....................</div>
+        </div>
+      </body>
+      </html>
+    `);
+    printWin.document.close();
   }
 </script>
 </body>
