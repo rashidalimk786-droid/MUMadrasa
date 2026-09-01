@@ -6,11 +6,11 @@
   <title>MUM - Prayer Tracker</title>
   
   <meta name="theme-color" content="#064e3b">
-  <meta name="apple-mobile-web-app-title" content="MUM">
-  <meta name="application-name" content="MUM">
+  <meta name="apple-mobile-web-app-title" content="MUM Tracker">
+  <meta name="application-name" content="MUM Tracker">
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='mumGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23047857;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23064e3b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23mumGrad)' stroke='%2310b981' stroke-width='16'/%3E%3Ctext x='50%25' y='54%25' font-family='system-ui, -apple-system, sans-serif' font-weight='900' font-size='140' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='mumGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23047857;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23064e3b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23mumGrad)' stroke='%2310b981' stroke-width='16'/%3E%3Ctext x='50%25' y='54%25' font-family='system-ui, -apple-system, sans-serif' font-weight='900' font-size='140' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='mumGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23047857;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23064e3b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23mumGrad)' stroke='%2310b981' stroke-width='16'/%3E%3Ctext x='50%25' y='46%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='700' font-size='42' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='mumGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23047857;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23064e3b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23mumGrad)' stroke='%2310b981' stroke-width='16'/%3E%3Ctext x='50%25' y='46%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='700' font-size='42' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
@@ -24,6 +24,8 @@
       --primary-dark: #064e3b;
       --accent: #10b981;
       --gold: #f59e0b;
+      --silver: #94a3b8;
+      --bronze: #d97706;
       --bg: #f0fdf4;
       --card-bg: #ffffff;
       --text: #0f172a;
@@ -40,7 +42,7 @@
     }
     .app-shell {
       width: 100%;
-      max-width: 620px;
+      max-width: 640px;
       background: var(--bg);
       border-radius: 24px;
       overflow: hidden;
@@ -58,7 +60,7 @@
       align-items: center;
       border-bottom: 2px solid #059669;
     }
-    .top-bar h3 { font-size: 14px; font-weight: 800; letter-spacing: 0.5px; }
+    .top-bar h3 { font-size: 15px; font-weight: 800; letter-spacing: 0.5px; }
     .btn-top {
       background: rgba(255,255,255,0.2);
       color: #fff;
@@ -86,11 +88,12 @@
       font-weight: bold;
       margin-bottom: 4px;
     }
-    .hero h1 { font-size: 15px; color: var(--primary-dark); font-weight: 800; line-height: 1.3; }
-    .hero p { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    .hero h1 { font-size: 16px; color: var(--primary-dark); font-weight: 800; line-height: 1.3; }
+    .hero p { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    
     @keyframes pulse-glow {
       0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { transform: scale(1.03); box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
+      70% { transform: scale(1.02); box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
       100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
     .pulse-btn {
@@ -128,6 +131,32 @@
       align-items: center;
       justify-content: space-between;
     }
+    
+    /* Rank tabs & badges */
+    .tab-container {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 10px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 6px 4px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #fff;
+      color: var(--primary-dark);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
     .rank-item {
       display: flex;
       align-items: center;
@@ -139,12 +168,17 @@
       font-size: 13px;
     }
     .rank-badge {
-      width: 24px; height: 24px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: bold; font-size: 11px; color: #fff; margin-right: 8px; flex-shrink: 0;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 10px;
+      color: #fff;
+      margin-right: 8px;
+      flex-shrink: 0;
+      text-transform: uppercase;
     }
     .rank-1 { background: #f59e0b; }
-    .rank-2 { background: #94a3b8; }
+    .rank-2 { background: #64748b; }
     .rank-3 { background: #d97706; }
     
     .form-group { margin-bottom: 12px; }
@@ -203,6 +237,16 @@
       cursor: pointer;
     }
     .btn-main:hover { background: var(--primary-dark); }
+    .btn-action {
+      background: #0284c7;
+      color: #fff;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 600;
+    }
     .btn-del {
       background: #fee2e2;
       color: #dc2626;
@@ -211,6 +255,7 @@
       border-radius: 6px;
       font-size: 11px;
       cursor: pointer;
+      font-weight: 600;
     }
     .btn-wa {
       background: #25D366;
@@ -226,11 +271,10 @@
       gap: 3px;
       text-decoration: none;
     }
-    .btn-wa:hover { background: #1eb956; }
     table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px; }
     th, td { border: 1px solid #e2e8f0; padding: 6px 4px; text-align: center; }
     th { background: #f1f5f9; }
-    .footer { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 16px; padding: 10px; line-height: 1.6; }
+    .footer { text-align: center; font-size: 12px; color: var(--primary-dark); margin-top: 16px; padding: 12px; font-weight: 800; letter-spacing: 0.5px; }
     .modal-overlay {
       display: none;
       position: fixed;
@@ -299,7 +343,7 @@
       <div class="hero">
         <div class="arabic-greeting">السلام عليكم</div>
         <h1>MALHARUL ULOOM MADRASA<br>KALOOR</h1>
-        <p>നിസ്കാര നിരീക്ഷണ പോർട്ടൽ</p>
+        <p>Prayer Monitoring Portal</p>
       </div>
 
       <button class="pulse-btn" onclick="openPrayerEntryModal()">
@@ -308,8 +352,13 @@
 
       <div class="card">
         <div class="card-title">
-          <span>🏆 ഇന്നത്തെ ടോപ്പ് വിദ്യാർത്ഥികൾ</span>
+          <span id="rankTitleHeader">🏆 Daily Top Rankers</span>
           <span style="font-size:11px; color:var(--text-muted);" id="todayDateLabel"></span>
+        </div>
+        <div class="tab-container">
+          <button class="tab-btn active" onclick="switchLeaderboard('daily', this)">Daily Top Rankers</button>
+          <button class="tab-btn" onclick="switchLeaderboard('weekly', this)">Weekly Top Rankers</button>
+          <button class="tab-btn" onclick="switchLeaderboard('monthly', this)">Monthly Top Rankers</button>
         </div>
         <div id="leaderboardList">
           <p style="font-size:12px; color:var(--text-muted); text-align:center;">വിവരങ്ങൾ ലഭ്യമല്ല</p>
@@ -317,18 +366,16 @@
       </div>
 
       <div class="card">
-        <div class="card-title">🔍 സ്വന്തം നിസ്കാര വിവരങ്ങൾ പരിശോധിക്കുക</div>
+        <div class="card-title">🔍 Check Your Status</div>
         <div class="form-group">
-          <input type="text" id="srchAdm" placeholder="അഡ്മിഷൻ നമ്പറോ പേരോ നൽകുക...">
+          <input type="text" id="srchAdm" placeholder="അഡ്മിഷൻ നമ്പർ അല്ലെങ്കിൽ പേര്...">
         </div>
-        <button class="btn-main" onclick="searchStudentHistory()">പരിശോധിക്കുക</button>
+        <button class="btn-main" onclick="searchStudentHistory()">View Status</button>
         <div id="srchResult" style="margin-top:12px;"></div>
       </div>
 
       <div class="footer">
-        അഡ്മിൻ കോൺടാക്റ്റ്: <span id="admContactSpan">_________________</span><br>
-        <b style="color:var(--primary);">mum Kalloor-koothali</b><br>
-        MUM Kaloor © 2026
+        MUM KALLOOR-KOOTHALI
       </div>
     </div>
 
@@ -345,7 +392,10 @@
       </div>
 
       <div class="card">
-        <div class="card-title">📅 ദിവസേനയുള്ള പരിശോധന & വാട്സാപ്പ് അലേർട്ട്</div>
+        <div class="card-title">
+          <span>📅 ദിവസേനയുള്ള പരിശോധന</span>
+          <button class="btn-action" onclick="downloadDailyPDF('teacher')">📄 Daily PDF</button>
+        </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="form-group">
             <label>ക്ലാസ്</label>
@@ -360,7 +410,7 @@
           <table>
             <thead>
               <tr>
-                <th>Adm</th><th>പേര്</th><th>സുബ്ഹ്</th><th>ളുഹ്ർ</th><th>അസ്വർ</th><th>മഗ്‌രിബ്</th><th>ഇശാ</th><th>അലേർട്ട്</th>
+                <th>No</th><th>Adm</th><th>പേര്</th><th>സുബ്ഹ്</th><th>ളുഹ്ർ</th><th>അസ്വർ</th><th>മഗ്‌രിബ്</th><th>ഇശാ</th><th>അലേർട്ട്</th>
               </tr>
             </thead>
             <tbody id="tDailyPrayerTable"></tbody>
@@ -371,12 +421,12 @@
       <div class="card">
         <div class="card-title">➕ പുതിയ വിദ്യാർത്ഥിയെ ചേർക്കുക</div>
         <div class="form-group"><label>ക്ലാസ്</label><select id="tRegClass"></select></div>
-        <div class="form-group"><label>അഡ്മിഷൻ നമ്പർ</label><input type="text" id="tRegAdm"></div>
-        <div class="form-group"><label>വിദ്യാർത്ഥിയുടെ പേര്</label><input type="text" id="tRegName"></div>
-        <div class="form-group">
-          <label>രക്ഷിതാവിന്റെ WhatsApp നമ്പർ (10 അക്കം)</label>
-          <input type="tel" id="tRegPhone" placeholder="ഉദാ: 9876543210">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          <div class="form-group"><label>റോൾ നമ്പർ (Roll No)</label><input type="number" id="tRegRoll" placeholder="ഉദാ: 1"></div>
+          <div class="form-group"><label>അഡ്മിഷൻ നമ്പർ</label><input type="text" id="tRegAdm"></div>
         </div>
+        <div class="form-group"><label>വിദ്യാർത്ഥിയുടെ പേര്</label><input type="text" id="tRegName"></div>
+        <div class="form-group"><label>രക്ഷിതാവിന്റെ WhatsApp നമ്പർ</label><input type="tel" id="tRegPhone" placeholder="10 അക്ക നമ്പർ"></div>
         <div class="form-group"><label>ലിംഗഭേദം</label>
           <select id="tRegGender">
             <option value="Male">ആൺകുട്ടി (Male)</option>
@@ -384,8 +434,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label>വിദ്യാർത്ഥിയുടെ ഫോട്ടോ (ക്യാമറ / ഫയൽ)</label>
-          <input type="file" id="tRegPhoto" accept="image/*" capture="environment" onchange="previewSelectedImage(this, 'tPhotoPreview')">
+          <label>വിദ്യാർത്ഥിയുടെ ഫോട്ടോ (ക്യാമറ / ഫയലുകൾ)</label>
+          <input type="file" id="tRegPhoto" accept="image/*" onchange="previewSelectedImage(this, 'tPhotoPreview')">
           <img id="tPhotoPreview" class="photo-preview">
         </div>
         <button class="btn-main" onclick="saveStudentByTeacher()">സേവ് ചെയ്യുക</button>
@@ -399,7 +449,7 @@
         </div>
         <div style="overflow-x:auto;">
           <table>
-            <thead><tr><th>ഫോട്ടോ</th><th>Adm</th><th>പേര്</th><th>ഫോൺ</th><th>ആക്ഷൻ</th></tr></thead>
+            <thead><tr><th>No</th><th>ഫോട്ടോ</th><th>Adm</th><th>പേര്</th><th>ലിംഗം</th><th>ആക്ഷൻ</th></tr></thead>
             <tbody id="tStudentTable"></tbody>
           </table>
         </div>
@@ -410,8 +460,8 @@
         <div class="form-group"><label>ക്ലാസ്</label><select id="tRepClass"></select></div>
         <div class="form-group"><label>മാസം</label><input type="month" id="tRepMonth"></div>
         <div style="display:flex; gap: 8px;">
-          <button class="btn-main" style="background:#0284c7;" onclick="downloadClassPDF('teacher')">📄 PDF ഡൗൺലോഡ്</button>
-          <button class="btn-main" style="background:#047857;" onclick="printClassReport('teacher')">🖨️ പ്രിന്റ് ചെയ്യുക</button>
+          <button class="btn-main" style="background:#0284c7;" onclick="downloadClassPDF('teacher')">📄 Monthly PDF</button>
+          <button class="btn-main" style="background:#047857;" onclick="printClassReport('teacher')">🖨️ പ്രിന്റ്</button>
         </div>
       </div>
     </div>
@@ -425,7 +475,10 @@
       </div>
 
       <div class="card">
-        <div class="card-title">📅 സ്കൂൾ നിസ്കാര ഡെയ്‌ലി മോണിറ്ററിംഗ് & അലേർട്ട്</div>
+        <div class="card-title">
+          <span>📅 സ്കൂൾ നിസ്കാര ഡെയ്‌ലി മോണിറ്ററിംഗ്</span>
+          <button class="btn-action" onclick="downloadDailyPDF('admin')">📄 Daily PDF</button>
+        </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="form-group">
             <label>ക്ലാസ്</label>
@@ -443,10 +496,27 @@
           <table>
             <thead>
               <tr>
-                <th>ക്ലാസ്</th><th>Adm</th><th>പേര്</th><th>സുബ്ഹ്</th><th>ളുഹ്ർ</th><th>അസ്വർ</th><th>മഗ്‌രിബ്</th><th>ഇശാ</th><th>അലേർട്ട്</th>
+                <th>ക്ലാസ്</th><th>No</th><th>Adm</th><th>പേര്</th><th>സുബ്ഹ്</th><th>ളുഹ്ർ</th><th>അസ്വർ</th><th>മഗ്‌രിബ്</th><th>ഇശാ</th><th>അലേർട്ട്</th>
               </tr>
             </thead>
             <tbody id="admDailyPrayerTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📝 എല്ലാ വിദ്യാർത്ഥികളും (Admin Edit)</div>
+        <div class="form-group">
+          <label>ക്ലാസ്</label>
+          <select id="admFilterClass" onchange="renderAdminStudentList()">
+            <option value="ALL">എല്ലാ ക്ലാസുകളും</option>
+            <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">ക്ലാസ് ${i}</option>`);</script>
+          </select>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead><tr><th>ക്ലാസ്</th><th>No</th><th>ഫോട്ടോ</th><th>Adm</th><th>പേര്</th><th>ആക്ഷൻ</th></tr></thead>
+            <tbody id="admStudentTable"></tbody>
           </table>
         </div>
       </div>
@@ -457,8 +527,8 @@
         <div class="form-group"><label>പാസ്‌വേഡ്</label><input type="password" id="admTPass"></div>
         <div class="form-group"><label>ചുമതലയുള്ള ക്ലാസുകൾ (കോമ ഇട്ട് നൽകുക: ഉദാ: 1,2)</label><input type="text" id="admTClasses" placeholder="1,2,3"></div>
         <div class="form-group">
-          <label>അധ്യാപകന്റെ ഫോട്ടോ (ക്യാമറ / ഫയൽ)</label>
-          <input type="file" id="admTPhoto" accept="image/*" capture="user" onchange="previewSelectedImage(this, 'admPhotoPreview')">
+          <label>അധ്യാപകന്റെ ഫോട്ടോ (ക്യാമറ / ഫയലുകൾ)</label>
+          <input type="file" id="admTPhoto" accept="image/*" onchange="previewSelectedImage(this, 'admPhotoPreview')">
           <img id="admPhotoPreview" class="photo-preview">
         </div>
         <button class="btn-main" onclick="saveTeacherByAdmin()">അധ്യാപകനെ ചേർക്കുക</button>
@@ -472,7 +542,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">📊 സ്കൂൾ റിപ്പോർട്ട് (Total & PDF)</div>
+        <div class="card-title">📊 സ്കൂൾ പ്രതിമാസ റിപ്പോർട്ട്</div>
         <div class="form-group"><label>ക്ലാസ്</label>
           <select id="admRepClass">
             <option value="ALL">എല്ലാ ക്ലാസുകളും</option>
@@ -481,8 +551,8 @@
         </div>
         <div class="form-group"><label>മാസം</label><input type="month" id="admRepMonth"></div>
         <div style="display:flex; gap: 8px;">
-          <button class="btn-main" style="background:#0284c7;" onclick="downloadClassPDF('admin')">📄 PDF ഡൗൺലോഡ്</button>
-          <button class="btn-main" style="background:#047857;" onclick="printClassReport('admin')">🖨️ പ്രിന്റ് ചെയ്യുക</button>
+          <button class="btn-main" style="background:#0284c7;" onclick="downloadClassPDF('admin')">📄 Monthly PDF</button>
+          <button class="btn-main" style="background:#047857;" onclick="printClassReport('admin')">🖨️ പ്രിന്റ്</button>
         </div>
       </div>
 
@@ -493,6 +563,40 @@
         <button class="btn-main" onclick="changeAdminPass()">അപ്ഡേറ്റ് ചെയ്യുക</button>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="editStudentModal" class="modal-overlay">
+  <div style="background:#fff; width:100%; max-width:440px; border-radius:18px; padding:20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height:90vh; overflow-y:auto;">
+    <h3 style="color:var(--primary); margin-bottom:12px;">വിദ്യാർത്ഥിയുടെ വിവരങ്ങൾ തിരുത്തുക</h3>
+    <input type="hidden" id="editStuDocId">
+    
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+      <div class="form-group"><label>ക്ലാസ്</label>
+        <select id="editStuClass">
+          <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">ക്ലാസ് ${i}</option>`);</script>
+        </select>
+      </div>
+      <div class="form-group"><label>റോൾ നമ്പർ</label><input type="number" id="editStuRoll"></div>
+    </div>
+
+    <div class="form-group"><label>അഡ്മിഷൻ നമ്പർ</label><input type="text" id="editStuAdm"></div>
+    <div class="form-group"><label>വിദ്യാർത്ഥിയുടെ പേര്</label><input type="text" id="editStuName"></div>
+    <div class="form-group"><label>രക്ഷിതാവിന്റെ WhatsApp നമ്പർ</label><input type="tel" id="editStuPhone"></div>
+    <div class="form-group"><label>ലിംഗഭേദം</label>
+      <select id="editStuGender">
+        <option value="Male">ആൺകുട്ടി (Male)</option>
+        <option value="Female">പെൺകുട്ടി (Female)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>ഫോട്ടോ മാറ്റുക (ആവശ്യമെങ്കിൽ മാത്രം)</label>
+      <input type="file" id="editStuPhoto" accept="image/*" onchange="previewSelectedImage(this, 'editPhotoPreview')">
+      <img id="editPhotoPreview" class="photo-preview">
+    </div>
+
+    <button class="btn-main" onclick="updateStudentData()">അപ്ഡേറ്റ് ചെയ്യുക</button>
+    <button class="btn-main" style="background:#94a3b8; margin-top:8px;" onclick="closeModal('editStudentModal')">റദ്ദാക്കുക</button>
   </div>
 </div>
 
@@ -561,6 +665,7 @@
   let dbTeachers = [];
   let dbPrayers = [];
   let adminPassword = "mumadminpass";
+  let activeLeaderboardTab = 'daily';
 
   const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
 
@@ -575,6 +680,19 @@
   let currentUser = null;
   let activeStudentForEntry = null;
 
+  // Sorting Helper: Boys first (by roll/adm), then Girls (by roll/adm)
+  function sortStudentsBoyFirst(arr) {
+    return [...arr].sort((a, b) => {
+      const gA = (a.gender || 'Male') === 'Male' ? 1 : 2;
+      const gB = (b.gender || 'Male') === 'Male' ? 1 : 2;
+      if (gA !== gB) return gA - gB;
+      const rollA = parseInt(a.rollNo) || 9999;
+      const rollB = parseInt(b.rollNo) || 9999;
+      if (rollA !== rollB) return rollA - rollB;
+      return (a.adm || '').localeCompare(b.adm || '');
+    });
+  }
+
   // Real-time Firestore Listeners
   db.collection("students").onSnapshot(snapshot => {
     dbStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -583,7 +701,10 @@
       renderTeacherStudentList();
       renderDailyTeacherView();
     }
-    if (currentUser?.role === 'admin') renderDailyAdminView();
+    if (currentUser?.role === 'admin') {
+      renderAdminStudentList();
+      renderDailyAdminView();
+    }
   });
 
   db.collection("teachers").onSnapshot(snapshot => {
@@ -593,7 +714,7 @@
 
   db.collection("prayers").onSnapshot(snapshot => {
     dbPrayers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    updateLeaderboard();
+    renderLeaderboard();
     if (currentUser?.role === 'teacher') renderDailyTeacherView();
     if (currentUser?.role === 'admin') renderDailyAdminView();
   });
@@ -696,10 +817,11 @@
     if (role === 'admin') {
       if (pass === adminPassword) {
         currentUser = { role: 'admin' };
-        document.getElementById('authBtn').innerText = 'പബ്ലിക് സൈറ്റ്';
+        document.getElementById('authBtn').innerText = 'Public Site';
         document.getElementById('publicView').style.display = 'none';
         document.getElementById('adminView').style.display = 'block';
         renderAdminTeachers();
+        renderAdminStudentList();
         renderDailyAdminView();
         closeModal('loginModal');
       } else {
@@ -712,7 +834,7 @@
         currentUser = { role: 'teacher', data: t };
         const classesArr = Array.isArray(t.classes) ? t.classes : (t.class ? [t.class] : ['1']);
         
-        document.getElementById('authBtn').innerText = 'പബ്ലിക് സൈറ്റ്';
+        document.getElementById('authBtn').innerText = 'Public Site';
         document.getElementById('publicView').style.display = 'none';
         document.getElementById('teacherView').style.display = 'block';
         document.getElementById('teacherNameDisplay').innerText = t.name;
@@ -749,6 +871,92 @@
     document.getElementById('adminView').style.display = 'none';
   }
 
+  // --- LEADERBOARD LOGIC (DAILY, WEEKLY, MONTHLY) ---
+  function switchLeaderboard(type, btn) {
+    activeLeaderboardTab = type;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const headers = {
+      daily: '🏆 Daily Top Rankers',
+      weekly: '🏆 Weekly Top Rankers',
+      monthly: '🏆 Monthly Top Rankers'
+    };
+    document.getElementById('rankTitleHeader').innerText = headers[type];
+    renderLeaderboard();
+  }
+
+  function renderLeaderboard() {
+    let filteredPrayers = [];
+    const now = new Date();
+
+    if (activeLeaderboardTab === 'daily') {
+      filteredPrayers = dbPrayers.filter(e => e.date === todayStr);
+    } else if (activeLeaderboardTab === 'weekly') {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(now.getDate() - 7);
+      const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+      filteredPrayers = dbPrayers.filter(e => e.date >= sevenDaysAgoStr && e.date <= todayStr);
+    } else if (activeLeaderboardTab === 'monthly') {
+      filteredPrayers = dbPrayers.filter(e => e.date && e.date.startsWith(currMonth));
+    }
+
+    if (filteredPrayers.length === 0) {
+      document.getElementById('leaderboardList').innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center;">വിവരങ്ങൾ ലഭ്യമല്ല</p>';
+      return;
+    }
+
+    const studentScoreMap = {};
+    filteredPrayers.forEach(e => {
+      if (!studentScoreMap[e.studentId]) {
+        studentScoreMap[e.studentId] = { jam: 0, ada: 0, totalScore: 0 };
+      }
+      [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
+        if (st === 'ജമാഅത്ത്') {
+          studentScoreMap[e.studentId].jam++;
+          studentScoreMap[e.studentId].totalScore += 2;
+        } else if (st === 'അദാഅ്') {
+          studentScoreMap[e.studentId].ada++;
+          studentScoreMap[e.studentId].totalScore += 1;
+        }
+      });
+    });
+
+    const scores = Object.keys(studentScoreMap).map(stuId => {
+      const s = dbStudents.find(x => x.id === stuId);
+      if (!s) return null;
+      return {
+        name: s.name,
+        class: s.class,
+        photo: s.photo,
+        jam: studentScoreMap[stuId].jam,
+        ada: studentScoreMap[stuId].ada,
+        totalScore: studentScoreMap[stuId].totalScore
+      };
+    }).filter(Boolean);
+
+    scores.sort((a,b) => b.totalScore - a.totalScore || b.jam - a.jam);
+
+    const rankLabels = ["1st Rank", "2nd Rank", "3rd Rank"];
+    let html = '';
+    scores.slice(0, 3).forEach((item, idx) => {
+      html += `
+        <div class="rank-item">
+          <div style="display:flex; align-items:center;">
+            <div class="rank-badge rank-${idx+1}">${rankLabels[idx]}</div>
+            <img src="${item.photo || defaultAvatar}" class="avatar-sm">
+            <div>
+              <b>${item.name}</b> (ക്ലാസ് ${item.class})<br>
+              <span style="font-size:10px; color:var(--text-muted);">ജമാഅത്ത്: ${item.jam} | അദാഅ്: ${item.ada}</span>
+            </div>
+          </div>
+          <span style="font-weight:bold; color:var(--primary);">${item.totalScore} pts</span>
+        </div>
+      `;
+    });
+    document.getElementById('leaderboardList').innerHTML = html || '<p style="font-size:12px; color:var(--text-muted); text-align:center;">വിവരങ്ങൾ ലഭ്യമല്ല</p>';
+  }
+
   // --- BADGE & WHATSAPP ALERT LOGIC ---
   function getBadgeHTML(st) {
     if (!st) return `<span class="badge-status st-na">-</span>`;
@@ -761,9 +969,7 @@
 
   function getWhatsAppActionHTML(student, prayerRecord, targetDate) {
     let phone = (student.phone || '').trim();
-    if (!phone) {
-      return `<span style="font-size:10px; color:var(--text-muted);">No Ph</span>`;
-    }
+    if (!phone) return `<span style="font-size:10px; color:var(--text-muted);">No Ph</span>`;
     phone = phone.replace(/[^0-9]/g, '');
     if (phone.length === 10) phone = '91' + phone;
 
@@ -783,7 +989,7 @@
     }
 
     const missedText = missedPrayers.join(', ');
-    const msg = `അസ്സലാമു അലൈക്കും,\n\nമൽഹറുൽ ഉലൂം മദ്റസ കലൂരിൽ നിന്നുള്ള അറിയിപ്പാണ്.\n\nമാതാപിതാക്കളുടെ ശ്രദ്ധയ്ക്ക്: നിങ്ങളുടെ മകൻ/മകൾ *${student.name}* (Adm: ${student.adm}, Class ${student.class}) തീയതി: ${targetDate} -ൽ നിസ്കാര ട്രാക്കറിൽ *[${missedText}]* നിസ്കാരം നിർവ്വഹിച്ചിട്ടില്ല / രേഖപ്പെടുത്തിയിട്ടില്ല എന്ന് കാണുന്നു.\n\nകുട്ടിയുടെ നിസ്കാര കാര്യത്തിൽ പ്രത്യേക ശ്രദ്ധ പുലർത്താൻ അഭ്യർത്ഥിക്കുന്നു. അല്ലാഹു അനുഗ്രഹിക്കട്ടെ.`;
+    const msg = `അസ്സലാമു അലൈക്കും,\n\nമൽഹറുൽ ഉലൂം മദ്റസ കലൂർ - നിസ്കാര നിരീക്ഷണ പോർട്ടൽ അറിയിപ്പ്.\n\nമാതാപിതാക്കളുടെ ശ്രദ്ധയ്ക്ക്: നിങ്ങളുടെ മകൻ/മകൾ *${student.name}* (Roll: ${student.rollNo || '-'}, Adm: ${student.adm}, Class: ${student.class}) തീയതി: ${targetDate} -ൽ *[${missedText}]* നിസ്കാരം നിർവ്വഹിച്ചിട്ടില്ല / രേഖപ്പെടുത്തിയിട്ടില്ല എന്ന് കാണുന്നു.\n\nകുട്ടിയുടെ നിസ്കാര കാര്യത്തിൽ പ്രത്യേക ശ്രദ്ധ പുലർത്താൻ അഭ്യർത്ഥിക്കുന്നു.`;
 
     const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
     return `<a href="${waUrl}" target="_blank" class="btn-wa">💬 WA</a>`;
@@ -795,23 +1001,25 @@
     const date = document.getElementById('tDailyDate').value;
     if (!cls || !date) return;
 
-    const students = dbStudents.filter(s => s.class === cls);
+    let students = dbStudents.filter(s => s.class === cls);
+    students = sortStudentsBoyFirst(students);
     const dayPrayers = dbPrayers.filter(p => p.date === date);
     const tbody = document.getElementById('tDailyPrayerTable');
     tbody.innerHTML = '';
 
     if (students.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="color:var(--text-muted);">ഈ ക്ലാസിൽ കുട്ടികളില്ല</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" style="color:var(--text-muted);">ഈ ക്ലാസിൽ കുട്ടികളില്ല</td></tr>`;
       return;
     }
 
-    students.forEach(s => {
+    students.forEach((s, idx) => {
       const rec = dayPrayers.find(p => p.studentId === s.id);
       const waAction = getWhatsAppActionHTML(s, rec, date);
       tbody.innerHTML += `
         <tr>
+          <td>${s.rollNo || (idx + 1)}</td>
           <td><b>${s.adm}</b></td>
-          <td style="text-align:left;">${s.name}</td>
+          <td style="text-align:left;">${s.name} <span style="font-size:9px; color:#64748b;">(${s.gender === 'Female' ? 'F' : 'M'})</span></td>
           <td>${getBadgeHTML(rec?.subh)}</td>
           <td>${getBadgeHTML(rec?.dhuhr)}</td>
           <td>${getBadgeHTML(rec?.asr)}</td>
@@ -831,23 +1039,25 @@
 
     let students = dbStudents;
     if (cls !== 'ALL') students = students.filter(s => s.class === cls);
+    students = sortStudentsBoyFirst(students);
     const dayPrayers = dbPrayers.filter(p => p.date === date);
     const tbody = document.getElementById('admDailyPrayerTable');
     tbody.innerHTML = '';
 
     if (students.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="9" style="color:var(--text-muted);">കുട്ടികളില്ല</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="10" style="color:var(--text-muted);">കുട്ടികളില്ല</td></tr>`;
       return;
     }
 
-    students.forEach(s => {
+    students.forEach((s, idx) => {
       const rec = dayPrayers.find(p => p.studentId === s.id);
       const waAction = getWhatsAppActionHTML(s, rec, date);
       tbody.innerHTML += `
         <tr>
           <td>${s.class}</td>
+          <td>${s.rollNo || (idx + 1)}</td>
           <td><b>${s.adm}</b></td>
-          <td style="text-align:left;">${s.name}</td>
+          <td style="text-align:left;">${s.name} <span style="font-size:9px; color:#64748b;">(${s.gender === 'Female' ? 'F' : 'M'})</span></td>
           <td>${getBadgeHTML(rec?.subh)}</td>
           <td>${getBadgeHTML(rec?.dhuhr)}</td>
           <td>${getBadgeHTML(rec?.asr)}</td>
@@ -859,9 +1069,58 @@
     });
   }
 
-  // Save Student (With Phone Number)
+  // Daily PDF Generator
+  function downloadDailyPDF(source) {
+    const cls = source === 'teacher' ? document.getElementById('tDailyClass').value : document.getElementById('admDailyClass').value;
+    const date = source === 'teacher' ? document.getElementById('tDailyDate').value : document.getElementById('admDailyDate').value;
+
+    if (!date) return alert("തീയതി തിരഞ്ഞെടുക്കുക!");
+
+    let students = dbStudents;
+    if (cls !== 'ALL') students = students.filter(s => s.class === cls);
+    students = sortStudentsBoyFirst(students);
+    const dayPrayers = dbPrayers.filter(p => p.date === date);
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(14);
+    doc.text("MALHARUL ULOOM MADRASA KALLOOR", 14, 15);
+    doc.setFontSize(10);
+    doc.text(`Daily Prayer Attendance - Class: ${cls} | Date: ${date}`, 14, 22);
+
+    const rows = students.map((s, idx) => {
+      const rec = dayPrayers.find(p => p.studentId === s.id);
+      return [
+        s.rollNo || (idx + 1),
+        s.adm,
+        `${s.name} (${s.gender === 'Female' ? 'F' : 'M'})`,
+        `Class ${s.class}`,
+        rec?.subh || 'No Entry',
+        rec?.dhuhr || 'No Entry',
+        rec?.asr || 'No Entry',
+        rec?.maghrib || 'No Entry',
+        rec?.isha || 'No Entry'
+      ];
+    });
+
+    doc.autoTable({
+      startY: 26,
+      head: [['Roll', 'Adm', 'Name', 'Class', 'Subh', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']],
+      body: rows,
+      theme: 'grid',
+      headStyles: { fillColor: [4, 120, 87] },
+      styles: { fontSize: 8, cellPadding: 2, halign: 'center' },
+      columnStyles: { 2: { halign: 'left' } }
+    });
+
+    doc.save(`MUM_Daily_Report_${cls}_${date}.pdf`);
+  }
+
+  // Save Student By Teacher
   async function saveStudentByTeacher() {
     const cls = document.getElementById('tRegClass').value;
+    const rollNo = document.getElementById('tRegRoll').value.trim();
     const adm = document.getElementById('tRegAdm').value.trim();
     const name = document.getElementById('tRegName').value.trim();
     const phone = document.getElementById('tRegPhone').value.trim();
@@ -874,6 +1133,7 @@
     try {
       const photoBase64 = await compressImage(photoFile);
       await db.collection("students").add({
+        rollNo: rollNo ? parseInt(rollNo) : null,
         adm,
         name,
         phone,
@@ -882,7 +1142,8 @@
         photo: photoBase64,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-      alert("വിദ്യാർത്ഥിയെ വിജയകരമായി ചേർത്തു!");
+      alert("വിദ്യാർത്ഥിയെ ചേർത്തു!");
+      document.getElementById('tRegRoll').value = '';
       document.getElementById('tRegAdm').value = '';
       document.getElementById('tRegName').value = '';
       document.getElementById('tRegPhone').value = '';
@@ -893,22 +1154,108 @@
     }
   }
 
+  // Render Teacher Student List
   function renderTeacherStudentList() {
     const cls = document.getElementById('tFilterClass').value;
-    const students = dbStudents.filter(s => s.class === cls);
+    let students = dbStudents.filter(s => s.class === cls);
+    students = sortStudentsBoyFirst(students);
     const tbody = document.getElementById('tStudentTable');
     tbody.innerHTML = '';
-    students.forEach(s => {
+    students.forEach((s, idx) => {
       tbody.innerHTML += `
         <tr>
+          <td>${s.rollNo || (idx + 1)}</td>
           <td><img src="${s.photo || defaultAvatar}" class="avatar-sm" style="margin:0 auto;"></td>
           <td>${s.adm}</td>
-          <td style="text-align:left;">${s.name} (${s.gender === 'Female' ? 'F' : 'M'})</td>
-          <td>${s.phone || '-'}</td>
-          <td><button class="btn-del" onclick="deleteStudent('${s.id}')">ഡിലീറ്റ്</button></td>
+          <td style="text-align:left;">${s.name}</td>
+          <td>${s.gender === 'Female' ? 'F' : 'M'}</td>
+          <td style="white-space:nowrap;">
+            <button class="btn-action" onclick="openEditStudentModal('${s.id}')">എഡിറ്റ്</button>
+            <button class="btn-del" onclick="deleteStudent('${s.id}')">ഡിലീറ്റ്</button>
+          </td>
         </tr>
       `;
     });
+  }
+
+  // Render Admin Student List
+  function renderAdminStudentList() {
+    const cls = document.getElementById('admFilterClass').value;
+    let students = dbStudents;
+    if (cls !== 'ALL') students = students.filter(s => s.class === cls);
+    students = sortStudentsBoyFirst(students);
+    const tbody = document.getElementById('admStudentTable');
+    tbody.innerHTML = '';
+    students.forEach((s, idx) => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${s.class}</td>
+          <td>${s.rollNo || (idx + 1)}</td>
+          <td><img src="${s.photo || defaultAvatar}" class="avatar-sm" style="margin:0 auto;"></td>
+          <td>${s.adm}</td>
+          <td style="text-align:left;">${s.name} <span style="font-size:9px; color:#64748b;">(${s.gender === 'Female' ? 'F' : 'M'})</span></td>
+          <td style="white-space:nowrap;">
+            <button class="btn-action" onclick="openEditStudentModal('${s.id}')">എഡിറ്റ്</button>
+            <button class="btn-del" onclick="deleteStudent('${s.id}')">ഡിലീറ്റ്</button>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  // Edit Modal Actions (Admin & Teacher)
+  function openEditStudentModal(id) {
+    const s = dbStudents.find(x => x.id === id);
+    if (!s) return;
+    document.getElementById('editStuDocId').value = s.id;
+    document.getElementById('editStuClass').value = s.class || '1';
+    document.getElementById('editStuRoll').value = s.rollNo || '';
+    document.getElementById('editStuAdm').value = s.adm || '';
+    document.getElementById('editStuName').value = s.name || '';
+    document.getElementById('editStuPhone').value = s.phone || '';
+    document.getElementById('editStuGender').value = s.gender || 'Male';
+    document.getElementById('editStuPhoto').value = '';
+    const prev = document.getElementById('editPhotoPreview');
+    if (s.photo) {
+      prev.src = s.photo;
+      prev.style.display = 'block';
+    } else {
+      prev.style.display = 'none';
+    }
+    document.getElementById('editStudentModal').style.display = 'flex';
+  }
+
+  async function updateStudentData() {
+    const id = document.getElementById('editStuDocId').value;
+    const cls = document.getElementById('editStuClass').value;
+    const rollNo = document.getElementById('editStuRoll').value.trim();
+    const adm = document.getElementById('editStuAdm').value.trim();
+    const name = document.getElementById('editStuName').value.trim();
+    const phone = document.getElementById('editStuPhone').value.trim();
+    const gender = document.getElementById('editStuGender').value;
+    const photoFile = document.getElementById('editStuPhoto').files[0];
+
+    if (!adm || !name) return alert("അഡ്മിഷൻ നമ്പറും പേരും നൽകുക!");
+
+    try {
+      const updatePayload = {
+        class: cls,
+        rollNo: rollNo ? parseInt(rollNo) : null,
+        adm,
+        name,
+        phone,
+        gender
+      };
+      if (photoFile) {
+        updatePayload.photo = await compressImage(photoFile);
+      }
+
+      await db.collection("students").doc(id).update(updatePayload);
+      alert("വിവരങ്ങൾ വിജയകരമായി അപ്ഡേറ്റ് ചെയ്തു!");
+      closeModal('editStudentModal');
+    } catch (e) {
+      alert("അപ്ഡേറ്റ് ചെയ്യാൻ സാധിച്ചില്ല: " + e.message);
+    }
   }
 
   async function deleteStudent(id) {
@@ -1031,6 +1378,7 @@
     }
   }
 
+  // Girls get 'ഇളവ്' option, boys don't!
   function loadPrayerFormForStudent(student) {
     const existing = dbPrayers.find(e => e.studentId === student.id && e.date === todayStr);
     if (existing) {
@@ -1044,13 +1392,13 @@
     pInfo.style.display = 'flex';
     pInfo.innerHTML = `
       <img src="${student.photo || defaultAvatar}" class="avatar-sm">
-      <div><b>${student.name}</b> (Adm: ${student.adm} | ക്ലാസ്: ${student.class})</div>
+      <div><b>${student.name}</b> (Roll: ${student.rollNo || '-'} | Adm: ${student.adm} | ക്ലാസ്: ${student.class})</div>
     `;
     
     const prayers = ['സുബ്ഹ്', 'ളുഹ്ർ', 'അസ്വർ', 'മഗ്‌രിബ്', 'ഇശാ'];
     const pKeys = ['subh', 'dhuhr', 'asr', 'maghrib', 'isha'];
     let html = '';
-    const isGirl = student.gender === 'Female';
+    const isGirl = (student.gender === 'Female');
 
     prayers.forEach((p, idx) => {
       html += `
@@ -1092,45 +1440,6 @@
     }
   }
 
-  function updateLeaderboard() {
-    const entries = dbPrayers.filter(e => e.date === todayStr);
-    if (entries.length === 0) {
-      document.getElementById('leaderboardList').innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center;">വിവരങ്ങൾ ലഭ്യമല്ല</p>';
-      return;
-    }
-
-    const scores = entries.map(e => {
-      const s = dbStudents.find(x => x.id === e.studentId);
-      if (!s) return null;
-      let jam = 0, ada = 0;
-      [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
-        if (st === 'ജമാഅത്ത്') jam++;
-        if (st === 'അദാഅ്') ada++;
-      });
-      return { name: s.name, class: s.class, photo: s.photo, jam, ada, totalScore: (jam * 2) + ada };
-    }).filter(Boolean);
-
-    scores.sort((a,b) => b.totalScore - a.totalScore || b.jam - a.jam);
-
-    let html = '';
-    scores.slice(0, 3).forEach((item, idx) => {
-      html += `
-        <div class="rank-item">
-          <div style="display:flex; align-items:center;">
-            <div class="rank-badge rank-${idx+1}">${idx+1}</div>
-            <img src="${item.photo || defaultAvatar}" class="avatar-sm">
-            <div>
-              <b>${item.name}</b> (ക്ലാസ് ${item.class})<br>
-              <span style="font-size:10px; color:var(--text-muted);">ജമാഅത്ത്: ${item.jam} | അദാഅ്: ${item.ada}</span>
-            </div>
-          </div>
-          <span style="font-weight:bold; color:var(--primary);">${item.totalScore} pts</span>
-        </div>
-      `;
-    });
-    document.getElementById('leaderboardList').innerHTML = html || '<p style="font-size:12px; color:var(--text-muted); text-align:center;">വിവരങ്ങൾ ലഭ്യമല്ല</p>';
-  }
-
   function searchStudentHistory() {
     const term = document.getElementById('srchAdm').value.trim().toLowerCase();
     const student = dbStudents.find(s => s.adm.toLowerCase() === term || s.name.toLowerCase() === term);
@@ -1160,7 +1469,7 @@
           <img src="${student.photo || defaultAvatar}" class="avatar-lg">
           <div>
             <div style="font-weight:bold; font-size:14px; color:var(--primary);">${student.name}</div>
-            <div style="color:var(--text-muted);">Adm: ${student.adm} | ക്ലാസ്: ${student.class}</div>
+            <div style="color:var(--text-muted);">Roll: ${student.rollNo || '-'} | Adm: ${student.adm} | Class: ${student.class}</div>
           </div>
         </div>
         <p style="margin:4px 0 8px;">രേഖപ്പെടുത്തിയ ദിവസങ്ങൾ: <b>${entries.length}</b> | ആകെ നിസ്കരിച്ചത്: <b style="color:var(--primary);">${totalPrayed} വഖ്ത്</b></p>
@@ -1175,7 +1484,7 @@
     `;
   }
 
-  // Reports
+  // Monthly Report Helper
   function getProcessedMonthlyData(source) {
     const cls = source === 'teacher' ? document.getElementById('tRepClass').value : document.getElementById('admRepClass').value;
     const month = source === 'teacher' ? document.getElementById('tRepMonth').value : document.getElementById('admRepMonth').value;
@@ -1187,10 +1496,11 @@
 
     let students = dbStudents;
     if (cls !== 'ALL') students = students.filter(s => s.class === cls);
+    students = sortStudentsBoyFirst(students);
     const allEntries = dbPrayers.filter(e => e.date && e.date.startsWith(month));
 
     const tableData = [];
-    students.forEach(s => {
+    students.forEach((s, idx) => {
       const sEntries = allEntries.filter(e => e.studentId === s.id);
       let jam = 0, ada = 0, qad = 0, nil = 0, exc = 0;
       sEntries.forEach(e => {
@@ -1204,8 +1514,9 @@
       });
       const totalScore = (jam * 2) + ada;
       tableData.push({
+        roll: s.rollNo || (idx + 1),
         adm: s.adm,
-        name: s.name,
+        name: `${s.name} (${s.gender === 'Female' ? 'F' : 'M'})`,
         cls: s.class,
         days: sEntries.length,
         jam, ada, qad, nil, exc,
@@ -1230,17 +1541,17 @@
     doc.text(`Prayer Monthly Report - Class: ${data.cls} | Month: ${data.month}`, 14, 22);
 
     const rows = data.tableData.map(r => [
-      r.adm, r.name, `Cls ${r.cls}`, r.days, r.jam, r.ada, r.qad, r.nil, r.exc, r.totalPrayed, r.totalScore
+      r.roll, r.adm, r.name, `Cls ${r.cls}`, r.days, r.jam, r.ada, r.qad, r.nil, r.exc, r.totalPrayed, r.totalScore
     ]);
 
     doc.autoTable({
       startY: 26,
-      head: [['Adm', 'Name', 'Class', 'Days', 'Jam', 'Ada', 'Qad', 'Nil', 'Exc', 'Total', 'Score']],
+      head: [['Roll', 'Adm', 'Name', 'Class', 'Days', 'Jam', 'Ada', 'Qad', 'Nil', 'Exc', 'Total', 'Score']],
       body: rows,
       theme: 'grid',
       headStyles: { fillColor: [4, 120, 87] },
       styles: { fontSize: 8, cellPadding: 2, halign: 'center' },
-      columnStyles: { 1: { halign: 'left' } }
+      columnStyles: { 2: { halign: 'left' } }
     });
 
     doc.save(`MUM_Report_${data.cls}_${data.month}.pdf`);
@@ -1251,10 +1562,10 @@
     if (!data) return;
 
     let rowsHtml = '';
-    data.tableData.forEach((r, idx) => {
+    data.tableData.forEach(r => {
       rowsHtml += `
         <tr>
-          <td>${idx + 1}</td>
+          <td>${r.roll}</td>
           <td><b>${r.adm}</b></td>
           <td style="text-align:left;">${r.name}</td>
           <td>Class ${r.cls}</td>
@@ -1274,7 +1585,7 @@
     printWin.document.write(`
       <html>
       <head>
-        <title>MUM Prayer Monthly Report - ${data.month}</title>
+        <title>MUM Monthly Report - ${data.month}</title>
         <style>
           body { font-family: system-ui, sans-serif; padding: 20px; color: #111; }
           .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #047857; padding-bottom: 10px; }
@@ -1295,13 +1606,13 @@
         </div>
         <div class="header">
           <h2>MALHARUL ULOOM MADRASA KALLOOR</h2>
-          <p>നിസ്കാര നിരീക്ഷണ പ്രതിമാസ റിപ്പോർട്ട് (Prayer Monthly Report)</p>
+          <p>Prayer Monthly Report</p>
           <p><b>ക്ലാസ്:</b> ${data.cls} | <b>മാസം:</b> ${data.month}</p>
         </div>
         <table>
           <thead>
             <tr>
-              <th>Sl</th>
+              <th>Roll</th>
               <th>Adm</th>
               <th>പേര്</th>
               <th>ക്ലാസ്</th>
