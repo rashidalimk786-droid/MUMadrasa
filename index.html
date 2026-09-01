@@ -40,7 +40,7 @@
     }
     .app-shell {
       width: 100%;
-      max-width: 580px;
+      max-width: 620px;
       background: var(--bg);
       border-radius: 24px;
       overflow: hidden;
@@ -212,6 +212,21 @@
       font-size: 11px;
       cursor: pointer;
     }
+    .btn-wa {
+      background: #25D366;
+      color: #fff;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      text-decoration: none;
+    }
+    .btn-wa:hover { background: #1eb956; }
     table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px; }
     th, td { border: 1px solid #e2e8f0; padding: 6px 4px; text-align: center; }
     th { background: #f1f5f9; }
@@ -228,11 +243,11 @@
     }
 
     .avatar-sm {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       object-fit: cover;
-      margin-right: 8px;
+      margin-right: 6px;
       border: 1px solid #cbd5e1;
       background: #e2e8f0;
       flex-shrink: 0;
@@ -330,7 +345,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">📅 ദിവസേനയുള്ള നിസ്കാര പരിശോധന</div>
+        <div class="card-title">📅 ദിവസേനയുള്ള പരിശോധന & വാട്സാപ്പ് അലേർട്ട്</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="form-group">
             <label>ക്ലാസ്</label>
@@ -345,7 +360,7 @@
           <table>
             <thead>
               <tr>
-                <th>Adm</th><th>പേര്</th><th>സുബ്ഹ്</th><th>ളുഹ്ർ</th><th>അസ്വർ</th><th>മഗ്‌രിബ്</th><th>ഇശാ</th>
+                <th>Adm</th><th>പേര്</th><th>സുബ്ഹ്</th><th>ളുഹ്ർ</th><th>അസ്വർ</th><th>മഗ്‌രിബ്</th><th>ഇശാ</th><th>അലേർട്ട്</th>
               </tr>
             </thead>
             <tbody id="tDailyPrayerTable"></tbody>
@@ -358,6 +373,10 @@
         <div class="form-group"><label>ക്ലാസ്</label><select id="tRegClass"></select></div>
         <div class="form-group"><label>അഡ്മിഷൻ നമ്പർ</label><input type="text" id="tRegAdm"></div>
         <div class="form-group"><label>വിദ്യാർത്ഥിയുടെ പേര്</label><input type="text" id="tRegName"></div>
+        <div class="form-group">
+          <label>രക്ഷിതാവിന്റെ WhatsApp നമ്പർ (10 അക്കം)</label>
+          <input type="tel" id="tRegPhone" placeholder="ഉദാ: 9876543210">
+        </div>
         <div class="form-group"><label>ലിംഗഭേദം</label>
           <select id="tRegGender">
             <option value="Male">ആൺകുട്ടി (Male)</option>
@@ -380,7 +399,7 @@
         </div>
         <div style="overflow-x:auto;">
           <table>
-            <thead><tr><th>ഫോട്ടോ</th><th>Adm</th><th>പേര്</th><th>ആക്ഷൻ</th></tr></thead>
+            <thead><tr><th>ഫോട്ടോ</th><th>Adm</th><th>പേര്</th><th>ഫോൺ</th><th>ആക്ഷൻ</th></tr></thead>
             <tbody id="tStudentTable"></tbody>
           </table>
         </div>
@@ -406,7 +425,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">📅 സ്കൂൾ നിസ്കാര ഡെയ്‌ലി മോണിറ്ററിംഗ്</div>
+        <div class="card-title">📅 സ്കൂൾ നിസ്കാര ഡെയ്‌ലി മോണിറ്ററിംഗ് & അലേർട്ട്</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="form-group">
             <label>ക്ലാസ്</label>
@@ -424,7 +443,7 @@
           <table>
             <thead>
               <tr>
-                <th>ക്ലാസ്</th><th>Adm</th><th>പേര്</th><th>സുബ്ഹ്</th><th>ളുഹ്ർ</th><th>അസ്വർ</th><th>മഗ്‌രിബ്</th><th>ഇശാ</th>
+                <th>ക്ലാസ്</th><th>Adm</th><th>പേര്</th><th>സുബ്ഹ്</th><th>ളുഹ്ർ</th><th>അസ്വർ</th><th>മഗ്‌രിബ്</th><th>ഇശാ</th><th>അലേർട്ട്</th>
               </tr>
             </thead>
             <tbody id="admDailyPrayerTable"></tbody>
@@ -538,7 +557,6 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // State Variables
   let dbStudents = [];
   let dbTeachers = [];
   let dbPrayers = [];
@@ -589,7 +607,7 @@
     }
   });
 
-  // Image Processing Helper
+  // Image Helper
   function compressImage(file, maxWidth = 250, maxHeight = 250, quality = 0.7) {
     return new Promise((resolve, reject) => {
       if (!file) return resolve('');
@@ -731,7 +749,7 @@
     document.getElementById('adminView').style.display = 'none';
   }
 
-  // --- DAILY INSPECTION VIEWS ---
+  // --- BADGE & WHATSAPP ALERT LOGIC ---
   function getBadgeHTML(st) {
     if (!st) return `<span class="badge-status st-na">-</span>`;
     if (st === 'ജമാഅത്ത്') return `<span class="badge-status st-jam">ജമാ</span>`;
@@ -741,6 +759,37 @@
     return `<span class="badge-status st-nil">ഇല്ല</span>`;
   }
 
+  function getWhatsAppActionHTML(student, prayerRecord, targetDate) {
+    let phone = (student.phone || '').trim();
+    if (!phone) {
+      return `<span style="font-size:10px; color:var(--text-muted);">No Ph</span>`;
+    }
+    phone = phone.replace(/[^0-9]/g, '');
+    if (phone.length === 10) phone = '91' + phone;
+
+    let missedPrayers = [];
+    if (!prayerRecord) {
+      missedPrayers.push('ഇന്നത്തെ നിസ്കാരം ഒന്നും രേഖപ്പെടുത്തിയിട്ടില്ല');
+    } else {
+      if (prayerRecord.subh === 'നിസ്കരിച്ചില്ല') missedPrayers.push('സുബ്ഹ്');
+      if (prayerRecord.dhuhr === 'നിസ്കരിച്ചില്ല') missedPrayers.push('ളുഹ്ർ');
+      if (prayerRecord.asr === 'നിസ്കരിച്ചില്ല') missedPrayers.push('അസ്വർ');
+      if (prayerRecord.maghrib === 'നിസ്കരിച്ചില്ല') missedPrayers.push('മഗ്‌രിബ്');
+      if (prayerRecord.isha === 'നിസ്കരിച്ചില്ല') missedPrayers.push('ഇശാ');
+    }
+
+    if (missedPrayers.length === 0) {
+      return `<span style="color:#047857; font-weight:bold; font-size:11px;">✔️ OK</span>`;
+    }
+
+    const missedText = missedPrayers.join(', ');
+    const msg = `അസ്സലാമു അലൈക്കും,\n\nമൽഹറുൽ ഉലൂം മദ്റസ കലൂരിൽ നിന്നുള്ള അറിയിപ്പാണ്.\n\nമാതാപിതാക്കളുടെ ശ്രദ്ധയ്ക്ക്: നിങ്ങളുടെ മകൻ/മകൾ *${student.name}* (Adm: ${student.adm}, Class ${student.class}) തീയതി: ${targetDate} -ൽ നിസ്കാര ട്രാക്കറിൽ *[${missedText}]* നിസ്കാരം നിർവ്വഹിച്ചിട്ടില്ല / രേഖപ്പെടുത്തിയിട്ടില്ല എന്ന് കാണുന്നു.\n\nകുട്ടിയുടെ നിസ്കാര കാര്യത്തിൽ പ്രത്യേക ശ്രദ്ധ പുലർത്താൻ അഭ്യർത്ഥിക്കുന്നു. അല്ലാഹു അനുഗ്രഹിക്കട്ടെ.`;
+
+    const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+    return `<a href="${waUrl}" target="_blank" class="btn-wa">💬 WA</a>`;
+  }
+
+  // Daily Inspection: Teacher
   function renderDailyTeacherView() {
     const cls = document.getElementById('tDailyClass').value;
     const date = document.getElementById('tDailyDate').value;
@@ -752,12 +801,13 @@
     tbody.innerHTML = '';
 
     if (students.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="color:var(--text-muted);">ഈ ക്ലാസിൽ കുട്ടികളില്ല</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" style="color:var(--text-muted);">ഈ ക്ലാസിൽ കുട്ടികളില്ല</td></tr>`;
       return;
     }
 
     students.forEach(s => {
       const rec = dayPrayers.find(p => p.studentId === s.id);
+      const waAction = getWhatsAppActionHTML(s, rec, date);
       tbody.innerHTML += `
         <tr>
           <td><b>${s.adm}</b></td>
@@ -767,11 +817,13 @@
           <td>${getBadgeHTML(rec?.asr)}</td>
           <td>${getBadgeHTML(rec?.maghrib)}</td>
           <td>${getBadgeHTML(rec?.isha)}</td>
+          <td>${waAction}</td>
         </tr>
       `;
     });
   }
 
+  // Daily Inspection: Admin
   function renderDailyAdminView() {
     const cls = document.getElementById('admDailyClass').value;
     const date = document.getElementById('admDailyDate').value;
@@ -784,12 +836,13 @@
     tbody.innerHTML = '';
 
     if (students.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="color:var(--text-muted);">കുട്ടികളില്ല</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" style="color:var(--text-muted);">കുട്ടികളില്ല</td></tr>`;
       return;
     }
 
     students.forEach(s => {
       const rec = dayPrayers.find(p => p.studentId === s.id);
+      const waAction = getWhatsAppActionHTML(s, rec, date);
       tbody.innerHTML += `
         <tr>
           <td>${s.class}</td>
@@ -800,16 +853,18 @@
           <td>${getBadgeHTML(rec?.asr)}</td>
           <td>${getBadgeHTML(rec?.maghrib)}</td>
           <td>${getBadgeHTML(rec?.isha)}</td>
+          <td>${waAction}</td>
         </tr>
       `;
     });
   }
 
-  // Teacher Actions
+  // Save Student (With Phone Number)
   async function saveStudentByTeacher() {
     const cls = document.getElementById('tRegClass').value;
     const adm = document.getElementById('tRegAdm').value.trim();
     const name = document.getElementById('tRegName').value.trim();
+    const phone = document.getElementById('tRegPhone').value.trim();
     const gender = document.getElementById('tRegGender').value;
     const photoFile = document.getElementById('tRegPhoto').files[0];
 
@@ -821,14 +876,16 @@
       await db.collection("students").add({
         adm,
         name,
+        phone,
         class: cls,
         gender,
         photo: photoBase64,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-      alert("വിദ്യാർത്ഥിയെ ചേർത്തു!");
+      alert("വിദ്യാർത്ഥിയെ വിജയകരമായി ചേർത്തു!");
       document.getElementById('tRegAdm').value = '';
       document.getElementById('tRegName').value = '';
+      document.getElementById('tRegPhone').value = '';
       document.getElementById('tRegPhoto').value = '';
       document.getElementById('tPhotoPreview').style.display = 'none';
     } catch (e) {
@@ -847,6 +904,7 @@
           <td><img src="${s.photo || defaultAvatar}" class="avatar-sm" style="margin:0 auto;"></td>
           <td>${s.adm}</td>
           <td style="text-align:left;">${s.name} (${s.gender === 'Female' ? 'F' : 'M'})</td>
+          <td>${s.phone || '-'}</td>
           <td><button class="btn-del" onclick="deleteStudent('${s.id}')">ഡിലീറ്റ്</button></td>
         </tr>
       `;
@@ -932,7 +990,7 @@
     }
   }
 
-  // Auto Search Datalists
+  // Datalists
   function populateDatalists() {
     const admDl = document.getElementById('admDatalist');
     const nameDl = document.getElementById('nameDatalist');
@@ -1117,7 +1175,7 @@
     `;
   }
 
-  // --- REPORT GENERATOR HELPER ---
+  // Reports
   function getProcessedMonthlyData(source) {
     const cls = source === 'teacher' ? document.getElementById('tRepClass').value : document.getElementById('admRepClass').value;
     const month = source === 'teacher' ? document.getElementById('tRepMonth').value : document.getElementById('admRepMonth').value;
@@ -1159,7 +1217,6 @@
     return { cls, month, tableData };
   }
 
-  // PDF Export
   function downloadClassPDF(source) {
     const data = getProcessedMonthlyData(source);
     if (!data) return;
@@ -1189,7 +1246,6 @@
     doc.save(`MUM_Report_${data.cls}_${data.month}.pdf`);
   }
 
-  // Print Window & Preview
   function printClassReport(source) {
     const data = getProcessedMonthlyData(source);
     if (!data) return;
