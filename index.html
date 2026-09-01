@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>നിസ്കാര ട്രാക്കർ - Malharul Uloom Madrasa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Manjari', sans-serif;
+      background: #f0fdf4;
+    }
+  </style>
+</head>
+<body class="p-3 sm:p-6 text-gray-800">
+
+  <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-emerald-100">
+    
+    <div class="bg-gradient-to-r from-emerald-700 to-teal-800 p-6 text-white text-center">
+      <h1 class="text-xl sm:text-2xl font-bold tracking-wide">MALHARUL ULOOM MADRASA</h1>
+      <p class="text-sm text-emerald-200 uppercase tracking-widest mt-1">Kalloor - Koothali</p>
+      <div class="mt-3 inline-block bg-emerald-900/50 px-4 py-1 rounded-full text-xs font-semibold">
+        പ്രതിദിന നിസ്കാര രജിസ്റ്റർ
+      </div>
+    </div>
+
+    <form id="prayerForm" class="p-5 sm:p-8 space-y-6">
+      
+      <div class="space-y-4 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-1">വിദ്യാർത്ഥിയുടെ പേര് (Student Name):</label>
+          <input type="text" id="studentName" required placeholder="പേര് ടൈപ്പ് ചെയ്യുക" 
+                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">ക്ലാസ് (Class):</label>
+            <select id="studentClass" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
+              <option value="">തിരഞ്ഞെടുക്കുക</option>
+              <option value="Class 1">ക്ലാസ് 1</option>
+              <option value="Class 2">ക്ലാസ് 2</option>
+              <option value="Class 3">ക്ലാസ് 3</option>
+              <option value="Class 4">ക്ലാസ് 4</option>
+              <option value="Class 5">ക്ലാസ് 5</option>
+              <option value="Class 6">ക്ലാസ് 6</option>
+              <option value="Class 7">ക്ലാസ് 7</option>
+              <option value="Class 8">ക്ലാസ് 8</option>
+              <option value="Class 9">ക്ലാസ് 9</option>
+              <option value="Class 10">ക്ലാസ് 10</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">റോൾ നമ്പർ (Roll No):</label>
+            <input type="number" id="rollNo" required placeholder="Roll No" 
+                   class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-gray-700 mb-1">തിയ്യതി (Date):</label>
+          <input type="date" id="entryDate" required 
+                 class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <h3 class="font-bold text-emerald-900 border-b pb-2">നിസ്കാര വിവരങ്ങൾ രേഖപ്പെടുത്തുക</h3>
+
+        <div id="prayerFields" class="space-y-3">
+          </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-gray-700 mb-1">മറ്റു വിവരങ്ങൾ / കുറിപ്പുകൾ (Optional):</label>
+        <textarea id="remarks" rows="2" placeholder="ഉദാഹരണത്തിന്: അസുഖം കാരണം..." 
+                  class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"></textarea>
+      </div>
+
+      <button type="submit" id="submitBtn" 
+              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-xl transition duration-200">
+        വിവരങ്ങൾ സേവ് ചെയ്യുക (Submit)
+      </button>
+
+      <p id="statusMsg" class="text-center text-sm font-bold hidden"></p>
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // 🔴 നിങ്ങളുടെ Firebase Config ഇവിടെ ചേർക്കുക
+    const const firebaseConfig = {
+  apiKey: "AIzaSyAFsoGr2bUuNuN8HpkV3pjfG6_bHAQzaUY",
+  authDomain: "mum-kalloor-koothali.firebaseapp.com",
+  projectId: "mum-kalloor-koothali",
+  storageBucket: "mum-kalloor-koothali.firebasestorage.app",
+  messagingSenderId: "1067273465346",
+  appId: "1:1067273465346:web:9699968605c7869f2d011b",
+  measurementId: "G-LED49NYSS1"
+};const firebaseConfig = {
+  apiKey: "AIzaSyAFsoGr2bUuNuN8HpkV3pjfG6_bHAQzaUY",
+  authDomain: "mum-kalloor-koothali.firebaseapp.com",
+  projectId: "mum-kalloor-koothali",
+  storageBucket: "mum-kalloor-koothali.firebasestorage.app",
+  messagingSenderId: "1067273465346",
+  appId: "1:1067273465346:web:9699968605c7869f2d011b",
+  measurementId: "G-LED49NYSS1"
+};
+
+    // Firebase Initialize
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Set today's date by default
+    document.getElementById('entryDate').valueAsDate = new Date();
+
+    // Prayers Array
+    const prayers = [
+      { id: 'fajr', name: 'സുബ്ഹ് (Fajr)' },
+      { id: 'dhuhr', name: 'ദുഹ്ർ (Dhuhr)' },
+      { id: 'asr', name: 'അസ്വർ (Asr)' },
+      { id: 'maghrib', name: 'മഗ്‌രിബ് (Maghrib)' },
+      { id: 'isha', name: 'ഇശാഅ് (Isha)' }
+    ];
+
+    const prayerContainer = document.getElementById('prayerFields');
+
+    // Generate Prayer Dropdowns
+    prayers.forEach(p => {
+      const div = document.createElement('div');
+      div.className = "flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 rounded-lg border";
+      div.innerHTML = `
+        <span class="font-bold text-gray-700 mb-1 sm:mb-0">${p.name}</span>
+        <select id="${p.id}" required class="px-3 py-1.5 border rounded-md bg-white text-sm focus:ring-2 focus:ring-emerald-500">
+          <option value="ജമാഅത്ത്">ജമാഅത്ത് (Jama'ath)</option>
+          <option value="അദാഅ്">അദാഅ് (Ada'a)</option>
+          <option value="കളാഅ്">കളാഅ് (Qadha'a)</option>
+          <option value="നിസ്കരിച്ചില്ല">നിസ്കരിച്ചില്ല (Missed)</option>
+        </select>
+      `;
+      prayerContainer.appendChild(div);
+    });
+
+    // Handle Form Submit
+    const form = document.getElementById('prayerForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusMsg = document.getElementById('statusMsg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = "സേവ് ചെയ്യുന്നു...";
+
+      const studentData = {
+        madrassa: "MALHARUL ULOOM MADRASA KALLOOR -KOOTHALI",
+        studentName: document.getElementById('studentName').value,
+        studentClass: document.getElementById('studentClass').value,
+        rollNo: document.getElementById('rollNo').value,
+        date: document.getElementById('entryDate').value,
+        prayers: {
+          fajr: document.getElementById('fajr').value,
+          dhuhr: document.getElementById('dhuhr').value,
+          asr: document.getElementById('asr').value,
+          maghrib: document.getElementById('maghrib').value,
+          isha: document.getElementById('isha').value
+        },
+        remarks: document.getElementById('remarks').value,
+        timestamp: serverTimestamp()
+      };
+
+      try {
+        await addDoc(collection(db, "daily_prayers"), studentData);
+        
+        statusMsg.innerText = "✅ വിജയകരമായി രേഖപ്പെടുത്തി!";
+        statusMsg.className = "text-center text-sm font-bold text-emerald-600 block";
+        
+        form.reset();
+        document.getElementById('entryDate').valueAsDate = new Date();
+      } catch (error) {
+        console.error("Error adding document: ", error);
+        statusMsg.innerText = "❌ രേഖപ്പെടുത്താൻ സാധിച്ചില്ല. വീണ്ടും ശ്രമിക്കുക.";
+        statusMsg.className = "text-center text-sm font-bold text-red-600 block";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "വിവരങ്ങൾ സേവ് ചെയ്യുക (Submit)";
+      }
+    });
+  </script>
+</body>
+</html>
