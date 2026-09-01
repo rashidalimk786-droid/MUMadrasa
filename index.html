@@ -31,17 +31,17 @@
     }
     .container {
       width: 100%;
-      max-width: 500px;
+      max-width: 540px;
       background: var(--card);
       border-radius: 20px;
       padding: 24px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
       border: 1px solid #dcfce7;
       height: fit-content;
     }
     .header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       padding-bottom: 16px;
       border-bottom: 2px solid #ecfdf5;
     }
@@ -54,20 +54,14 @@
       padding: 4px 10px;
       border-radius: 20px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
       margin-bottom: 8px;
     }
     .header h1 {
-      font-size: 18px;
+      font-size: 17px;
       color: var(--primary);
       font-weight: 800;
       line-height: 1.3;
       text-transform: uppercase;
-    }
-    .header p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 4px;
     }
     .tabs {
       display: flex;
@@ -87,22 +81,15 @@
       font-size: 13px;
       cursor: pointer;
       color: var(--text-muted);
-      transition: all 0.2s;
     }
     .tab-btn.active {
       background: var(--card);
       color: var(--primary);
       box-shadow: 0 2px 4px rgba(0,0,0,0.06);
     }
-    .section {
-      display: none;
-    }
-    .section.active {
-      display: block;
-    }
-    .form-group {
-      margin-bottom: 16px;
-    }
+    .section { display: none; }
+    .section.active { display: block; }
+    .form-group { margin-bottom: 14px; }
     label {
       display: block;
       font-size: 13px;
@@ -112,92 +99,54 @@
     }
     select, input[type="date"], input[type="text"], input[type="password"], input[type="number"] {
       width: 100%;
-      padding: 12px 14px;
+      padding: 11px 13px;
       border: 1px solid var(--border);
       border-radius: 10px;
-      font-size: 15px;
+      font-size: 14px;
       background-color: #fff;
       outline: none;
-      transition: border-color 0.2s;
     }
-    select:focus, input:focus {
-      border-color: var(--accent);
-    }
+    select:focus, input:focus { border-color: var(--accent); }
     .prayer-card {
       background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 12px;
-      margin-bottom: 12px;
-    }
-    .prayer-title {
-      font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 8px;
-      color: #334155;
+      margin-bottom: 10px;
     }
     .status-group {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
     }
-    .status-group input[type="radio"] {
-      display: none;
-    }
+    .status-group input[type="radio"] { display: none; }
     .status-btn {
       text-align: center;
       font-size: 12px;
-      padding: 9px 2px;
+      padding: 8px 2px;
       border-radius: 8px;
       background: #fff;
       border: 1px solid var(--border);
       cursor: pointer;
-      font-weight: 500;
-      transition: all 0.15s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: block;
     }
-    .status-group input[value="ജമാഅത്ത്"]:checked + .status-btn {
-      background: #047857;
-      color: #fff;
-      border-color: #047857;
-      font-weight: 700;
-    }
-    .status-group input[value="അദാഅ്"]:checked + .status-btn {
-      background: #10b981;
-      color: #fff;
-      border-color: #10b981;
-      font-weight: 700;
-    }
-    .status-group input[value="ഖദാഅ്"]:checked + .status-btn {
-      background: #f59e0b;
-      color: #fff;
-      border-color: #f59e0b;
-      font-weight: 700;
-    }
-    .status-group input[value="നിസ്കരിച്ചില്ല"]:checked + .status-btn {
-      background: #ef4444;
-      color: #fff;
-      border-color: #ef4444;
-      font-weight: 700;
-    }
+    .status-group input[value="ജമാഅത്ത്"]:checked + .status-btn { background: #047857; color: #fff; font-weight: 700; }
+    .status-group input[value="അദാഅ്"]:checked + .status-btn { background: #10b981; color: #fff; font-weight: 700; }
+    .status-group input[value="ഖദാഅ്"]:checked + .status-btn { background: #f59e0b; color: #fff; font-weight: 700; }
+    .status-group input[value="നിസ്കരിച്ചില്ല"]:checked + .status-btn { background: #ef4444; color: #fff; font-weight: 700; }
+    
     .btn-submit {
       width: 100%;
       background: var(--primary);
       color: white;
       border: none;
-      padding: 14px;
+      padding: 12px;
       border-radius: 10px;
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      margin-top: 8px;
-      transition: background 0.2s;
     }
-    .btn-submit:hover {
-      background: var(--primary-hover);
-    }
+    .btn-submit:hover { background: var(--primary-hover); }
     .btn-danger {
       background: #fee2e2;
       color: #dc2626;
@@ -217,7 +166,7 @@
     }
     .table-container {
       overflow-x: auto;
-      margin-top: 16px;
+      margin-top: 14px;
     }
     table {
       width: 100%;
@@ -226,17 +175,13 @@
     }
     th, td {
       border: 1px solid var(--border);
-      padding: 8px 6px;
+      padding: 8px 5px;
       text-align: center;
     }
-    th {
-      background: #f1f5f9;
-      color: var(--text-muted);
-      font-weight: 700;
-    }
+    th { background: #f1f5f9; color: var(--text-muted); }
     .badge-tag {
       font-size: 11px;
-      padding: 2px 5px;
+      padding: 2px 4px;
       border-radius: 4px;
       font-weight: 600;
     }
@@ -252,7 +197,6 @@
   <div class="header">
     <span class="badge">ഡെയിലി പ്രെയർ ട്രാക്കർ</span>
     <h1>MALHARUL ULOOM MADRASA<br>KALOOR-KOOTHALI</h1>
-    <p>നിസ്കാര വിവരങ്ങൾ രേഖപ്പെടുത്തുക</p>
   </div>
 
   <div class="tabs">
@@ -261,30 +205,21 @@
     <button class="tab-btn" onclick="switchTab('adminTab')">അഡ്മിൻ</button>
   </div>
 
-  <!-- 1. വിദ്യാർത്ഥി / എൻട്രി സെക്ഷൻ -->
+  <!-- വിദ്യാർത്ഥികൾ മാർക്ക് ചെയ്യുന്ന പേജ് -->
   <div id="trackerTab" class="section active">
     <div class="form-group">
       <label>തീയതി</label>
       <input type="date" id="entryDate">
     </div>
-
     <div class="form-group">
       <label>ക്ലാസ് തെരഞ്ഞെടുക്കുക</label>
       <select id="entryClass" onchange="populateStudentsDropdown()">
         <option value="">-- ക്ലാസ് തിരഞ്ഞെടുക്കുക --</option>
-        <option value="1">ക്ലാസ് 1</option>
-        <option value="2">ക്ലാസ് 2</option>
-        <option value="3">ക്ലാസ് 3</option>
-        <option value="4">ക്ലാസ് 4</option>
-        <option value="5">ക്ലാസ് 5</option>
-        <option value="6">ക്ലാസ് 6</option>
-        <option value="7">ക്ലാസ് 7</option>
-        <option value="8">ക്ലാസ് 8</option>
-        <option value="9">ക്ലാസ് 9</option>
-        <option value="10">ക്ലാസ് 10</option>
+        <script>
+          for(let i=1; i<=10; i++) document.write(`<option value="${i}">ക്ലാസ് ${i}</option>`);
+        </script>
       </select>
     </div>
-
     <div class="form-group">
       <label>വിദ്യാർത്ഥി</label>
       <select id="entryStudent">
@@ -292,10 +227,9 @@
       </select>
     </div>
 
-    <!-- നിസ്കാര കാർഡുകൾ -->
     <div id="prayerFields">
-      <div class="prayer-card">
-        <div class="prayer-title">സുബ്ഹ്</div>
+      <!-- സുബ്ഹ്, ളുഹ്ർ, അസ്വർ, മഗ്‌രിബ്, ഇശാ -->
+      <div class="prayer-card"><div style="font-weight:700; margin-bottom:6px;">സുബ്ഹ്</div>
         <div class="status-group">
           <label><input type="radio" name="subh" value="ജമാഅത്ത്" checked><span class="status-btn">ജമാഅത്ത്</span></label>
           <label><input type="radio" name="subh" value="അദാഅ്"><span class="status-btn">അദാഅ്</span></label>
@@ -303,9 +237,7 @@
           <label><input type="radio" name="subh" value="നിസ്കരിച്ചില്ല"><span class="status-btn">ഇല്ല</span></label>
         </div>
       </div>
-
-      <div class="prayer-card">
-        <div class="prayer-title">ളുഹ്ർ</div>
+      <div class="prayer-card"><div style="font-weight:700; margin-bottom:6px;">ളുഹ്ർ</div>
         <div class="status-group">
           <label><input type="radio" name="dhuhr" value="ജമാഅത്ത്" checked><span class="status-btn">ജമാഅത്ത്</span></label>
           <label><input type="radio" name="dhuhr" value="അദാഅ്"><span class="status-btn">അദാഅ്</span></label>
@@ -313,9 +245,7 @@
           <label><input type="radio" name="dhuhr" value="നിസ്കരിച്ചില്ല"><span class="status-btn">ഇല്ല</span></label>
         </div>
       </div>
-
-      <div class="prayer-card">
-        <div class="prayer-title">അസ്വർ</div>
+      <div class="prayer-card"><div style="font-weight:700; margin-bottom:6px;">അസ്വർ</div>
         <div class="status-group">
           <label><input type="radio" name="asr" value="ജമാഅത്ത്" checked><span class="status-btn">ജമാഅത്ത്</span></label>
           <label><input type="radio" name="asr" value="അദാഅ്"><span class="status-btn">അദാഅ്</span></label>
@@ -323,9 +253,7 @@
           <label><input type="radio" name="asr" value="നിസ്കരിച്ചില്ല"><span class="status-btn">ഇല്ല</span></label>
         </div>
       </div>
-
-      <div class="prayer-card">
-        <div class="prayer-title">മഗ്‌രിബ്</div>
+      <div class="prayer-card"><div style="font-weight:700; margin-bottom:6px;">മഗ്‌രിബ്</div>
         <div class="status-group">
           <label><input type="radio" name="maghrib" value="ജമാഅത്ത്" checked><span class="status-btn">ജമാഅത്ത്</span></label>
           <label><input type="radio" name="maghrib" value="അദാഅ്"><span class="status-btn">അദാഅ്</span></label>
@@ -333,9 +261,7 @@
           <label><input type="radio" name="maghrib" value="നിസ്കരിച്ചില്ല"><span class="status-btn">ഇല്ല</span></label>
         </div>
       </div>
-
-      <div class="prayer-card">
-        <div class="prayer-title">ഇശാ</div>
+      <div class="prayer-card"><div style="font-weight:700; margin-bottom:6px;">ഇശാ</div>
         <div class="status-group">
           <label><input type="radio" name="isha" value="ജമാഅത്ത്" checked><span class="status-btn">ജമാഅത്ത്</span></label>
           <label><input type="radio" name="isha" value="അദാഅ്"><span class="status-btn">അദാഅ്</span></label>
@@ -344,159 +270,124 @@
         </div>
       </div>
     </div>
-
-    <button class="btn-submit" onclick="submitPrayerEntry()">സേവ് ചെയ്യുക</button>
+    <button class="btn-submit" onclick="submitPrayerEntry()" style="margin-top:10px;">സേവ് ചെയ്യുക</button>
   </div>
 
-  <!-- 2. അധ്യാപകരുടെ പോർട്ടൽ -->
+  <!-- അധ്യാപക പേജ് -->
   <div id="teacherTab" class="section">
     <div id="teacherAuth" class="auth-card">
       <h3 style="margin-bottom: 8px;">അധ്യാപക ലോഗിൻ</h3>
-      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">കുട്ടികളെ ചേർക്കാനും ക്ലാസ് റിപ്പോർട്ട് കാണാനും പാസ്‌വേഡ് നൽകുക</p>
       <div class="form-group">
-        <input type="password" id="teacherPassInput" placeholder="Teacher Password">
+        <label>അധ്യാപകനെ തിരഞ്ഞെടുക്കുക</label>
+        <select id="tLoginSelect">
+          <option value="">-- തിരഞ്ഞെടുക്കുക --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <input type="password" id="teacherPassInput" placeholder="പാസ്‌വേഡ് ടൈപ്പ് ചെയ്യുക">
       </div>
       <button class="btn-submit" onclick="loginTeacher()">പ്രവേശിക്കുക</button>
     </div>
 
     <div id="teacherContent" style="display: none;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h3>അധ്യാപക പാനൽ</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 id="tWelcome">അധ്യാപക പാനൽ</h3>
         <button class="btn-danger" onclick="logoutTeacher()">ലോഗൗട്ട്</button>
       </div>
 
-      <!-- വിദ്യാർത്ഥിയെ ചേർക്കുക -->
-      <div class="prayer-card" style="margin-bottom: 20px;">
-        <h4 style="margin-bottom: 10px;">പുതിയ കുട്ടിയെ ചേർക്കുക</h4>
-        <div class="form-group">
-          <label>ക്ലാസ്</label>
-          <select id="regClass">
-            <option value="1">ക്ലാസ് 1</option>
-            <option value="2">ക്ലാസ് 2</option>
-            <option value="3">ക്ലാസ് 3</option>
-            <option value="4">ക്ലാസ് 4</option>
-            <option value="5">ക്ലാസ് 5</option>
-            <option value="6">ക്ലാസ് 6</option>
-            <option value="7">ക്ലാസ് 7</option>
-            <option value="8">ക്ലാസ് 8</option>
-            <option value="9">ക്ലാസ് 9</option>
-            <option value="10">ക്ലാസ് 10</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>റോൾ നമ്പർ</label>
-          <input type="number" id="regRoll" placeholder="Roll No">
-        </div>
-        <div class="form-group">
-          <label>പേര്</label>
-          <input type="text" id="regName" placeholder="Student Name">
-        </div>
-        <button class="btn-submit" onclick="registerStudent()">വിദ്യാർത്ഥിയെ ചേർക്കുക</button>
+      <div class="prayer-card">
+        <h4 style="margin-bottom: 8px;">കുട്ടിയെ ചേർക്കുക</h4>
+        <input type="number" id="regRoll" placeholder="റോൾ നമ്പർ" style="margin-bottom: 8px;">
+        <input type="text" id="regName" placeholder="വിദ്യാർത്ഥിയുടെ പേര്" style="margin-bottom: 8px;">
+        <button class="btn-submit" onclick="registerStudent()">ചേർക്കുക</button>
       </div>
 
-      <!-- ക്ലാസ് റിപ്പോർട്ട് -->
-      <h4>ക്ലാസ് റിപ്പോർട്ട്</h4>
-      <div class="form-group" style="margin-top: 10px;">
-        <label>തീയതി</label>
-        <input type="date" id="tRepDate" onchange="renderTeacherReport()">
-      </div>
-      <div class="form-group">
-        <label>ക്ലാസ്</label>
-        <select id="tRepClass" onchange="renderTeacherReport()">
-          <option value="1">ക്ലാസ് 1</option>
-          <option value="2">ക്ലാസ് 2</option>
-          <option value="3">ക്ലാസ് 3</option>
-          <option value="4">ക്ലാസ് 4</option>
-          <option value="5">ക്ലാസ് 5</option>
-          <option value="6">ക്ലാസ് 6</option>
-          <option value="7">ക്ലാസ് 7</option>
-          <option value="8">ക്ലാസ് 8</option>
-          <option value="9">ക്ലാസ് 9</option>
-          <option value="10">ക്ലാസ് 10</option>
-        </select>
-      </div>
-
+      <h4 style="margin: 14px 0 8px;">ക്ലാസ് റിപ്പോർട്ട്</h4>
+      <input type="date" id="tRepDate" onchange="renderTeacherReport()" style="margin-bottom: 8px;">
       <div class="table-container">
         <table>
           <thead>
-            <tr>
-              <th>റോൾ</th>
-              <th>പേര്</th>
-              <th>സു</th>
-              <th>ളു</th>
-              <th>അ</th>
-              <th>മ</th>
-              <th>ഇ</th>
-            </tr>
+            <tr><th>റോൾ</th><th>പേര്</th><th>സു</th><th>ളു</th><th>അ</th><th>മ</th><th>ഇ</th></tr>
           </thead>
           <tbody id="teacherReportTable">
-            <tr><td colspan="7">വിവരങ്ങൾ ലഭ്യമല്ല</td></tr>
+            <tr><td colspan="7">ഡാറ്റ ലഭ്യമല്ല</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- 3. അഡ്മിൻ പോർട്ടൽ -->
+  <!-- അഡ്മിൻ പേജ് -->
   <div id="adminTab" class="section">
     <div id="adminAuth" class="auth-card">
-      <h3 style="margin-bottom: 8px;">അഡ്മിൻ ലോഗിൻ</h3>
-      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">മൊത്തം റിപ്പോർട്ടുകൾ കാണാനും കൺട്രോളിനുമായി ലോഗിൻ ചെയ്യുക</p>
+      <h3 style="margin-bottom: 4px;">അഡ്മിൻ ലോഗിൻ</h3>
+      <p style="font-size:13px; color:var(--primary); font-weight:700; margin-bottom: 12px;">RASHIDALI FAIZY</p>
       <div class="form-group">
-        <input type="password" id="adminPassInput" placeholder="Admin Password">
+        <input type="password" id="adminPassInput" placeholder="അഡ്മിൻ പാസ്‌വേഡ്">
       </div>
-      <button class="btn-submit" onclick="loginAdmin()">പ്രവേശിക്കുക</button>
+      <button class="btn-submit" onclick="loginAdmin()">ലോഗിൻ ചെയ്യുക</button>
     </div>
 
     <div id="adminContent" style="display: none;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h3>അഡ്മിൻ ഡാഷ്‌ബോർഡ്</h3>
+        <div>
+          <h3 style="color:var(--primary);">RASHIDALI FAIZY</h3>
+          <p style="font-size:12px; color:var(--text-muted);">Admin Portal</p>
+        </div>
         <button class="btn-danger" onclick="logoutAdmin()">ലോഗൗട്ട്</button>
       </div>
 
-      <div class="form-group">
-        <label>തീയതി തിരഞ്ഞെടുക്കുക</label>
-        <input type="date" id="adminDate" onchange="renderAdminReport()">
+      <!-- പാസ്‌വേഡ് മാറ്റാനുള്ള സെക്ഷൻ -->
+      <div class="prayer-card">
+        <h4 style="margin-bottom: 8px;">അഡ്മിൻ പാസ്‌വേഡ് മാറ്റുക</h4>
+        <input type="password" id="oldPass" placeholder="പഴയ പാസ്‌വേഡ്" style="margin-bottom: 6px;">
+        <input type="password" id="newPass" placeholder="പുതിയ പാസ്‌വേഡ്" style="margin-bottom: 8px;">
+        <button class="btn-submit" style="background:#0284c7;" onclick="changeAdminPassword()">പാസ്‌വേഡ് അപ്ഡേറ്റ് ചെയ്യുക</button>
       </div>
 
+      <!-- അധ്യാപകരെ ചേർക്കുന്ന സെക്ഷൻ -->
+      <div class="prayer-card">
+        <h4 style="margin-bottom: 8px;">അധ്യാപകരെ ചേർക്കുക</h4>
+        <input type="text" id="tName" placeholder="അധ്യാപകന്റെ പേര്" style="margin-bottom: 6px;">
+        <select id="tAssignedClass" style="margin-bottom: 6px;">
+          <option value="">ക്ലാസ് നൽകുക</option>
+          <script>
+            for(let i=1; i<=10; i++) document.write(`<option value="${i}">ക്ലാസ് ${i}</option>`);
+          </script>
+        </select>
+        <input type="password" id="tPass" placeholder="അധ്യാപകന്റെ പാസ്‌വേഡ്" style="margin-bottom: 8px;">
+        <button class="btn-submit" onclick="addTeacherByAdmin()">അധ്യാപകനെ സേവ് ചെയ്യുക</button>
+      </div>
+
+      <!-- മൊത്തം റിപ്പോർട്ട് -->
+      <h4 style="margin: 14px 0 8px;">സ്കൂൾ റിപ്പോർട്ട്</h4>
+      <input type="date" id="adminDate" onchange="renderAdminReport()" style="margin-bottom: 8px;">
       <div class="table-container">
         <table>
           <thead>
-            <tr>
-              <th>ക്ലാസ്</th>
-              <th>പേര്</th>
-              <th>സുബ്ഹ്</th>
-              <th>ളുഹ്ർ</th>
-              <th>അസ്വർ</th>
-              <th>മഗ്‌രിബ്</th>
-              <th>ഇശാ</th>
-            </tr>
+            <tr><th>ക്ലാസ്</th><th>പേര്</th><th>സു</th><th>ളു</th><th>അ</th><th>മ</th><th>ഇ</th></tr>
           </thead>
           <tbody id="adminReportTable">
-            <tr><td colspan="7">വിവരങ്ങൾ ലഭ്യമല്ല</td></tr>
+            <tr><td colspan="7">ഡാറ്റ ലഭ്യമല്ല</td></tr>
           </tbody>
         </table>
-      </div>
-
-      <div style="margin-top: 20px; padding: 12px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 10px;">
-        <p style="font-size: 12px; color: #9f1239; margin-bottom: 8px;">ആപ്പിലെ മുഴുവൻ വിദ്യാർത്ഥി ലിസ്റ്റും നിസ്കാര വിവരങ്ങളും മായ്‌ക്കാൻ:</p>
-        <button class="btn-danger" style="width: 100%;" onclick="clearAllData()">എല്ലാ വിവരങ്ങളും ഡിലീറ്റ് ചെയ്യുക (Reset)</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  // പാസ്‌വേഡുകൾ
-  const PASSWORDS = {
-    teacher: "teacher123",
-    admin: "admin123"
-  };
+  // അഡ്മിൻ സ്ഥിരസ്ഥിതി പാസ്‌വേഡ് സെറ്റിംഗ്
+  if (!localStorage.getItem('mum_admin_pass')) {
+    localStorage.setItem('mum_admin_pass', '772625');
+  }
 
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('entryDate').value = today;
   document.getElementById('tRepDate').value = today;
   document.getElementById('adminDate').value = today;
+
+  let currentTeacher = null;
 
   function switchTab(tabId) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -504,95 +395,144 @@
     event.target.classList.add('active');
     document.getElementById(tabId).classList.add('active');
     
-    if(tabId === 'teacherTab' && document.getElementById('teacherContent').style.display === 'block') {
-      renderTeacherReport();
-    }
-    if(tabId === 'adminTab' && document.getElementById('adminContent').style.display === 'block') {
-      renderAdminReport();
-    }
+    if(tabId === 'teacherTab') loadTeacherDropdown();
+    if(tabId === 'adminTab' && document.getElementById('adminContent').style.display === 'block') renderAdminReport();
   }
 
-  // അധ്യാപക ലോഗിൻ
-  function loginTeacher() {
-    const pass = document.getElementById('teacherPassInput').value;
-    if(pass === PASSWORDS.teacher) {
-      document.getElementById('teacherAuth').style.display = 'none';
-      document.getElementById('teacherContent').style.display = 'block';
-      renderTeacherReport();
-    } else {
-      alert("തെറ്റായ പാസ്‌വേഡ്!");
-    }
-  }
-  function logoutTeacher() {
-    document.getElementById('teacherPassInput').value = '';
-    document.getElementById('teacherAuth').style.display = 'block';
-    document.getElementById('teacherContent').style.display = 'none';
-  }
-
-  // അഡ്മിൻ ലോഗിൻ
+  // അഡ്മിൻ ഫംഗ്ഷനുകൾ
   function loginAdmin() {
-    const pass = document.getElementById('adminPassInput').value;
-    if(pass === PASSWORDS.admin) {
+    const entered = document.getElementById('adminPassInput').value;
+    const actual = localStorage.getItem('mum_admin_pass');
+    if(entered === actual) {
       document.getElementById('adminAuth').style.display = 'none';
       document.getElementById('adminContent').style.display = 'block';
       renderAdminReport();
     } else {
-      alert("തെറ്റായ പാസ്‌വേഡ്!");
+      alert("തെറ്റായ അഡ്മിൻ പാസ്‌വേഡ്!");
     }
   }
+
   function logoutAdmin() {
     document.getElementById('adminPassInput').value = '';
     document.getElementById('adminAuth').style.display = 'block';
     document.getElementById('adminContent').style.display = 'none';
   }
 
-  // വിദ്യാർത്ഥി മാനേജ്മെന്റ്
-  function getStudents() {
-    return JSON.parse(localStorage.getItem('mum_students')) || [];
+  function changeAdminPassword() {
+    const oldP = document.getElementById('oldPass').value;
+    const newP = document.getElementById('newPass').value;
+    const actual = localStorage.getItem('mum_admin_pass');
+
+    if(oldP !== actual) {
+      alert("പഴയ പാസ്‌വേഡ് തെറ്റാണ്!");
+      return;
+    }
+    if(!newP || newP.length < 4) {
+      alert("പുതിയ പാസ്‌വേഡ് കുറഞ്ഞത് 4 അക്ഷരങ്ങൾ വേണം!");
+      return;
+    }
+
+    localStorage.setItem('mum_admin_pass', newP);
+    alert("അഡ്മിൻ പാസ്‌വേഡ് വിജയകരമായി മാറ്റി!");
+    document.getElementById('oldPass').value = '';
+    document.getElementById('newPass').value = '';
+  }
+
+  function addTeacherByAdmin() {
+    const name = document.getElementById('tName').value.trim();
+    const cls = document.getElementById('tAssignedClass').value;
+    const pass = document.getElementById('tPass').value.trim();
+
+    if(!name || !cls || !pass) {
+      alert("എല്ലാ വിവരങ്ങളും നൽകുക!");
+      return;
+    }
+
+    let teachers = JSON.parse(localStorage.getItem('mum_teachers')) || [];
+    teachers.push({ id: Date.now().toString(), name, class: cls, pass });
+    localStorage.setItem('mum_teachers', JSON.stringify(teachers));
+
+    alert("അധ്യാപകന്റെ അക്കൗണ്ട് വിജയകരമായി ചേർത്തു!");
+    document.getElementById('tName').value = '';
+    document.getElementById('tAssignedClass').value = '';
+    document.getElementById('tPass').value = '';
+  }
+
+  // അധ്യാപകരുടെ ഫംഗ്ഷനുകൾ
+  function loadTeacherDropdown() {
+    const select = document.getElementById('tLoginSelect');
+    select.innerHTML = '<option value="">-- തിരഞ്ഞെടുക്കുക --</option>';
+    const teachers = JSON.parse(localStorage.getItem('mum_teachers')) || [];
+    teachers.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t.id;
+      opt.textContent = `${t.name} (ക്ലാസ് ${t.class})`;
+      select.appendChild(opt);
+    });
+  }
+
+  function loginTeacher() {
+    const tId = document.getElementById('tLoginSelect').value;
+    const pass = document.getElementById('teacherPassInput').value;
+    const teachers = JSON.parse(localStorage.getItem('mum_teachers')) || [];
+    const teacher = teachers.find(t => t.id === tId && t.pass === pass);
+
+    if(teacher) {
+      currentTeacher = teacher;
+      document.getElementById('teacherAuth').style.display = 'none';
+      document.getElementById('teacherContent').style.display = 'block';
+      document.getElementById('tWelcome').textContent = `${teacher.name} (ക്ലാസ് ${teacher.class})`;
+      renderTeacherReport();
+    } else {
+      alert("അധ്യാപകനെയോ പാസ്‌വേഡോ ശരിയായി നൽകുക!");
+    }
+  }
+
+  function logoutTeacher() {
+    currentTeacher = null;
+    document.getElementById('teacherPassInput').value = '';
+    document.getElementById('teacherAuth').style.display = 'block';
+    document.getElementById('teacherContent').style.display = 'none';
   }
 
   function registerStudent() {
-    const cls = document.getElementById('regClass').value;
     const roll = document.getElementById('regRoll').value.trim();
     const name = document.getElementById('regName').value.trim();
 
     if(!roll || !name) {
-      alert("വിവരങ്ങൾ പൂർണ്ണമായും നൽകുക!");
+      alert("റോൾ നമ്പറും പേരും നൽകുക!");
       return;
     }
 
-    const students = getStudents();
-    students.push({ id: Date.now().toString(), class: cls, roll, name });
+    let students = JSON.parse(localStorage.getItem('mum_students')) || [];
+    students.push({ id: Date.now().toString(), class: currentTeacher.class, roll, name });
     localStorage.setItem('mum_students', JSON.stringify(students));
-    
-    alert("വിദ്യാർത്ഥിയെ വിജയകരമായി ചേർത്തു!");
+
+    alert("വിദ്യാർത്ഥിയെ ചേർത്തു!");
     document.getElementById('regRoll').value = '';
     document.getElementById('regName').value = '';
-    populateStudentsDropdown();
     renderTeacherReport();
   }
 
   function populateStudentsDropdown() {
     const cls = document.getElementById('entryClass').value;
-    const studentSelect = document.getElementById('entryStudent');
-    studentSelect.innerHTML = '<option value="">-- തിരഞ്ഞെടുക്കുക --</option>';
-
-    const students = getStudents().filter(s => s.class === cls);
+    const select = document.getElementById('entryStudent');
+    select.innerHTML = '<option value="">-- തിരഞ്ഞെടുക്കുക --</option>';
+    const students = (JSON.parse(localStorage.getItem('mum_students')) || []).filter(s => s.class === cls);
     students.forEach(s => {
       const opt = document.createElement('option');
       opt.value = s.id;
       opt.textContent = `${s.roll}. ${s.name}`;
-      studentSelect.appendChild(opt);
+      select.appendChild(opt);
     });
   }
 
-  // നിസ്കാര ഡാറ്റ സേവിംഗ്
   function submitPrayerEntry() {
     const date = document.getElementById('entryDate').value;
     const studentId = document.getElementById('entryStudent').value;
 
     if(!date || !studentId) {
-      alert("ദയവായി തീയതിയും കുട്ടിയുടെ പേരും തിരഞ്ഞെടുക്കുക!");
+      alert("തീയതിയും കുട്ടിയുടെ പേരും തിരഞ്ഞെടുക്കുക!");
       return;
     }
 
@@ -610,30 +550,28 @@
     entries = entries.filter(e => !(e.date === date && e.studentId === studentId));
     entries.push(record);
     localStorage.setItem('mum_prayers', JSON.stringify(entries));
-
-    alert("നിസ്കാര വിവരങ്ങൾ സേവ് ചെയ്തു!");
+    alert("വിവരങ്ങൾ രേഖപ്പെടുത്തി!");
   }
 
   function getBadge(status) {
     if(!status) return '-';
     if(status === 'ജമാഅത്ത്') return '<span class="badge-tag tag-jam">ജ</span>';
     if(status === 'അദാഅ്') return '<span class="badge-tag tag-ada">അ</span>';
-    if(status === 'ഖളാഅ്') return '<span class="badge-tag tag-qad">ഖ</span>';
+    if(status === 'ഖദാഅ്') return '<span class="badge-tag tag-qad">ഖ</span>';
     return '<span class="badge-tag tag-nil">ഇ</span>';
   }
 
-  // ടീച്ചർ റിപ്പോർട്ട്
   function renderTeacherReport() {
+    if(!currentTeacher) return;
     const date = document.getElementById('tRepDate').value;
-    const cls = document.getElementById('tRepClass').value;
     const tbody = document.getElementById('teacherReportTable');
     tbody.innerHTML = '';
 
-    const students = getStudents().filter(s => s.class === cls);
+    const students = (JSON.parse(localStorage.getItem('mum_students')) || []).filter(s => s.class === currentTeacher.class);
     const entries = JSON.parse(localStorage.getItem('mum_prayers')) || [];
 
     if(students.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7">ഈ ക്ലാസിൽ കുട്ടികളെ ചേർത്തിട്ടില്ല</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7">കുട്ടികളെ ചേർത്തിട്ടില്ല</td></tr>';
       return;
     }
 
@@ -653,17 +591,16 @@
     });
   }
 
-  // അഡ്മിൻ റിപ്പോർട്ട്
   function renderAdminReport() {
     const date = document.getElementById('adminDate').value;
     const tbody = document.getElementById('adminReportTable');
     tbody.innerHTML = '';
 
-    const students = getStudents();
+    const students = JSON.parse(localStorage.getItem('mum_students')) || [];
     const entries = JSON.parse(localStorage.getItem('mum_prayers')) || [];
 
     if(students.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7">കുട്ടികളെ ചേർത്തിട്ടില്ല</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7">വിദ്യാർത്ഥികളുടെ വിവരങ്ങൾ ലഭ്യമല്ല</td></tr>';
       return;
     }
 
@@ -683,15 +620,6 @@
       `;
       tbody.appendChild(tr);
     });
-  }
-
-  function clearAllData() {
-    if(confirm("ശ്രദ്ധിക്കുക: എല്ലാ കുട്ടികളുടെയും വിവരങ്ങളും നിസ്കാര റിപ്പോർട്ടുകളും പൂർണ്ണമായി നഷ്ടപ്പെടും. തുടരണോ?")) {
-      localStorage.removeItem('mum_students');
-      localStorage.removeItem('mum_prayers');
-      alert("ഡാറ്റ ക്ലിയർ ചെയ്തു.");
-      renderAdminReport();
-    }
   }
 </script>
 </body>
