@@ -3,192 +3,440 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>നിസ്കാര ട്രാക്കർ - Malharul Uloom Madrasa</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&display=swap" rel="stylesheet">
+  <title>Prayer Tracker - നിസ്കാര ട്രാക്കർ</title>
   <style>
+    :root {
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
     body {
-      font-family: 'Manjari', sans-serif;
-      background: #f0fdf4;
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: 10px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: var(--card);
+      color: var(--primary-dark);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    select, input[type="date"], input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: #fff;
+    }
+    .prayer-card {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .prayer-name {
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+    .status-options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    .status-label {
+      text-align: center;
+      font-size: 12px;
+      padding: 8px 4px;
+      border-radius: 6px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .status-options input[type="radio"] {
+      display: none;
+    }
+    .status-options input[type="radio"]:checked + .status-label {
+      color: #fff;
+      border-color: transparent;
+      font-weight: bold;
+    }
+    /* Status Colors */
+    .status-options input[value="ജമാഅത്ത്"]:checked + .status-label { background: #059669; }
+    .status-options input[value="അദാഅ്"]:checked + .status-label { background: #10b981; }
+    .status-options input[value="ഖദാഅ്"]:checked + .status-label { background: #f59e0b; }
+    .status-options input[value="നിസ്കരിച്ചില്ല"]:checked + .status-label { background: #ef4444; }
+
+    .submit-btn {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .report-table th, .report-table td {
+      border: 1px solid #cbd5e1;
+      padding: 8px;
+      text-align: center;
+    }
+    .report-table th {
+      background: #f1f5f9;
     }
   </style>
 </head>
-<body class="p-3 sm:p-6 text-gray-800">
+<body>
 
-  <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-emerald-100">
-    
-    <div class="bg-gradient-to-r from-emerald-700 to-teal-800 p-6 text-white text-center">
-      <h1 class="text-xl sm:text-2xl font-bold tracking-wide">MALHARUL ULOOM MADRASA</h1>
-      <p class="text-sm text-emerald-200 uppercase tracking-widest mt-1">Kalloor - Koothali</p>
-      <div class="mt-3 inline-block bg-emerald-900/50 px-4 py-1 rounded-full text-xs font-semibold">
-        പ്രതിദിന നിസ്കാര രജിസ്റ്റർ
+<div class="container">
+  <h2>നിസ്കാര ട്രാക്കർ</h2>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('tracker')">മാർക്ക് ചെയ്യുക</button>
+    <button class="tab-btn" onclick="switchTab('teacher')">അധ്യാപകർക്ക്</button>
+    <button class="tab-btn" onclick="switchTab('reports')">റിപ്പോർട്ട്</button>
+  </div>
+
+  <!-- നിസ്കാരം എൻട്രി ചെയ്യുന്ന ഭാഗം -->
+  <div id="tracker" class="section active">
+    <div class="form-group">
+      <label>തീയതി</label>
+      <input type="date" id="trackDate">
+    </div>
+
+    <div class="form-group">
+      <label>ക്ലാസ് തെരഞ്ഞെടുക്കുക</label>
+      <select id="trackClass" onchange="loadClassStudents()">
+        <option value="">ക്ലാസ് തിരഞ്ഞെടുക്കുക</option>
+        <option value="1">ക്ലാസ് 1</option>
+        <option value="2">ക്ലാസ് 2</option>
+        <option value="3">ക്ലാസ് 3</option>
+        <option value="4">ക്ലാസ് 4</option>
+        <option value="5">ക്ലാസ് 5</option>
+        <option value="6">ക്ലാസ് 6</option>
+        <option value="7">ക്ലാസ് 7</option>
+        <option value="8">ക്ലാസ് 8</option>
+        <option value="9">ക്ലാസ് 9</option>
+        <option value="10">ക്ലാസ് 10</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>വിദ്യാർത്ഥി</label>
+      <select id="trackStudent">
+        <option value="">ആദ്യം ക്ലാസ് തിരഞ്ഞെടുക്കുക</option>
+      </select>
+    </div>
+
+    <!-- നിസ്കാരങ്ങൾ -->
+    <div id="prayersList">
+      <!-- സുബ്ഹ് -->
+      <div class="prayer-card">
+        <div class="prayer-name">സുബ്ഹ്</div>
+        <div class="status-options">
+          <label><input type="radio" name="subh" value="ജമാഅത്ത്" checked><span class="status-label">ജമാഅത്ത്</span></label>
+          <label><input type="radio" name="subh" value="അദാഅ്"><span class="status-label">അദാഅ്</span></label>
+          <label><input type="radio" name="subh" value="ഖദാഅ്"><span class="status-label">ഖദാഅ്</span></label>
+          <label><input type="radio" name="subh" value="നിസ്കരിച്ചില്ല"><span class="status-label">ഇല്ല</span></label>
+        </div>
+      </div>
+      <!-- ളുഹ്ർ -->
+      <div class="prayer-card">
+        <div class="prayer-name">ളുഹ്ർ</div>
+        <div class="status-options">
+          <label><input type="radio" name="dhuhr" value="ജമാഅത്ത്" checked><span class="status-label">ജമാഅത്ത്</span></label>
+          <label><input type="radio" name="dhuhr" value="അദാഅ്"><span class="status-label">അദാഅ്</span></label>
+          <label><input type="radio" name="dhuhr" value="ഖദാഅ്"><span class="status-label">ഖദാഅ്</span></label>
+          <label><input type="radio" name="dhuhr" value="നിസ്കരിച്ചില്ല"><span class="status-label">ഇല്ല</span></label>
+        </div>
+      </div>
+      <!-- അസ്വർ -->
+      <div class="prayer-card">
+        <div class="prayer-name">അസ്വർ</div>
+        <div class="status-options">
+          <label><input type="radio" name="asr" value="ജമാഅത്ത്" checked><span class="status-label">ജമാഅത്ത്</span></label>
+          <label><input type="radio" name="asr" value="അദാഅ്"><span class="status-label">അദാഅ്</span></label>
+          <label><input type="radio" name="asr" value="ഖദാഅ്"><span class="status-label">ഖദാഅ്</span></label>
+          <label><input type="radio" name="asr" value="നിസ്കരിച്ചില്ല"><span class="status-label">ഇല്ല</span></label>
+        </div>
+      </div>
+      <!-- മഗ്‌രിബ് -->
+      <div class="prayer-card">
+        <div class="prayer-name">മഗ്‌രിബ്</div>
+        <div class="status-options">
+          <label><input type="radio" name="maghrib" value="ജമാഅത്ത്" checked><span class="status-label">ജമാഅത്ത്</span></label>
+          <label><input type="radio" name="maghrib" value="അദാഅ്"><span class="status-label">അദാഅ്</span></label>
+          <label><input type="radio" name="maghrib" value="ഖദാഅ്"><span class="status-label">ഖദാഅ്</span></label>
+          <label><input type="radio" name="maghrib" value="നിസ്കരിച്ചില്ല"><span class="status-label">ഇല്ല</span></label>
+        </div>
+      </div>
+      <!-- ഇശാ -->
+      <div class="prayer-card">
+        <div class="prayer-name">ഇശാ</div>
+        <div class="status-options">
+          <label><input type="radio" name="isha" value="ജമാഅത്ത്" checked><span class="status-label">ജമാഅത്ത്</span></label>
+          <label><input type="radio" name="isha" value="അദാഅ്"><span class="status-label">അദാഅ്</span></label>
+          <label><input type="radio" name="isha" value="ഖദാഅ്"><span class="status-label">ഖദാഅ്</span></label>
+          <label><input type="radio" name="isha" value="നിസ്കരിച്ചില്ല"><span class="status-label">ഇല്ല</span></label>
+        </div>
       </div>
     </div>
 
-    <form id="prayerForm" class="p-5 sm:p-8 space-y-6">
-      
-      <div class="space-y-4 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
-        <div>
-          <label class="block text-sm font-bold text-gray-700 mb-1">വിദ്യാർത്ഥിയുടെ പേര് (Student Name):</label>
-          <input type="text" id="studentName" required placeholder="പേര് ടൈപ്പ് ചെയ്യുക" 
-                 class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-bold text-gray-700 mb-1">ക്ലാസ് (Class):</label>
-            <select id="studentClass" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
-              <option value="">തിരഞ്ഞെടുക്കുക</option>
-              <option value="Class 1">ക്ലാസ് 1</option>
-              <option value="Class 2">ക്ലാസ് 2</option>
-              <option value="Class 3">ക്ലാസ് 3</option>
-              <option value="Class 4">ക്ലാസ് 4</option>
-              <option value="Class 5">ക്ലാസ് 5</option>
-              <option value="Class 6">ക്ലാസ് 6</option>
-              <option value="Class 7">ക്ലാസ് 7</option>
-              <option value="Class 8">ക്ലാസ് 8</option>
-              <option value="Class 9">ക്ലാസ് 9</option>
-              <option value="Class 10">ക്ലാസ് 10</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-bold text-gray-700 mb-1">റോൾ നമ്പർ (Roll No):</label>
-            <input type="number" id="rollNo" required placeholder="Roll No" 
-                   class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-sm font-bold text-gray-700 mb-1">തിയ്യതി (Date):</label>
-          <input type="date" id="entryDate" required 
-                 class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white">
-        </div>
-      </div>
-
-      <div class="space-y-4">
-        <h3 class="font-bold text-emerald-900 border-b pb-2">നിസ്കാര വിവരങ്ങൾ രേഖപ്പെടുത്തുക</h3>
-
-        <div id="prayerFields" class="space-y-3">
-          </div>
-      </div>
-
-      <div>
-        <label class="block text-sm font-bold text-gray-700 mb-1">മറ്റു വിവരങ്ങൾ / കുറിപ്പുകൾ (Optional):</label>
-        <textarea id="remarks" rows="2" placeholder="ഉദാഹരണത്തിന്: അസുഖം കാരണം..." 
-                  class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"></textarea>
-      </div>
-
-      <button type="submit" id="submitBtn" 
-              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-xl transition duration-200">
-        വിവരങ്ങൾ സേവ് ചെയ്യുക (Submit)
-      </button>
-
-      <p id="statusMsg" class="text-center text-sm font-bold hidden"></p>
-    </form>
+    <button class="submit-btn" onclick="savePrayerData()">സേവ് ചെയ്യുക</button>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  <!-- അധ്യാപകർ കുട്ടികളെ ചേർക്കുന്ന ഭാഗം -->
+  <div id="teacher" class="section">
+    <h3 style="margin-bottom: 12px;">കുട്ടികളെ ചേർക്കുക</h3>
+    <div class="form-group">
+      <label>ക്ലാസ്</label>
+      <select id="regClass">
+        <option value="1">ക്ലാസ് 1</option>
+        <option value="2">ക്ലാസ് 2</option>
+        <option value="3">ക്ലാസ് 3</option>
+        <option value="4">ക്ലാസ് 4</option>
+        <option value="5">ക്ലാസ് 5</option>
+        <option value="6">ക്ലാസ് 6</option>
+        <option value="7">ക്ലാസ് 7</option>
+        <option value="8">ക്ലാസ് 8</option>
+        <option value="9">ക്ലാസ് 9</option>
+        <option value="10">ക്ലാസ് 10</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>റോൾ നമ്പർ</label>
+      <input type="number" id="regRoll" placeholder="ഉദാ: 1">
+    </div>
+    <div class="form-group">
+      <label>വിദ്യാർത്ഥിയുടെ പേര്</label>
+      <input type="text" id="regName" placeholder="പേര് ടൈപ്പ് ചെയ്യുക">
+    </div>
+    <button class="submit-btn" onclick="addStudent()">വിദ്യാർത്ഥിയെ ചേർക്കുക</button>
+  </div>
 
-    // 🔴 നിങ്ങളുടെ Firebase Config ഇവിടെ ചേർക്കുക
-    const const firebaseConfig = {
-  apiKey: "AIzaSyAFsoGr2bUuNuN8HpkV3pjfG6_bHAQzaUY",
-  authDomain: "mum-kalloor-koothali.firebaseapp.com",
-  projectId: "mum-kalloor-koothali",
-  storageBucket: "mum-kalloor-koothali.firebasestorage.app",
-  messagingSenderId: "1067273465346",
-  appId: "1:1067273465346:web:9699968605c7869f2d011b",
-  measurementId: "G-LED49NYSS1"
-};const firebaseConfig = {
-  apiKey: "AIzaSyAFsoGr2bUuNuN8HpkV3pjfG6_bHAQzaUY",
-  authDomain: "mum-kalloor-koothali.firebaseapp.com",
-  projectId: "mum-kalloor-koothali",
-  storageBucket: "mum-kalloor-koothali.firebasestorage.app",
-  messagingSenderId: "1067273465346",
-  appId: "1:1067273465346:web:9699968605c7869f2d011b",
-  measurementId: "G-LED49NYSS1"
-};
+  <!-- റിപ്പോർട്ട് കാണുന്ന ഭാഗം -->
+  <div id="reports" class="section">
+    <div class="form-group">
+      <label>തീയതി</label>
+      <input type="date" id="repDate" onchange="generateReport()">
+    </div>
+    <div class="form-group">
+      <label>ക്ലാസ്</label>
+      <select id="repClass" onchange="generateReport()">
+        <option value="1">ക്ലാസ് 1</option>
+        <option value="2">ക്ലാസ് 2</option>
+        <option value="3">ക്ലാസ് 3</option>
+        <option value="4">ക്ലാസ് 4</option>
+        <option value="5">ക്ലാസ് 5</option>
+        <option value="6">ക്ലാസ് 6</option>
+        <option value="7">ക്ലാസ് 7</option>
+        <option value="8">ക്ലാസ് 8</option>
+        <option value="9">ക്ലാസ് 9</option>
+        <option value="10">ക്ലാസ് 10</option>
+      </select>
+    </div>
 
-    // Firebase Initialize
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>കുട്ടി</th>
+          <th>സു</th>
+          <th>ളു</th>
+          <th>അ</th>
+          <th>മ</th>
+          <th>ഇ</th>
+        </tr>
+      </thead>
+      <tbody id="reportBody">
+        <tr><td colspan="6">വിവരങ്ങൾ ലഭ്യമല്ല</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-    // Set today's date by default
-    document.getElementById('entryDate').valueAsDate = new Date();
+<script>
+  // ഇന്നത്തെ തീയതി സെറ്റ് ചെയ്യുക
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('trackDate').value = today;
+  document.getElementById('repDate').value = today;
 
-    // Prayers Array
-    const prayers = [
-      { id: 'fajr', name: 'സുബ്ഹ് (Fajr)' },
-      { id: 'dhuhr', name: 'ദുഹ്ർ (Dhuhr)' },
-      { id: 'asr', name: 'അസ്വർ (Asr)' },
-      { id: 'maghrib', name: 'മഗ്‌രിബ് (Maghrib)' },
-      { id: 'isha', name: 'ഇശാഅ് (Isha)' }
-    ];
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+    if(tabId === 'reports') generateReport();
+  }
 
-    const prayerContainer = document.getElementById('prayerFields');
+  function getStudents() {
+    return JSON.parse(localStorage.getItem('prayer_students')) || [];
+  }
 
-    // Generate Prayer Dropdowns
-    prayers.forEach(p => {
-      const div = document.createElement('div');
-      div.className = "flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 rounded-lg border";
-      div.innerHTML = `
-        <span class="font-bold text-gray-700 mb-1 sm:mb-0">${p.name}</span>
-        <select id="${p.id}" required class="px-3 py-1.5 border rounded-md bg-white text-sm focus:ring-2 focus:ring-emerald-500">
-          <option value="ജമാഅത്ത്">ജമാഅത്ത് (Jama'ath)</option>
-          <option value="അദാഅ്">അദാഅ് (Ada'a)</option>
-          <option value="കളാഅ്">കളാഅ് (Qadha'a)</option>
-          <option value="നിസ്കരിച്ചില്ല">നിസ്കരിച്ചില്ല (Missed)</option>
-        </select>
-      `;
-      prayerContainer.appendChild(div);
+  function addStudent() {
+    const cls = document.getElementById('regClass').value;
+    const roll = document.getElementById('regRoll').value.trim();
+    const name = document.getElementById('regName').value.trim();
+
+    if(!roll || !name) {
+      alert("വിവരങ്ങൾ പൂർണ്ണമായും നൽകുക!");
+      return;
+    }
+
+    const students = getStudents();
+    students.push({ id: Date.now(), class: cls, roll, name });
+    localStorage.setItem('prayer_students', JSON.stringify(students));
+    alert("വിദ്യാർത്ഥിയെ ചേർത്തു!");
+    document.getElementById('regRoll').value = '';
+    document.getElementById('regName').value = '';
+  }
+
+  function loadClassStudents() {
+    const cls = document.getElementById('trackClass').value;
+    const studentSelect = document.getElementById('trackStudent');
+    studentSelect.innerHTML = '<option value="">തിരഞ്ഞെടുക്കുക</option>';
+
+    const students = getStudents().filter(s => s.class === cls);
+    students.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = `${s.roll}. ${s.name}`;
+      studentSelect.appendChild(opt);
     });
+  }
 
-    // Handle Form Submit
-    const form = document.getElementById('prayerForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const statusMsg = document.getElementById('statusMsg');
+  function savePrayerData() {
+    const date = document.getElementById('trackDate').value;
+    const studentId = document.getElementById('trackStudent').value;
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    if(!date || !studentId) {
+      alert("തീയതിയും കുട്ടിയുടെ പേരും തിരഞ്ഞെടുക്കുക!");
+      return;
+    }
 
-      submitBtn.disabled = true;
-      submitBtn.innerText = "സേവ് ചെയ്യുന്നു...";
+    const entry = {
+      date,
+      studentId,
+      subh: document.querySelector('input[name="subh"]:checked').value,
+      dhuhr: document.querySelector('input[name="dhuhr"]:checked').value,
+      asr: document.querySelector('input[name="asr"]:checked').value,
+      maghrib: document.querySelector('input[name="maghrib"]:checked').value,
+      isha: document.querySelector('input[name="isha"]:checked').value
+    };
 
-      const studentData = {
-        madrassa: "MALHARUL ULOOM MADRASA KALLOOR -KOOTHALI",
-        studentName: document.getElementById('studentName').value,
-        studentClass: document.getElementById('studentClass').value,
-        rollNo: document.getElementById('rollNo').value,
-        date: document.getElementById('entryDate').value,
-        prayers: {
-          fajr: document.getElementById('fajr').value,
-          dhuhr: document.getElementById('dhuhr').value,
-          asr: document.getElementById('asr').value,
-          maghrib: document.getElementById('maghrib').value,
-          isha: document.getElementById('isha').value
-        },
-        remarks: document.getElementById('remarks').value,
-        timestamp: serverTimestamp()
+    let entries = JSON.parse(localStorage.getItem('prayer_entries')) || [];
+    entries = entries.filter(e => !(e.date === date && e.studentId === studentId));
+    entries.push(entry);
+    localStorage.setItem('prayer_entries', JSON.stringify(entries));
+
+    alert("വിജയകരമായി രേഖപ്പെടുത്തി!");
+  }
+
+  function generateReport() {
+    const date = document.getElementById('repDate').value;
+    const cls = document.getElementById('repClass').value;
+    const tbody = document.getElementById('reportBody');
+    tbody.innerHTML = '';
+
+    const students = getStudents().filter(s => s.class === cls);
+    const entries = JSON.parse(localStorage.getItem('prayer_entries')) || [];
+
+    if(students.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6">കുട്ടികളെ ചേർത്തിട്ടില്ല</td></tr>';
+      return;
+    }
+
+    students.forEach(s => {
+      const rec = entries.find(e => e.date === date && e.studentId == s.id);
+      const format = val => {
+        if(!val) return '-';
+        if(val === 'ജമാഅത്ത്') return '🟢 ജ';
+        if(val === 'അദാഅ്') return '✅ അ';
+        if(val === 'ഖദാഅ്') return '⚠️ ഖ';
+        return '❌ ഇ';
       };
 
-      try {
-        await addDoc(collection(db, "daily_prayers"), studentData);
-        
-        statusMsg.innerText = "✅ വിജയകരമായി രേഖപ്പെടുത്തി!";
-        statusMsg.className = "text-center text-sm font-bold text-emerald-600 block";
-        
-        form.reset();
-        document.getElementById('entryDate').valueAsDate = new Date();
-      } catch (error) {
-        console.error("Error adding document: ", error);
-        statusMsg.innerText = "❌ രേഖപ്പെടുത്താൻ സാധിച്ചില്ല. വീണ്ടും ശ്രമിക്കുക.";
-        statusMsg.className = "text-center text-sm font-bold text-red-600 block";
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = "വിവരങ്ങൾ സേവ് ചെയ്യുക (Submit)";
-      }
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${s.roll}. ${s.name}</td>
+        <td>${rec ? format(rec.subh) : '-'}</td>
+        <td>${rec ? format(rec.dhuhr) : '-'}</td>
+        <td>${rec ? format(rec.asr) : '-'}</td>
+        <td>${rec ? format(rec.maghrib) : '-'}</td>
+        <td>${rec ? format(rec.isha) : '-'}</td>
+      `;
+      tbody.appendChild(tr);
     });
-  </script>
+  }
+</script>
 </body>
 </html>
