@@ -58,6 +58,26 @@
       flex-direction: column;
       position: relative;
     }
+    /* Moving Text Marquee Bar */
+    .marquee-bar {
+      background: #022c22;
+      color: #a7f3d0;
+      padding: 7px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      border-bottom: 1px solid #059669;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .marquee-content {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marqueeAnim 28s linear infinite;
+    }
+    @keyframes marqueeAnim {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
     .top-bar {
       background: var(--primary-dark);
       color: #fff;
@@ -79,7 +99,7 @@
       cursor: pointer;
       text-transform: uppercase;
     }
-    .main-body { padding: 18px; overflow-y: auto; max-height: 90vh; }
+    .main-body { padding: 18px; overflow-y: auto; max-height: 88vh; }
     .hero {
       text-align: center;
       background: #ffffff;
@@ -139,7 +159,6 @@
       align-items: center;
       justify-content: space-between;
     }
-    
     .tab-container {
       display: flex;
       gap: 6px;
@@ -188,7 +207,7 @@
     .rank-2 { background: #64748b; }
     .rank-3 { background: #d97706; }
     
-    .form-group { margin-bottom: 12px; }
+    .form-group { margin-bottom: 12px; position: relative; }
     label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 4px; }
     input, select {
       width: 100%;
@@ -200,6 +219,31 @@
       background: #fff;
     }
     input:focus, select:focus { border-color: var(--accent); }
+
+    /* Live Search Suggestions Dropdown */
+    .search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      z-index: 1000;
+      max-height: 180px;
+      overflow-y: auto;
+      display: none;
+    }
+    .suggestion-item {
+      padding: 9px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+    }
+    .suggestion-item:hover { background: #f0fdf4; color: var(--primary); }
     
     .prayer-box {
       background: #f8fafc;
@@ -350,6 +394,13 @@
 <body>
 
 <div class="app-shell">
+  <!-- Moving Status Ticker Banner -->
+  <div class="marquee-bar">
+    <div class="marquee-content">
+      ...MUM... &nbsp;&nbsp; « الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ » &nbsp;&nbsp; "Prayer is the pillar of religion; whoever establishes it, establishes faith." &nbsp;&nbsp; مدرسة مظهر العلوم كلور &nbsp;&nbsp;
+    </div>
+  </div>
+
   <!-- Top Navigation -->
   <div class="top-bar">
     <h3 id="appHeaderTitle">MUM TRACKER</h3>
@@ -361,7 +412,7 @@
     <div id="publicView">
       <div class="hero">
         <div class="arabic-greeting">السلام عليكم</div>
-        <h1>MALHARUL ULOOM MADRASA<br>KALOOR</h1>
+        <h1>MALHARUL ULOOM MADRASA<br>KALOOR-KOOTHALI</h1>
         <p>Prayer Monitoring Portal</p>
       </div>
 
@@ -386,11 +437,12 @@
         </div>
       </div>
 
-      <!-- Search Record -->
+      <!-- Search Record with Smart Suggestions -->
       <div class="card">
         <div class="card-title">🔍 Check Your Status</div>
         <div class="form-group">
-          <input type="text" id="srchAdm" placeholder="അഡ്മിഷൻ നമ്പർ അല്ലെങ്കിൽ പേര്...">
+          <input type="text" id="srchAdm" placeholder="അഡ്മിഷൻ നമ്പർ അല്ലെങ്കിൽ പേര് ടൈപ്പ് ചെയ്യുക..." oninput="handleSmartSearch(this.value, 'srchSuggestions', selectStatusStudent)" autocomplete="off">
+          <div id="srchSuggestions" class="search-suggestions"></div>
         </div>
         <button class="btn-main" onclick="searchStudentHistory()">View Status</button>
         <div id="srchResult" style="margin-top:12px;"></div>
@@ -398,6 +450,7 @@
 
       <div class="footer">
         MUM KALLOOR-KOOTHALI
+        1283
       </div>
     </div>
 
@@ -492,7 +545,7 @@
         </div>
       </div>
 
-      <!-- Monthly Reports (Screen View & PDF) -->
+      <!-- Monthly Reports -->
       <div class="card">
         <div class="card-title">Monthly Attendance & Scorecard</div>
         <div class="form-group"><label>Class</label><select id="tRepClass"></select></div>
@@ -683,20 +736,21 @@
   </div>
 </div>
 
-<!-- MODAL: TEACHER OVERWRITE / EDIT STUDENT DAILY PRAYERS -->
+<!-- MODAL: TEACHER & ADMIN OVERWRITE / EDIT / CLEAR STUDENT DAILY PRAYERS -->
 <div id="teacherPrayerEditModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:440px; border-radius:18px; padding:20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height:90vh; overflow-y:auto;">
-    <h3 style="color:var(--primary); margin-bottom:8px;">Teacher Edit: Daily Prayers</h3>
+    <h3 style="color:var(--primary); margin-bottom:8px;">Edit or Clear Daily Prayers</h3>
     <div id="tEditPrayerStudentInfo" style="font-size:12px; margin-bottom:10px; color:var(--text-muted);"></div>
     <input type="hidden" id="tEditTargetDate">
     <input type="hidden" id="tEditTargetStudentId">
     <div id="tEditPrayerCardsContainer"></div>
     <button class="btn-main" onclick="saveTeacherOverriddenPrayer()" style="margin-top:12px;">Update Prayer Record</button>
+    <button class="btn-main" style="background:#dc2626; margin-top:8px;" onclick="clearStudentDailyPrayer()">🗑️ Clear / Delete Record</button>
     <button class="btn-main" style="background:#94a3b8; margin-top:8px;" onclick="closeModal('teacherPrayerEditModal')">Cancel</button>
   </div>
 </div>
 
-<!-- MODAL: LOGIN WITH BIOMETRICS -->
+<!-- MODAL: LOGIN WITH BIOMETRICS (TEACHERS & ADMIN) -->
 <div id="loginModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:360px; border-radius:18px; padding:20px; text-align:center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
     <h3 style="margin-bottom:14px; color:var(--primary);">Portal Login</h3>
@@ -718,21 +772,21 @@
   </div>
 </div>
 
-<!-- MODAL: DAILY PRAYER ENTRY (SIMPLE & INSTANT - NO PIN) -->
+<!-- MODAL: DAILY PRAYER ENTRY (WITH SMART LIVE AUTOCOMPLETE) -->
 <div id="prayerModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:440px; border-radius:18px; padding:20px; max-height:90vh; overflow-y:auto;">
     <h3 style="color:var(--primary); margin-bottom:12px;">ഇന്നത്തെ നിസ്കാരം രേഖപ്പെടുത്തുക</h3>
     
     <div class="form-group">
       <label>അഡ്മിഷൻ നമ്പർ</label>
-      <input type="text" id="pAdmInput" list="admDatalist" placeholder="അഡ്മിഷൻ നമ്പർ ടൈപ്പ് ചെയ്യുക" oninput="onAdmChange()">
-      <datalist id="admDatalist"></datalist>
+      <input type="text" id="pAdmInput" placeholder="അഡ്മിഷൻ നമ്പർ ടൈപ്പ് ചെയ്യുക..." oninput="handleSmartSearch(this.value, 'pAdmSuggestions', selectEntryStudent)" autocomplete="off">
+      <div id="pAdmSuggestions" class="search-suggestions"></div>
     </div>
 
     <div class="form-group">
       <label>അല്ലെങ്കിൽ വിദ്യാർത്ഥിയുടെ പേര്</label>
-      <input type="text" id="pNameInput" list="nameDatalist" placeholder="പേര് ടൈപ്പ് ചെയ്യുക" oninput="onNameChange()">
-      <datalist id="nameDatalist"></datalist>
+      <input type="text" id="pNameInput" placeholder="പേര് ടൈപ്പ് ചെയ്യുക..." oninput="handleSmartSearch(this.value, 'pNameSuggestions', selectEntryStudent)" autocomplete="off">
+      <div id="pNameSuggestions" class="search-suggestions"></div>
     </div>
 
     <div id="pStudentInfo" style="display:none; font-size:12px; background:#dcfce7; padding:10px; border-radius:10px; margin-bottom:10px; align-items:center;"></div>
@@ -838,7 +892,6 @@
   // Realtime Listeners
   db.collection("students").onSnapshot(snapshot => {
     dbStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    populateDatalists();
     if (currentUser?.role === 'teacher') {
       renderTeacherStudentList();
       renderDailyTeacherView();
@@ -959,22 +1012,33 @@
     });
   }
 
-  // --- ROBUST BIOMETRIC / SCREEN LOCK LOGIC ---
+  // --- ROBUST BIOMETRIC (TEACHER & ADMIN) ---
   async function handleBiometricLogin() {
+    if (!window.PublicKeyCredential) {
+      return alert("Fingerprint/Biometric is not supported on this browser!");
+    }
     const role = document.getElementById('loginRole').value;
-    if (role !== 'teacher') return alert("Biometric login is available for Teachers.");
+    let userIdKey = '', userName = '', currentPass = '';
 
-    const tId = document.getElementById('loginTeacherSelect').value;
-    if (!tId) return alert("Please select your Teacher name first!");
-    const t = dbTeachers.find(x => x.id === tId);
-    if (!t) return alert("Teacher not found!");
+    if (role === 'admin') {
+      userIdKey = 'mum_admin_user';
+      userName = 'Administrator';
+      currentPass = adminPassword;
+    } else {
+      const tId = document.getElementById('loginTeacherSelect').value;
+      if (!tId) return alert("Please select your Teacher name first!");
+      const t = dbTeachers.find(x => x.id === tId);
+      if (!t) return alert("Teacher not found!");
+      userIdKey = 'mum_bio_cred_' + t.id;
+      userName = t.name;
+      currentPass = t.pass;
+    }
 
-    const storedCredentialId = localStorage.getItem('mum_bio_cred_' + t.id);
+    const storedCredentialId = localStorage.getItem(userIdKey);
 
-    // കേസ് 1: ആദ്യ തവണ വിരലടയാളം സെറ്റ് ചെയ്യാൻ
     if (!storedCredentialId) {
-      const pass = prompt(`ഹലോ ${t.name}, ഈ ഫോണിൽ ഫിംഗർപ്രിന്റ് സെറ്റ് ചെയ്യാൻ നിങ്ങളുടെ പാസ്‌വേഡ് നൽകുക:`);
-      if (pass !== t.pass) return alert("പാസ്‌വേഡ് തെറ്റാണ്! ഫിംഗർപ്രിന്റ് രജിസ്റ്റർ ചെയ്യാൻ സാധിച്ചില്ല.");
+      const pass = prompt(`ഹലോ ${userName}, ഈ ഫോണിൽ ഫിംഗർപ്രിന്റ് സെറ്റ് ചെയ്യാൻ നിങ്ങളുടെ പാസ്‌വേഡ് നൽകുക:`);
+      if (pass !== currentPass) return alert("പാസ്‌വേഡ് തെറ്റാണ്! ഫിംഗർപ്രിന്റ് രജിസ്റ്റർ ചെയ്യാൻ സാധിച്ചില്ല.");
 
       try {
         const challenge = new Uint8Array(32);
@@ -986,31 +1050,23 @@
           publicKey: {
             challenge: challenge,
             rp: { name: "MUM Tracker" },
-            user: {
-              id: userId,
-              name: t.name,
-              displayName: t.name
-            },
+            user: { id: userId, name: userName, displayName: userName },
             pubKeyCredParams: [{ type: "public-key", alg: -7 }],
-            authenticatorSelection: {
-              authenticatorAttachment: "platform",
-              userVerification: "required"
-            },
+            authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
             timeout: 60000
           }
         });
 
         if (newCred) {
-          localStorage.setItem('mum_bio_cred_' + t.id, btoa(String.fromCharCode(...new Uint8Array(newCred.rawId))));
-          alert("ഫിംഗർപ്രിന്റ് വിജയകരമായി രജിസ്റ്റർ ചെയ്തു! ഇനി മുതൽ വിരലടയാളം വെച്ച് നേരിട്ട് ലോഗിൻ ചെയ്യാം.");
-          loginAsTeacher(t);
+          localStorage.setItem(userIdKey, btoa(String.fromCharCode(...new Uint8Array(newCred.rawId))));
+          alert("ഫിംഗർപ്രിന്റ് രജിസ്റ്റർ ചെയ്തു! ഇനി മുതൽ വിരലടയാളം വെച്ച് ലോഗിൻ ചെയ്യാം.");
+          if (role === 'admin') loginAsAdmin();
+          else loginAsTeacher(dbTeachers.find(x => x.id === document.getElementById('loginTeacherSelect').value));
         }
       } catch (err) {
-        alert("ഫിംഗർപ്രിന്റ് സപ്പോർട്ട് ചെയ്യുന്നില്ല അല്ലെങ്കിൽ റദ്ദാക്കി: " + err.message);
+        alert("ഫിംഗർപ്രിന്റ് രജിസ്ട്രേഷൻ റദ്ദാക്കി: " + err.message);
       }
-    } 
-    // കേസ് 2: രജിസ്റ്റർ ചെയ്ത ശേഷം വിരലടയാളം വെച്ച് ലോഗിൻ ചെയ്യാൻ
-    else {
+    } else {
       try {
         const challenge = new Uint8Array(32);
         window.crypto.getRandomValues(challenge);
@@ -1019,18 +1075,15 @@
         const assertion = await navigator.credentials.get({
           publicKey: {
             challenge: challenge,
-            allowCredentials: [{
-              type: 'public-key',
-              id: rawId,
-              transports: ['internal']
-            }],
+            allowCredentials: [{ type: 'public-key', id: rawId, transports: ['internal'] }],
             userVerification: "required",
             timeout: 60000
           }
         });
 
         if (assertion) {
-          loginAsTeacher(t);
+          if (role === 'admin') loginAsAdmin();
+          else loginAsTeacher(dbTeachers.find(x => x.id === document.getElementById('loginTeacherSelect').value));
         }
       } catch (err) {
         alert("വിരലടയാളം തിരിച്ചറിഞ്ഞില്ല! പാസ്‌വേഡ് ഉപയോഗിച്ച് ലോഗിൻ ചെയ്യുക.");
@@ -1044,14 +1097,7 @@
 
     if (role === 'admin') {
       if (pass === adminPassword) {
-        currentUser = { role: 'admin' };
-        document.getElementById('authBtn').innerText = 'Public Site';
-        document.getElementById('publicView').style.display = 'none';
-        document.getElementById('adminView').style.display = 'block';
-        renderAdminTeachers();
-        renderAdminStudentList();
-        renderDailyAdminView();
-        closeModal('loginModal');
+        loginAsAdmin();
       } else {
         alert("Admin password is wrong!");
       }
@@ -1064,6 +1110,17 @@
         alert("Incorrect Teacher or Password!");
       }
     }
+  }
+
+  function loginAsAdmin() {
+    currentUser = { role: 'admin' };
+    document.getElementById('authBtn').innerText = 'Public Site';
+    document.getElementById('publicView').style.display = 'none';
+    document.getElementById('adminView').style.display = 'block';
+    renderAdminTeachers();
+    renderAdminStudentList();
+    renderDailyAdminView();
+    closeModal('loginModal');
   }
 
   function loginAsTeacher(t) {
@@ -1193,7 +1250,7 @@
     return `<a href="https://wa.me/${phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn-wa">💬 WA</a>`;
   }
 
-  // Teacher Daily View
+  // Teacher Daily View with Edit and Clear Option
   function renderDailyTeacherView() {
     const cls = document.getElementById('tDailyClass').value;
     const date = document.getElementById('tDailyDate').value;
@@ -1224,7 +1281,7 @@
           <td>${getBadgeHTML(rec?.maghrib)}</td>
           <td>${getBadgeHTML(rec?.isha)}</td>
           <td style="white-space:nowrap;">
-            <button class="btn-action" style="padding:3px 6px; font-size:10px;" onclick="openTeacherPrayerEdit('${s.id}', '${date}')">✏️ Edit</button>
+            <button class="btn-action" style="padding:3px 6px; font-size:10px;" onclick="openTeacherPrayerEdit('${s.id}', '${date}')">✏️ Edit/Clear</button>
             ${waAction}
           </td>
         </tr>
@@ -1260,7 +1317,7 @@
           <td>${getBadgeHTML(rec?.maghrib)}</td>
           <td>${getBadgeHTML(rec?.isha)}</td>
           <td style="white-space:nowrap;">
-            <button class="btn-action" style="padding:3px 6px; font-size:10px;" onclick="openTeacherPrayerEdit('${s.id}', '${date}')">✏️ Edit</button>
+            <button class="btn-action" style="padding:3px 6px; font-size:10px;" onclick="openTeacherPrayerEdit('${s.id}', '${date}')">✏️ Edit/Clear</button>
             ${waAction}
           </td>
         </tr>
@@ -1276,7 +1333,7 @@
     document.getElementById('tEditTargetDate').value = date;
     document.getElementById('tEditTargetStudentId').value = studentId;
     document.getElementById('tEditPrayerStudentInfo').innerHTML = `
-      <b>${student.name}</b> (Class ${student.class} | Adm: ${student.adm})<br>Editing Attendance for Date: <b>${date}</b>
+      <b>${student.name}</b> (Class ${student.class} | Adm: ${student.adm})<br>Date: <b>${date}</b>
     `;
 
     const prayers = ['സുബ്ഹ്', 'ളുഹ്ർ', 'അസ്വർ', 'മഗ്‌രിബ്', 'ഇശാ'];
@@ -1333,7 +1390,28 @@
     }
   }
 
-  // Student Registration (No PIN)
+  // Clear / Delete prayer record for selected date
+  async function clearStudentDailyPrayer() {
+    const studentId = document.getElementById('tEditTargetStudentId').value;
+    const date = document.getElementById('tEditTargetDate').value;
+
+    if (confirm(`ഈ കുട്ടിയുടെ ${date}-ലെ നിസ്കാര രേഖ പൂർണ്ണമായി മായ്ച്ചുകളയണോ (Clear)?`)) {
+      try {
+        const existing = dbPrayers.find(p => p.studentId === studentId && p.date === date);
+        if (existing) {
+          await db.collection("prayers").doc(existing.id).delete();
+          alert("നിസ്കാര രേഖ വിജയകരമായി ഒഴിവാക്കി!");
+        } else {
+          alert("ഈ തീയതിയിൽ രേഖകൾ ഒന്നും നിലവിലില്ല.");
+        }
+        closeModal('teacherPrayerEditModal');
+      } catch (e) {
+        alert("ഡിലീറ്റ് ചെയ്യാൻ സാധിച്ചില്ല: " + e.message);
+      }
+    }
+  }
+
+  // Student Registration
   async function saveStudentByTeacher() {
     const cls = document.getElementById('tRegClass').value;
     const rollNo = document.getElementById('tRegRoll').value.trim();
@@ -1566,16 +1644,50 @@
     }
   }
 
-  // --- STUDENT PRAYER ENTRY (INSTANT LOAD & MULTI-STUDENT HOME SUPPORT) ---
-  function populateDatalists() {
-    const admDl = document.getElementById('admDatalist');
-    const nameDl = document.getElementById('nameDatalist');
-    if (!admDl || !nameDl) return;
-    admDl.innerHTML = ''; nameDl.innerHTML = '';
-    dbStudents.forEach(s => {
-      admDl.innerHTML += `<option value="${s.adm}">${s.name} (ക്ലാസ് ${s.class})</option>`;
-      nameDl.innerHTML += `<option value="${s.name}">${s.adm} (ക്ലാസ് ${s.class})</option>`;
-    });
+  // --- SMART LIVE AUTOCOMPLETE SEARCH LOGIC ---
+  function handleSmartSearch(val, containerId, selectCallback) {
+    const query = val.trim().toLowerCase();
+    const box = document.getElementById(containerId);
+    if (!query) {
+      box.style.display = 'none';
+      box.innerHTML = '';
+      return;
+    }
+
+    const matches = dbStudents.filter(s =>
+      s.adm.toLowerCase().includes(query) || s.name.toLowerCase().includes(query)
+    ).slice(0, 6);
+
+    if (matches.length === 0) {
+      box.style.display = 'none';
+      return;
+    }
+
+    box.innerHTML = matches.map(s => `
+      <div class="suggestion-item" onclick='${selectCallback.name}("${s.id}")'>
+        <span><b>${s.name}</b> (Class ${s.class})</span>
+        <span style="color:var(--text-muted);">Adm: ${s.adm}</span>
+      </div>
+    `).join('');
+    box.style.display = 'block';
+  }
+
+  function selectStatusStudent(studentId) {
+    const s = dbStudents.find(x => x.id === studentId);
+    if (!s) return;
+    document.getElementById('srchAdm').value = s.adm;
+    document.getElementById('srchSuggestions').style.display = 'none';
+    searchStudentHistory();
+  }
+
+  function selectEntryStudent(studentId) {
+    const s = dbStudents.find(x => x.id === studentId);
+    if (!s) return;
+    document.getElementById('pAdmInput').value = s.adm;
+    document.getElementById('pNameInput').value = s.name;
+    document.getElementById('pAdmSuggestions').style.display = 'none';
+    document.getElementById('pNameSuggestions').style.display = 'none';
+    loadPrayerFormForStudent(s);
   }
 
   function openPrayerEntryModal() {
@@ -1584,32 +1696,14 @@
     }
     document.getElementById('pAdmInput').value = '';
     document.getElementById('pNameInput').value = '';
+    document.getElementById('pAdmSuggestions').style.display = 'none';
+    document.getElementById('pNameSuggestions').style.display = 'none';
     document.getElementById('pStudentInfo').style.display = 'none';
     document.getElementById('prayerCardsContainer').style.display = 'none';
-    populateDatalists();
     document.getElementById('prayerModal').style.display = 'flex';
   }
 
-  function onAdmChange() {
-    const adm = document.getElementById('pAdmInput').value.trim();
-    const student = dbStudents.find(s => s.adm.toLowerCase() === adm.toLowerCase());
-    if (student) {
-      document.getElementById('pNameInput').value = student.name;
-      loadPrayerFormForStudent(student);
-    }
-  }
-
-  function onNameChange() {
-    const name = document.getElementById('pNameInput').value.trim();
-    const student = dbStudents.find(s => s.name.toLowerCase() === name.toLowerCase());
-    if (student) {
-      document.getElementById('pAdmInput').value = student.adm;
-      loadPrayerFormForStudent(student);
-    }
-  }
-
   function loadPrayerFormForStudent(student) {
-    // Single daily submission check per student (Supports multiple children from same device)
     const existing = dbPrayers.find(e => e.studentId === student.id && e.date === todayStr);
     if (existing) {
       alert("ഈ വിദ്യാർത്ഥി ഇന്ന് ഇതിനകം നിസ്കാരം രേഖപ്പെടുത്തിയിട്ടുണ്ട്! മാറ്റങ്ങൾ വരുത്തണമെങ്കിൽ ക്ലാസ് അധ്യാപകനെ ബന്ധപ്പെടുക.");
@@ -1755,7 +1849,7 @@
     return { cls, month, tableData };
   }
 
-  // VIEW MONTHLY REPORT ON SCREEN WITHOUT DOWNLOADING
+  // VIEW MONTHLY REPORT ON SCREEN
   function viewMonthlyReportOnScreen(source) {
     const data = getProcessedMonthlyData(source);
     if (!data) return;
