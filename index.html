@@ -959,34 +959,82 @@
     });
   }
 
-  // Teacher Biometric Login
+  // --- ROBUST BIOMETRIC / SCREEN LOCK LOGIC ---
   async function handleBiometricLogin() {
-    if (!window.PublicKeyCredential) {
-      return alert("Fingerprint/Biometric is not supported on this browser!");
-    }
     const role = document.getElementById('loginRole').value;
-    if (role === 'teacher') {
-      const tId = document.getElementById('loginTeacherSelect').value;
-      if (!tId) return alert("Please select your Teacher name first!");
-      const t = dbTeachers.find(x => x.id === tId);
-      if (!t) return alert("Teacher not found!");
+    if (role !== 'teacher') return alert("Biometric login is available for Teachers.");
+
+    const tId = document.getElementById('loginTeacherSelect').value;
+    if (!tId) return alert("Please select your Teacher name first!");
+    const t = dbTeachers.find(x => x.id === tId);
+    if (!t) return alert("Teacher not found!");
+
+    const storedCredentialId = localStorage.getItem('mum_bio_cred_' + t.id);
+
+    // കേസ് 1: ആദ്യ തവണ വിരലടയാളം സെറ്റ് ചെയ്യാൻ
+    if (!storedCredentialId) {
+      const pass = prompt(`ഹലോ ${t.name}, ഈ ഫോണിൽ ഫിംഗർപ്രിന്റ് സെറ്റ് ചെയ്യാൻ നിങ്ങളുടെ പാസ്‌വേഡ് നൽകുക:`);
+      if (pass !== t.pass) return alert("പാസ്‌വേഡ് തെറ്റാണ്! ഫിംഗർപ്രിന്റ് രജിസ്റ്റർ ചെയ്യാൻ സാധിച്ചില്ല.");
 
       try {
         const challenge = new Uint8Array(32);
         window.crypto.getRandomValues(challenge);
-        await navigator.credentials.get({
+        const userId = new Uint8Array(16);
+        window.crypto.getRandomValues(userId);
+
+        const newCred = await navigator.credentials.create({
           publicKey: {
             challenge: challenge,
-            timeout: 60000,
-            userVerification: "required"
+            rp: { name: "MUM Tracker" },
+            user: {
+              id: userId,
+              name: t.name,
+              displayName: t.name
+            },
+            pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+            authenticatorSelection: {
+              authenticatorAttachment: "platform",
+              userVerification: "required"
+            },
+            timeout: 60000
           }
         });
-        loginAsTeacher(t);
-      } catch (e) {
-        alert("Fingerprint/Screen lock authentication failed or canceled.");
+
+        if (newCred) {
+          localStorage.setItem('mum_bio_cred_' + t.id, btoa(String.fromCharCode(...new Uint8Array(newCred.rawId))));
+          alert("ഫിംഗർപ്രിന്റ് വിജയകരമായി രജിസ്റ്റർ ചെയ്തു! ഇനി മുതൽ വിരലടയാളം വെച്ച് നേരിട്ട് ലോഗിൻ ചെയ്യാം.");
+          loginAsTeacher(t);
+        }
+      } catch (err) {
+        alert("ഫിംഗർപ്രിന്റ് സപ്പോർട്ട് ചെയ്യുന്നില്ല അല്ലെങ്കിൽ റദ്ദാക്കി: " + err.message);
       }
-    } else {
-      alert("Admin must use password login.");
+    } 
+    // കേസ് 2: രജിസ്റ്റർ ചെയ്ത ശേഷം വിരലടയാളം വെച്ച് ലോഗിൻ ചെയ്യാൻ
+    else {
+      try {
+        const challenge = new Uint8Array(32);
+        window.crypto.getRandomValues(challenge);
+        const rawId = Uint8Array.from(atob(storedCredentialId), c => c.charCodeAt(0));
+
+        const assertion = await navigator.credentials.get({
+          publicKey: {
+            challenge: challenge,
+            allowCredentials: [{
+              type: 'public-key',
+              id: rawId,
+              transports: ['internal']
+            }],
+            userVerification: "required",
+            timeout: 60000
+          }
+        });
+
+        if (assertion) {
+          loginAsTeacher(t);
+        }
+      } catch (err) {
+        alert("വിരലടയാളം തിരിച്ചറിഞ്ഞില്ല! പാസ്‌വേഡ് ഉപയോഗിച്ച് ലോഗിൻ ചെയ്യുക.");
+      }
     }
   }
 
