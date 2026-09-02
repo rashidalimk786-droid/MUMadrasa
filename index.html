@@ -73,11 +73,13 @@
       background: rgba(255,255,255,0.2);
       color: #fff;
       border: 1px solid rgba(255,255,255,0.4);
-      padding: 8px 14px;
+      padding: 8px 16px;
       border-radius: 20px;
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .main-body { padding: 18px; overflow-y: auto; max-height: 90vh; }
     .hero {
@@ -344,7 +346,7 @@
   <!-- Top Navigation -->
   <div class="top-bar">
     <h3 id="appHeaderTitle">MUM TRACKER</h3>
-    <button class="btn-top" id="authBtn" onclick="toggleAuthAction()">ലോഗിൻ</button>
+    <button class="btn-top" id="authBtn" onclick="toggleAuthAction()">Login</button>
   </div>
 
   <div class="main-body" id="mainBody">
@@ -398,7 +400,7 @@
         <div class="card-title">
           <div style="display:flex; align-items:center;">
             <img id="tProfileImg" class="avatar-sm" src="" style="display:none;">
-            <span id="teacherNameDisplay">അധ്യാപക പോർട്ടൽ</span>
+            <span id="teacherNameDisplay">Teacher Portal</span>
           </div>
           <button class="btn-del" onclick="logout()">Logout</button>
         </div>
@@ -621,14 +623,14 @@
     </div>
 
     <button class="btn-main" onclick="updateStudentData()">അപ്ഡേറ്റ് ചെയ്യുക</button>
-    <button class="btn-main" style="background:#94a3b8; margin-top:8px;" onclick="closeModal('editStudentModal')">റദ്ദാക്കുക</button>
+    <button class="btn-main" style="background:#94a3b8; margin-top:8px;" onclick="closeModal('editStudentModal')">Cancel</button>
   </div>
 </div>
 
 <!-- MODAL: LOGIN -->
 <div id="loginModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:360px; border-radius:18px; padding:20px; text-align:center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-    <h3 style="margin-bottom:14px; color:var(--primary);">പോർട്ടൽ ലോഗിൻ</h3>
+    <h3 style="margin-bottom:14px; color:var(--primary);">Portal Login</h3>
     <div class="form-group">
       <select id="loginRole" onchange="toggleLoginInputs()">
         <option value="teacher">അധ്യാപകർ (Teacher)</option>
@@ -639,10 +641,10 @@
       <select id="loginTeacherSelect"><option value="">-- അധ്യാപകനെ തിരഞ്ഞെടുക്കുക --</option></select>
     </div>
     <div class="form-group">
-      <input type="password" id="loginPass" placeholder="പാസ്‌വേഡ് നൽകുക">
+      <input type="password" id="loginPass" placeholder="Password നൽകുക">
     </div>
-    <button class="btn-main" onclick="handleLogin()">ലോഗിൻ ചെയ്യുക</button>
-    <button class="btn-main" style="background:#94a3b8; margin-top:8px;" onclick="closeModal('loginModal')">റദ്ദാക്കുക</button>
+    <button class="btn-main" onclick="handleLogin()">Login</button>
+    <button class="btn-main" style="background:#94a3b8; margin-top:8px;" onclick="closeModal('loginModal')">Cancel</button>
   </div>
 </div>
 
@@ -674,7 +676,7 @@
 </div>
 
 <script>
-  // Service Worker Registration for PWA Standalone Support
+  // Service Worker for Standalone PWA Support
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       const swCode = `self.addEventListener('fetch', function(e) {});`;
@@ -716,7 +718,7 @@
   let currentUser = null;
   let activeStudentForEntry = null;
 
-  // Sorting Helper: Boys first (by roll/adm), then Girls (by roll/adm)
+  // Sorting Helper: Boys first, then Girls
   function sortStudentsBoyFirst(arr) {
     return [...arr].sort((a, b) => {
       const gA = (a.gender || 'Male') === 'Male' ? 1 : 2;
@@ -901,7 +903,7 @@
 
   function logout() {
     currentUser = null;
-    document.getElementById('authBtn').innerText = 'ലോഗിൻ';
+    document.getElementById('authBtn').innerText = 'Login';
     document.getElementById('publicView').style.display = 'block';
     document.getElementById('teacherView').style.display = 'none';
     document.getElementById('adminView').style.display = 'none';
