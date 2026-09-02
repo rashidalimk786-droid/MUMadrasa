@@ -6,15 +6,23 @@
   <title>MUM - Prayer Tracker</title>
   
   <meta name="theme-color" content="#064e3b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MUM Tracker">
   <meta name="application-name" content="MUM Tracker">
 
+  <!-- MUM App Icon with Subtitle (SVG Data URI) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='mumGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23047857;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23064e3b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23mumGrad)' stroke='%2310b981' stroke-width='16'/%3E%3Ctext x='50%25' y='46%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='700' font-size='42' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='mumGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23047857;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23064e3b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='128' fill='url(%23mumGrad)' stroke='%2310b981' stroke-width='16'/%3E%3Ctext x='50%25' y='46%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='700' font-size='42' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
 
+  <!-- Embedded Web App Manifest (Chrome ബാഡ്ജ് ഒഴിവാക്കാൻ) -->
+  <link rel="manifest" href='data:application/manifest+json,{"name":"MUM Tracker","short_name":"MUM Tracker","start_url":"./","display":"standalone","background_color":"%23064e3b","theme_color":"%23064e3b","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27%3E%3Cdefs%3E%3ClinearGradient id=%27mumGrad%27 x1=%270%25%27 y1=%270%25%27 x2=%27100%25%27 y2=%27100%25%27%3E%3Cstop offset=%270%25%27 style=%27stop-color:%23047857;stop-opacity:1%27 /%3E%3Cstop offset=%27100%25%27 style=%27stop-color:%23064e3b;stop-opacity:1%27 /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%27512%27 height=%27512%27 rx=%27128%27 fill=%27url(%23mumGrad)%27 stroke=%27%2310b981%27 stroke-width=%2716%27/%3E%3Ctext x=%2750%25%27 y=%2746%25%27 font-family=%27sans-serif%27 font-weight=%27900%27 font-size=%27130%27 fill=%27%23ffffff%27 text-anchor=%27middle%27 dominant-baseline=%27central%27 letter-spacing=%274%27%3EMUM%3C/text%3E%3Ctext x=%2750%25%27 y=%2772%25%27 font-family=%27sans-serif%27 font-weight=%27700%27 font-size=%2742%27 fill=%27%236ee7b7%27 text-anchor=%27middle%27 dominant-baseline=%27central%27 letter-spacing=%271%27%3EPrayer Tracker%3C/text%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}]}'>
+
+  <!-- jsPDF & AutoTable -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
+  <!-- Firebase App & Cloud Firestore (v8) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -132,7 +140,7 @@
       justify-content: space-between;
     }
     
-    /* Rank tabs & badges */
+    /* Leaderboard Tabs */
     .tab-container {
       display: flex;
       gap: 6px;
@@ -333,23 +341,27 @@
 <body>
 
 <div class="app-shell">
+  <!-- Top Navigation -->
   <div class="top-bar">
     <h3 id="appHeaderTitle">MUM TRACKER</h3>
-    <button class="btn-top" id="authBtn" onclick="toggleAuthAction()">login</button>
+    <button class="btn-top" id="authBtn" onclick="toggleAuthAction()">ലോഗിൻ</button>
   </div>
 
   <div class="main-body" id="mainBody">
+    <!-- PUBLIC VIEW -->
     <div id="publicView">
       <div class="hero">
         <div class="arabic-greeting">السلام عليكم</div>
-        <h1>MALHARUL ULOOM MADRASA<br>KALLOOR-KOOTHALI</h1>
+        <h1>MALHARUL ULOOM MADRASA<br>KALOOR</h1>
         <p>Prayer Monitoring Portal</p>
       </div>
 
+      <!-- Action Button -->
       <button class="pulse-btn" onclick="openPrayerEntryModal()">
         <span>🕌</span> എന്റെ ഇന്നത്തെ നിസ്കാരം
       </button>
 
+      <!-- Leaderboard Tabs -->
       <div class="card">
         <div class="card-title">
           <span id="rankTitleHeader">🏆 Daily Top Rankers</span>
@@ -365,6 +377,7 @@
         </div>
       </div>
 
+      <!-- Search Record -->
       <div class="card">
         <div class="card-title">🔍 Check Your Status</div>
         <div class="form-group">
@@ -379,6 +392,7 @@
       </div>
     </div>
 
+    <!-- TEACHER PORTAL -->
     <div id="teacherView" style="display: none;">
       <div class="card">
         <div class="card-title">
@@ -391,6 +405,7 @@
         <p style="font-size:12px; color:var(--text-muted);" id="tClassListDisplay"></p>
       </div>
 
+      <!-- Daily View for Teachers with Daily PDF Option -->
       <div class="card">
         <div class="card-title">
           <span>📅 ദിവസേനയുള്ള പരിശോധന</span>
@@ -418,6 +433,7 @@
         </div>
       </div>
 
+      <!-- Student Registration -->
       <div class="card">
         <div class="card-title">➕ പുതിയ വിദ്യാർത്ഥിയെ ചേർക്കുക</div>
         <div class="form-group"><label>ക്ലാസ്</label><select id="tRegClass"></select></div>
@@ -441,6 +457,7 @@
         <button class="btn-main" onclick="saveStudentByTeacher()">സേവ് ചെയ്യുക</button>
       </div>
 
+      <!-- Manage Students -->
       <div class="card">
         <div class="card-title">📝 വിദ്യാർത്ഥി മാനേജ്മെന്റ്</div>
         <div class="form-group">
@@ -455,6 +472,7 @@
         </div>
       </div>
 
+      <!-- Monthly Reports & PDF -->
       <div class="card">
         <div class="card-title">📊 പ്രതിമാസ റിപ്പോർട്ട് (Total & PDF)</div>
         <div class="form-group"><label>ക്ലാസ്</label><select id="tRepClass"></select></div>
@@ -466,6 +484,7 @@
       </div>
     </div>
 
+    <!-- ADMIN PORTAL -->
     <div id="adminView" style="display: none;">
       <div class="card">
         <div class="card-title">
@@ -474,6 +493,7 @@
         </div>
       </div>
 
+      <!-- Daily View for Admin -->
       <div class="card">
         <div class="card-title">
           <span>📅 സ്കൂൾ നിസ്കാര ഡെയ്‌ലി മോണിറ്ററിംഗ്</span>
@@ -504,6 +524,7 @@
         </div>
       </div>
 
+      <!-- Admin Student Management & Edit -->
       <div class="card">
         <div class="card-title">📝 എല്ലാ വിദ്യാർത്ഥികളും (Admin Edit)</div>
         <div class="form-group">
@@ -521,6 +542,7 @@
         </div>
       </div>
 
+      <!-- Teacher Management -->
       <div class="card">
         <div class="card-title">👨‍🏫 അധ്യാപകരെ ചേർക്കുക / മാറ്റുക</div>
         <div class="form-group"><label>പേര്</label><input type="text" id="admTName"></div>
@@ -541,6 +563,7 @@
         </div>
       </div>
 
+      <!-- Admin Monthly PDF -->
       <div class="card">
         <div class="card-title">📊 സ്കൂൾ പ്രതിമാസ റിപ്പോർട്ട്</div>
         <div class="form-group"><label>ക്ലാസ്</label>
@@ -556,6 +579,7 @@
         </div>
       </div>
 
+      <!-- Security -->
       <div class="card">
         <div class="card-title">🔑 അഡ്മിൻ പാസ്‌വേഡ് മാറ്റുക</div>
         <div class="form-group"><input type="password" id="admOldPass" placeholder="പഴയ പാസ്‌വേഡ്"></div>
@@ -566,6 +590,7 @@
   </div>
 </div>
 
+<!-- MODAL: EDIT STUDENT (FOR TEACHERS & ADMIN) -->
 <div id="editStudentModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:440px; border-radius:18px; padding:20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height:90vh; overflow-y:auto;">
     <h3 style="color:var(--primary); margin-bottom:12px;">വിദ്യാർത്ഥിയുടെ വിവരങ്ങൾ തിരുത്തുക</h3>
@@ -600,6 +625,7 @@
   </div>
 </div>
 
+<!-- MODAL: LOGIN -->
 <div id="loginModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:360px; border-radius:18px; padding:20px; text-align:center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
     <h3 style="margin-bottom:14px; color:var(--primary);">പോർട്ടൽ ലോഗിൻ</h3>
@@ -620,6 +646,7 @@
   </div>
 </div>
 
+<!-- MODAL: DAILY PRAYER ENTRY -->
 <div id="prayerModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:440px; border-radius:18px; padding:20px; max-height:90vh; overflow-y:auto;">
     <h3 style="color:var(--primary); margin-bottom:12px;">ഇന്നത്തെ നിസ്കാരം രേഖപ്പെടുത്തുക</h3>
@@ -647,6 +674,15 @@
 </div>
 
 <script>
+  // Service Worker Registration for PWA Standalone Support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      const swCode = `self.addEventListener('fetch', function(e) {});`;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+    });
+  }
+
   // --- FIREBASE INITIALIZATION ---
   const firebaseConfig = {
     apiKey: "AIzaSyAFsoGr2bUuNuN8HpkV3pjfG6_bHAQzaUY",
@@ -871,7 +907,7 @@
     document.getElementById('adminView').style.display = 'none';
   }
 
-  // --- LEADERBOARD LOGIC (DAILY, WEEKLY, MONTHLY) ---
+  // --- LEADERBOARD LOGIC WITH MARKS: JAMAAT = 5, ADAA = 3, QADA = 1 ---
   function switchLeaderboard(type, btn) {
     activeLeaderboardTab = type;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -909,15 +945,18 @@
     const studentScoreMap = {};
     filteredPrayers.forEach(e => {
       if (!studentScoreMap[e.studentId]) {
-        studentScoreMap[e.studentId] = { jam: 0, ada: 0, totalScore: 0 };
+        studentScoreMap[e.studentId] = { jam: 0, ada: 0, qad: 0, totalScore: 0 };
       }
       [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
         if (st === 'ജമാഅത്ത്') {
           studentScoreMap[e.studentId].jam++;
-          studentScoreMap[e.studentId].totalScore += 2;
+          studentScoreMap[e.studentId].totalScore += 5; // 5 Marks
         } else if (st === 'അദാഅ്') {
           studentScoreMap[e.studentId].ada++;
-          studentScoreMap[e.studentId].totalScore += 1;
+          studentScoreMap[e.studentId].totalScore += 3; // 3 Marks
+        } else if (st === 'ഖളാഅ്') {
+          studentScoreMap[e.studentId].qad++;
+          studentScoreMap[e.studentId].totalScore += 1; // 1 Mark
         }
       });
     });
@@ -931,6 +970,7 @@
         photo: s.photo,
         jam: studentScoreMap[stuId].jam,
         ada: studentScoreMap[stuId].ada,
+        qad: studentScoreMap[stuId].qad,
         totalScore: studentScoreMap[stuId].totalScore
       };
     }).filter(Boolean);
@@ -947,7 +987,7 @@
             <img src="${item.photo || defaultAvatar}" class="avatar-sm">
             <div>
               <b>${item.name}</b> (ക്ലാസ് ${item.class})<br>
-              <span style="font-size:10px; color:var(--text-muted);">ജമാഅത്ത്: ${item.jam} | അദാഅ്: ${item.ada}</span>
+              <span style="font-size:10px; color:var(--text-muted);">ജമാ: ${item.jam} | അദാ: ${item.ada} | ഖളാ: ${item.qad}</span>
             </div>
           </div>
           <span style="font-weight:bold; color:var(--primary);">${item.totalScore} pts</span>
@@ -1462,6 +1502,7 @@
     });
 
     const totalPrayed = totals.jam + totals.ada + totals.qad;
+    const totalScore = (totals.jam * 5) + (totals.ada * 3) + (totals.qad * 1);
 
     div.innerHTML = `
       <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:12px; font-size:12px;">
@@ -1472,11 +1513,11 @@
             <div style="color:var(--text-muted);">Roll: ${student.rollNo || '-'} | Adm: ${student.adm} | Class: ${student.class}</div>
           </div>
         </div>
-        <p style="margin:4px 0 8px;">രേഖപ്പെടുത്തിയ ദിവസങ്ങൾ: <b>${entries.length}</b> | ആകെ നിസ്കരിച്ചത്: <b style="color:var(--primary);">${totalPrayed} വഖ്ത്</b></p>
+        <p style="margin:4px 0 8px;">രേഖപ്പെടുത്തിയ ദിവസങ്ങൾ: <b>${entries.length}</b> | ആകെ സ്കോർ: <b style="color:var(--primary);">${totalScore} pts</b></p>
         <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; text-align:center;">
-          <div style="background:#d1fae5; padding:6px; border-radius:6px;">ജമാഅത്ത്: <b>${totals.jam}</b></div>
-          <div style="background:#dcfce7; padding:6px; border-radius:6px;">അദാഅ്: <b>${totals.ada}</b></div>
-          <div style="background:#fef3c7; padding:6px; border-radius:6px;">ഖളാഅ്: <b>${totals.qad}</b></div>
+          <div style="background:#d1fae5; padding:6px; border-radius:6px;">ജമാഅത്ത് (5): <b>${totals.jam}</b></div>
+          <div style="background:#dcfce7; padding:6px; border-radius:6px;">അദാഅ് (3): <b>${totals.ada}</b></div>
+          <div style="background:#fef3c7; padding:6px; border-radius:6px;">ഖളാഅ് (1): <b>${totals.qad}</b></div>
           <div style="background:#fee2e2; padding:6px; border-radius:6px;">നിസ്കരിക്കാത്തത്: <b>${totals.nil}</b></div>
           ${student.gender === 'Female' ? `<div style="background:#ede9fe; padding:6px; border-radius:6px;">ഇളവ്: <b>${totals.exc}</b></div>` : ''}
         </div>
@@ -1484,7 +1525,7 @@
     `;
   }
 
-  // Monthly Report Helper
+  // Monthly Report Helper With Marks: 5, 3, 1
   function getProcessedMonthlyData(source) {
     const cls = source === 'teacher' ? document.getElementById('tRepClass').value : document.getElementById('admRepClass').value;
     const month = source === 'teacher' ? document.getElementById('tRepMonth').value : document.getElementById('admRepMonth').value;
@@ -1512,7 +1553,7 @@
           else nil++;
         });
       });
-      const totalScore = (jam * 2) + ada;
+      const totalScore = (jam * 5) + (ada * 3) + (qad * 1);
       tableData.push({
         roll: s.rollNo || (idx + 1),
         adm: s.adm,
@@ -1546,7 +1587,7 @@
 
     doc.autoTable({
       startY: 26,
-      head: [['Roll', 'Adm', 'Name', 'Class', 'Days', 'Jam', 'Ada', 'Qad', 'Nil', 'Exc', 'Total', 'Score']],
+      head: [['Roll', 'Adm', 'Name', 'Class', 'Days', 'Jam(5)', 'Ada(3)', 'Qad(1)', 'Nil', 'Exc', 'Total', 'Score']],
       body: rows,
       theme: 'grid',
       headStyles: { fillColor: [4, 120, 87] },
@@ -1617,9 +1658,9 @@
               <th>പേര്</th>
               <th>ക്ലാസ്</th>
               <th>ദിവസങ്ങൾ</th>
-              <th>ജമാഅത്ത്</th>
-              <th>അദാഅ്</th>
-              <th>ഖളാഅ്</th>
+              <th>ജമാഅത്ത് (5)</th>
+              <th>അദാഅ് (3)</th>
+              <th>ഖളാഅ് (1)</th>
               <th>ഇല്ല</th>
               <th>ഇളവ്</th>
               <th>ആകെ വഖ്ത്</th>
