@@ -58,26 +58,37 @@
       flex-direction: column;
       position: relative;
     }
-    /* Moving Text Marquee Bar */
+
+    /* Seamless Infinite Slow Marquee Bar */
     .marquee-bar {
       background: #022c22;
       color: #a7f3d0;
-      padding: 7px 0;
+      padding: 8px 0;
       overflow: hidden;
-      white-space: nowrap;
+      display: flex;
       border-bottom: 1px solid #059669;
       font-size: 13px;
       font-weight: 600;
     }
-    .marquee-content {
-      display: inline-block;
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: seamlessScroll 45s linear infinite;
+    }
+    .marquee-track:hover {
+      animation-play-state: paused;
+    }
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
       white-space: nowrap;
-      animation: marqueeAnim 28s linear infinite;
+      padding-right: 40px;
     }
-    @keyframes marqueeAnim {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
+    @keyframes seamlessScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
+
     .top-bar {
       background: var(--primary-dark);
       color: #fff;
@@ -220,7 +231,6 @@
     }
     input:focus, select:focus { border-color: var(--accent); }
 
-    /* Live Search Suggestions Dropdown */
     .search-suggestions {
       position: absolute;
       top: 100%;
@@ -394,10 +404,30 @@
 <body>
 
 <div class="app-shell">
-  <!-- Moving Status Ticker Banner -->
+  <!-- Seamless Infinite Slow Marquee Banner -->
   <div class="marquee-bar">
-    <div class="marquee-content">
-      ...MUM... &nbsp;&nbsp; « الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ » &nbsp;&nbsp; "Prayer is the pillar of religion; whoever establishes it, establishes faith." &nbsp;&nbsp; مدرسة مظهر العلوم كلور &nbsp;&nbsp;
+    <div class="marquee-track">
+      <!-- Item Set 1 -->
+      <div class="marquee-item">
+        <span><b>...MUM...</b></span> &nbsp;&nbsp;
+        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span> &nbsp;&nbsp;
+        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span> &nbsp;&nbsp;
+        <span style="color:#6ee7b7;">مدرسة مظهر العلوم كلور</span>
+      </div>
+      <!-- Item Set 2 (Continuous Loop) -->
+      <div class="marquee-item">
+        <span><b>...MUM...</b></span> &nbsp;&nbsp;
+        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span> &nbsp;&nbsp;
+        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span> &nbsp;&nbsp;
+        <span style="color:#6ee7b7;">مدرسة مظهر العلوم كلور</span>
+      </div>
+      <!-- Item Set 3 (Buffer) -->
+      <div class="marquee-item">
+        <span><b>...MUM...</b></span> &nbsp;&nbsp;
+        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span> &nbsp;&nbsp;
+        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span> &nbsp;&nbsp;
+        <span style="color:#6ee7b7;">مدرسة مظهر العلوم كلور</span>
+      </div>
     </div>
   </div>
 
@@ -412,7 +442,7 @@
     <div id="publicView">
       <div class="hero">
         <div class="arabic-greeting">السلام عليكم</div>
-        <h1>MALHARUL ULOOM MADRASA<br>KALLOOR-KOOTHALI</h1>
+        <h1>MALHARUL ULOOM MADRASA<br>KALOOR</h1>
         <p>Prayer Monitoring Portal</p>
       </div>
 
@@ -450,7 +480,6 @@
 
       <div class="footer">
         MUM KALLOOR-KOOTHALI
-        1283
       </div>
     </div>
 
@@ -1390,7 +1419,6 @@
     }
   }
 
-  // Clear / Delete prayer record for selected date
   async function clearStudentDailyPrayer() {
     const studentId = document.getElementById('tEditTargetStudentId').value;
     const date = document.getElementById('tEditTargetDate').value;
