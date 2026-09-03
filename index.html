@@ -33,12 +33,12 @@
       --gold: #f59e0b;
       --silver: #94a3b8;
       --bronze: #d97706;
-      --bg: #f0fdf4;
+      --bg: #f8fafc;
       --card-bg: #ffffff;
       --text: #0f172a;
       --text-muted: #64748b;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body {
       background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #0f766e 100%);
       min-height: 100vh;
@@ -53,7 +53,7 @@
       background: var(--bg);
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+      box-shadow: 0 20px 30px -10px rgba(0,0,0,0.35);
       display: flex;
       flex-direction: column;
       position: relative;
@@ -130,25 +130,39 @@
     .top-bar {
       background: var(--primary-dark);
       color: #fff;
-      padding: 14px 18px;
+      padding: 12px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 2px solid #059669;
     }
     .top-bar h3 { font-size: 15px; font-weight: 800; letter-spacing: 0.5px; }
+    .top-actions { display: flex; gap: 8px; align-items: center; }
+    .btn-contact {
+      background: #059669;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
     .btn-top {
       background: rgba(255,255,255,0.2);
       color: #fff;
       border: 1px solid rgba(255,255,255,0.4);
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
       text-transform: uppercase;
     }
-    .main-body { padding: 18px; overflow-y: auto; max-height: 85vh; }
+    .main-body { padding: 16px; overflow-y: auto; max-height: 85vh; }
     .hero {
       text-align: center;
       background: #ffffff;
@@ -178,9 +192,9 @@
       background: linear-gradient(135deg, #059669, #10b981);
       color: white;
       border: none;
-      padding: 16px;
+      padding: 15px;
       border-radius: 16px;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 800;
       cursor: pointer;
       display: flex;
@@ -188,7 +202,7 @@
       justify-content: center;
       gap: 10px;
       animation: pulse-glow 2s infinite;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       border: 2px solid #a7f3d0;
     }
     .card {
@@ -211,7 +225,7 @@
     .tab-container {
       display: flex;
       gap: 6px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       background: #f1f5f9;
       padding: 4px;
       border-radius: 10px;
@@ -232,6 +246,14 @@
       color: var(--primary-dark);
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
+    
+    /* Fixed container for Leaderboard so it never pushes the search bar down */
+    .leaderboard-scroll-box {
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+    
     .rank-item {
       display: flex;
       align-items: center;
@@ -241,6 +263,7 @@
       background: #f8fafc;
       margin-bottom: 6px;
       font-size: 13px;
+      border: 1px solid #edf2f7;
     }
     .rank-badge {
       padding: 4px 8px;
@@ -263,7 +286,7 @@
       padding: 10px 12px;
       border: 1px solid #cbd5e1;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 13px;
       outline: none;
       background: #fff;
     }
@@ -445,6 +468,17 @@
       padding-bottom: 2px;
       border-bottom: 1.5px dashed #cbd5e1;
     }
+
+    .teacher-contact-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 10px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
@@ -463,7 +497,7 @@
     </div>
   </div>
 
-  <!-- Rotating Status / Instructions Notice Bar -->
+  <!-- Rotating Status / Instructions & Unlocked Classes Notice Bar -->
   <div class="notice-slider-bar">
     <span class="notice-badge">NOTICE</span>
     <span id="rotatingNoticeText" class="notice-msg-text">ഇശാഇന് ശേഷം നിസ്കാരങ്ങൾ എൻട്രി ചെയ്യുക</span>
@@ -472,7 +506,10 @@
   <!-- Top Navigation -->
   <div class="top-bar">
     <h3 id="appHeaderTitle">MUM TRACKER</h3>
-    <button class="btn-top" id="authBtn" onclick="toggleAuthAction()">Login</button>
+    <div class="top-actions">
+      <button class="btn-contact" onclick="openTeachersContactModal()">📞 അധ്യാപകർ</button>
+      <button class="btn-top" id="authBtn" onclick="toggleAuthAction()">Login</button>
+    </div>
   </div>
 
   <div class="main-body" id="mainBody">
@@ -489,23 +526,34 @@
         <span>🕌</span> എന്റെ ഇന്നത്തെ നിസ്കാരം
       </button>
 
-      <!-- Leaderboard Tabs with Separate Boys & Girls Evaluation -->
+      <!-- Leaderboard Tabs with Class Filtering & Separate Boys & Girls Evaluation -->
       <div class="card">
         <div class="card-title">
           <span id="rankTitleHeader">🏆 Daily Top Rankers</span>
           <span style="font-size:11px; color:var(--text-muted);" id="todayDateLabel"></span>
         </div>
-        <div class="tab-container">
-          <button class="tab-btn active" onclick="switchLeaderboard('daily', this)">Daily Top Rankers</button>
-          <button class="tab-btn" onclick="switchLeaderboard('weekly', this)">Weekly Top Rankers</button>
-          <button class="tab-btn" onclick="switchLeaderboard('monthly', this)">Monthly Top Rankers</button>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
+          <div class="tab-container" style="margin-bottom:0; flex:1;">
+            <button class="tab-btn active" onclick="switchLeaderboard('daily', this)">Daily</button>
+            <button class="tab-btn" onclick="switchLeaderboard('weekly', this)">Weekly</button>
+            <button class="tab-btn" onclick="switchLeaderboard('monthly', this)">Monthly</button>
+          </div>
+          <div style="width:115px; flex-shrink:0;">
+            <select id="leaderboardClassFilter" onchange="renderLeaderboard()" style="padding:5px 8px; font-size:11px; font-weight:700;">
+              <option value="ALL">All Classes</option>
+              <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
+            </select>
+          </div>
         </div>
-        <div id="leaderboardList">
+
+        <!-- Scrollable Leaderboard Area to keep View Status strictly anchored -->
+        <div class="leaderboard-scroll-box" id="leaderboardList">
           <p style="font-size:12px; color:var(--text-muted); text-align:center;">വിവരങ്ങൾ ലഭ്യമല്ല</p>
         </div>
       </div>
 
-      <!-- Search Record with Smart Suggestions -->
+      <!-- Search Record with Smart Suggestions (Position firmly retained) -->
       <div class="card">
         <div class="card-title">🔍 Check Your Status</div>
         <div class="form-group">
@@ -608,9 +656,9 @@
         <button class="btn-main" onclick="saveStudentByTeacher()">Save Student</button>
       </div>
 
-      <!-- Manage Students -->
+      <!-- Manage Students with Individual Student Report Action -->
       <div class="card">
-        <div class="card-title">Student Management (With Passwords)</div>
+        <div class="card-title">Student Management & Individual Reports</div>
         <div class="form-group">
           <label>Filter Class</label>
           <select id="tFilterClass" onchange="renderTeacherStudentList()"></select>
@@ -623,18 +671,30 @@
         </div>
       </div>
 
-      <!-- Monthly Reports -->
+      <!-- Monthly & Overall Cumulative Reports -->
       <div class="card">
-        <div class="card-title">Monthly Attendance & Scorecard</div>
+        <div class="card-title">Class Reports (Monthly & Overall Total)</div>
         <div class="form-group"><label>Class</label><select id="tRepClass"></select></div>
-        <div class="form-group"><label>Month</label><input type="month" id="tRepMonth"></div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          <div class="form-group">
+            <label>Report Type</label>
+            <select id="tRepType" onchange="toggleReportTypeInputs('teacher')">
+              <option value="monthly">Monthly Report</option>
+              <option value="overall">All-Time Cumulative Total</option>
+            </select>
+          </div>
+          <div class="form-group" id="tRepMonthGroup">
+            <label>Month</label>
+            <input type="month" id="tRepMonth">
+          </div>
+        </div>
         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
-          <button class="btn-action" style="background:#047857;" onclick="viewMonthlyReportOnScreen('teacher')">👁️ View Report</button>
-          <button class="btn-action" style="background:#0284c7;" onclick="downloadClassPDF('teacher')">📄 Download PDF</button>
-          <button class="btn-action" style="background:#475569;" onclick="printClassReport('teacher')">🖨️ Print</button>
+          <button class="btn-action" style="background:#047857;" onclick="viewReportOnScreen('teacher')">👁️ View Report</button>
+          <button class="btn-action" style="background:#0284c7;" onclick="downloadReportPDF('teacher')">📄 Download PDF</button>
+          <button class="btn-action" style="background:#475569;" onclick="printReportData('teacher')">🖨️ Print</button>
         </div>
         <div id="tMonthlyViewBox" style="display:none; overflow-x:auto; margin-top:14px;">
-          <h4 style="font-size:13px; color:var(--primary-dark); margin-bottom:6px;">Monthly Performance Summary</h4>
+          <h4 style="font-size:13px; color:var(--primary-dark); margin-bottom:6px;" id="tRepSummaryTitle">Performance Summary</h4>
           <table>
             <thead>
               <tr><th>Roll</th><th>Adm</th><th>Name</th><th>Days</th><th>Jam(5)</th><th>Ada(3)</th><th>Qad(1)</th><th>Nil</th><th>Total</th><th>Score</th></tr>
@@ -685,9 +745,9 @@
         </div>
       </div>
 
-      <!-- Admin Student Management & Edit -->
+      <!-- Admin Student Management & Individual Reports -->
       <div class="card">
-        <div class="card-title">All Students (Admin Edit & Passwords)</div>
+        <div class="card-title">All Students (Edit & Individual Report)</div>
         <div class="form-group">
           <label>Filter Class</label>
           <select id="admFilterClass" onchange="renderAdminStudentList()">
@@ -703,11 +763,14 @@
         </div>
       </div>
 
-      <!-- Teacher Management & Edit -->
+      <!-- Teacher Management & Edit (With Phone Number) -->
       <div class="card">
         <div class="card-title">👨‍🏫 Teacher Management</div>
         <div class="form-group"><label>Teacher Name</label><input type="text" id="admTName"></div>
-        <div class="form-group"><label>Login Password</label><input type="password" id="admTPass"></div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          <div class="form-group"><label>Teacher Phone (WhatsApp)</label><input type="tel" id="admTPhone" placeholder="10 Digits"></div>
+          <div class="form-group"><label>Login Password</label><input type="password" id="admTPass"></div>
+        </div>
         <div class="form-group"><label>Assigned Classes (Comma-separated: e.g. 1,2)</label><input type="text" id="admTClasses" placeholder="1,2,3"></div>
         <div class="form-group">
           <label>Teacher Photo</label>
@@ -718,29 +781,41 @@
         
         <div style="overflow-x:auto; margin-top:12px;">
           <table>
-            <thead><tr><th>Photo</th><th>Name</th><th>Classes</th><th>Password</th><th>Action</th></tr></thead>
+            <thead><tr><th>Photo</th><th>Name</th><th>Phone</th><th>Classes</th><th>Password</th><th>Action</th></tr></thead>
             <tbody id="admTeacherTable"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- Admin Monthly Reports -->
+      <!-- Admin Reports (Monthly & Overall) -->
       <div class="card">
-        <div class="card-title">School Monthly Reports</div>
+        <div class="card-title">School Reports (Monthly & Overall Total)</div>
         <div class="form-group"><label>Class</label>
           <select id="admRepClass">
             <option value="ALL">All Classes</option>
             <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
           </select>
         </div>
-        <div class="form-group"><label>Month</label><input type="month" id="admRepMonth"></div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          <div class="form-group">
+            <label>Report Type</label>
+            <select id="admRepType" onchange="toggleReportTypeInputs('admin')">
+              <option value="monthly">Monthly Report</option>
+              <option value="overall">All-Time Cumulative Total</option>
+            </select>
+          </div>
+          <div class="form-group" id="admRepMonthGroup">
+            <label>Month</label>
+            <input type="month" id="admRepMonth">
+          </div>
+        </div>
         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
-          <button class="btn-action" style="background:#047857;" onclick="viewMonthlyReportOnScreen('admin')">👁️ View Report</button>
-          <button class="btn-action" style="background:#0284c7;" onclick="downloadClassPDF('admin')">📄 Download PDF</button>
-          <button class="btn-action" style="background:#475569;" onclick="printClassReport('admin')">🖨️ Print</button>
+          <button class="btn-action" style="background:#047857;" onclick="viewReportOnScreen('admin')">👁️ View Report</button>
+          <button class="btn-action" style="background:#0284c7;" onclick="downloadReportPDF('admin')">📄 Download PDF</button>
+          <button class="btn-action" style="background:#475569;" onclick="printReportData('admin')">🖨️ Print</button>
         </div>
         <div id="admMonthlyViewBox" style="display:none; overflow-x:auto; margin-top:14px;">
-          <h4 style="font-size:13px; color:var(--primary-dark); margin-bottom:6px;">Monthly Performance Summary</h4>
+          <h4 style="font-size:13px; color:var(--primary-dark); margin-bottom:6px;" id="admRepSummaryTitle">Performance Summary</h4>
           <table>
             <thead>
               <tr><th>Cls</th><th>Roll</th><th>Adm</th><th>Name</th><th>Days</th><th>Jam(5)</th><th>Ada(3)</th><th>Qad(1)</th><th>Nil</th><th>Total</th><th>Score</th></tr>
@@ -758,6 +833,30 @@
         <button class="btn-main" onclick="changeAdminPass()">Update Password</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- MODAL: CONTACT TEACHERS (FOR STUDENTS & PARENTS) -->
+<div id="teachersContactModal" class="modal-overlay">
+  <div style="background:#fff; width:100%; max-width:440px; border-radius:18px; padding:20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height:90vh; overflow-y:auto;">
+    <h3 style="color:var(--primary); margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+      <span>📞</span> അധ്യാപകരുടെ വിവരങ്ങൾ
+    </h3>
+    <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">എന്തെങ്കിലും സംശയങ്ങൾക്കോ സഹായങ്ങൾക്കോ ക്ലാസ് അധ്യാപകരുമായി നേരിട്ട് ബന്ധപ്പെടാം:</p>
+    <div id="teachersContactList"></div>
+    <button class="btn-main" style="background:#94a3b8; margin-top:10px;" onclick="closeModal('teachersContactModal')">Close</button>
+  </div>
+</div>
+
+<!-- MODAL: INDIVIDUAL STUDENT FULL PERFORMANCE & PDF -->
+<div id="studentDetailReportModal" class="modal-overlay">
+  <div style="background:#fff; width:100%; max-width:480px; border-radius:18px; padding:20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height:90vh; overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 style="color:var(--primary); font-size:16px;">Student Performance Card</h3>
+      <button class="btn-action" onclick="downloadIndividualStudentPDF()">📄 PDF Download</button>
+    </div>
+    <div id="studentDetailContent"></div>
+    <button class="btn-main" style="background:#94a3b8; margin-top:12px;" onclick="closeModal('studentDetailReportModal')">Close</button>
   </div>
 </div>
 
@@ -805,7 +904,10 @@
     <h3 style="color:var(--primary); margin-bottom:12px;">Edit Teacher Details</h3>
     <input type="hidden" id="editTeacherDocId">
     <div class="form-group"><label>Name</label><input type="text" id="editTeacherName"></div>
-    <div class="form-group"><label>Password</label><input type="password" id="editTeacherPass"></div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+      <div class="form-group"><label>Phone (WhatsApp)</label><input type="tel" id="editTeacherPhone"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="editTeacherPass"></div>
+    </div>
     <div class="form-group"><label>Assigned Classes</label><input type="text" id="editTeacherClasses"></div>
     <div class="form-group">
       <label>Photo</label>
@@ -960,6 +1062,7 @@
   let adminPassword = "mumadminpass";
   let activeLeaderboardTab = 'daily';
   let classLockSettings = {};
+  let selectedStudentForReport = null;
 
   const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
 
@@ -974,8 +1077,8 @@
   let currentUser = null;
   let activeStudentForEntry = null;
 
-  // ROTATING NOTICE MESSAGES
-  const rotatingNotices = [
+  // ROTATING NOTICE MESSAGES WITH DYNAMIC UNLOCKED CLASSES INFO
+  const baseNotices = [
     "ഇശാഇന് ശേഷം നിസ്കാരങ്ങൾ എൻട്രി ചെയ്യുക",
     "ഒരു ദിവസം ഒരു തവണ മാത്രമേ എൻട്രി ചെയ്യാൻ സാധിക്കുകയുള്ളൂ",
     "സത്യസന്ധമായി വിവരങ്ങൾ രേഖപ്പെടുത്തുക",
@@ -988,11 +1091,18 @@
     if (!el) return;
     el.style.opacity = '0';
     setTimeout(() => {
-      currentNoticeIndex = (currentNoticeIndex + 1) % rotatingNotices.length;
-      el.innerText = rotatingNotices[currentNoticeIndex];
+      // Check which classes are unlocked right now
+      const openClasses = Object.keys(classLockSettings).filter(c => classLockSettings[c] === false);
+      let list = [...baseNotices];
+      if (openClasses.length > 0) {
+        list.unshift(`✨ ക്ലാസുകൾ (${openClasses.sort((a,b)=>a-b).join(', ')}) എൻട്രി ചെയ്യാൻ ഇപ്പോൾ തുറന്നിരിക്കുന്നു.`);
+      }
+
+      currentNoticeIndex = (currentNoticeIndex + 1) % list.length;
+      el.innerText = list[currentNoticeIndex];
       el.style.opacity = '1';
     }, 400);
-  }, 4000);
+  }, 4500);
 
   // Restore Persistent Session
   (function restorePersistentSession() {
@@ -1244,6 +1354,48 @@
     });
   }
 
+  // --- TEACHERS CONTACT DIRECTORY MODAL ---
+  function openTeachersContactModal(filterClass = null) {
+    const listDiv = document.getElementById('teachersContactList');
+    listDiv.innerHTML = '';
+
+    let teachersToShow = dbTeachers;
+    if (filterClass) {
+      teachersToShow = dbTeachers.filter(t => {
+        const clsArr = Array.isArray(t.classes) ? t.classes : (t.class ? [t.class] : []);
+        return clsArr.includes(String(filterClass));
+      });
+      if (teachersToShow.length === 0) teachersToShow = dbTeachers;
+    }
+
+    if (teachersToShow.length === 0) {
+      listDiv.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center;">അധ്യാപകരുടെ വിവരങ്ങൾ ലഭ്യമല്ല</p>';
+    } else {
+      teachersToShow.forEach(t => {
+        const clsList = Array.isArray(t.classes) ? t.classes.join(', ') : (t.class || '-');
+        let phone = (t.phone || '').trim().replace(/[^0-9]/g, '');
+        let waPhone = phone.length === 10 ? '91' + phone : phone;
+
+        listDiv.innerHTML += `
+          <div class="teacher-contact-card">
+            <img src="${t.photo || defaultAvatar}" class="avatar-lg">
+            <div style="flex:1;">
+              <div style="font-weight:bold; font-size:14px; color:var(--primary);">${t.name}</div>
+              <div style="font-size:11px; color:var(--text-muted); margin:2px 0;">ക്ലാസുകൾ: <b>${clsList}</b></div>
+              <div style="font-size:12px; font-weight:700; color:#0f172a;">${t.phone || 'ഫോൺ നമ്പർ നൽകിയിട്ടില്ല'}</div>
+              <div style="display:flex; gap:6px; margin-top:6px;">
+                ${phone ? `<a href="tel:${phone}" class="btn-action" style="text-decoration:none; padding:4px 8px;">📞 Call</a>` : ''}
+                ${phone ? `<a href="https://wa.me/${waPhone}" target="_blank" class="btn-wa">💬 WhatsApp</a>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    document.getElementById('teachersContactModal').style.display = 'flex';
+  }
+
   // BIOMETRIC (TEACHER & ADMIN)
   async function handleBiometricLogin() {
     if (!window.PublicKeyCredential) {
@@ -1390,7 +1542,7 @@
     updateTopNavBtn();
   }
 
-  // --- SEPARATE BOYS & GIRLS LEADERBOARD LOGIC ---
+  // --- SEPARATE BOYS & GIRLS LEADERBOARD WITH CLASS FILTER ---
   function switchLeaderboard(type, btn) {
     activeLeaderboardTab = type;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1401,6 +1553,7 @@
   }
 
   function renderLeaderboard() {
+    const selectedClass = document.getElementById('leaderboardClassFilter')?.value || 'ALL';
     let filteredPrayers = [];
     const now = new Date();
     if (activeLeaderboardTab === 'daily') {
@@ -1413,11 +1566,6 @@
       filteredPrayers = dbPrayers.filter(e => e.date && e.date.startsWith(currMonth));
     }
 
-    if (filteredPrayers.length === 0) {
-      document.getElementById('leaderboardList').innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center;">വിവരങ്ങൾ ലഭ്യമല്ല</p>';
-      return;
-    }
-
     const map = {};
     filteredPrayers.forEach(e => {
       if (!map[e.studentId]) map[e.studentId] = { jam: 0, ada: 0, qad: 0, totalScore: 0 };
@@ -1428,9 +1576,10 @@
       });
     });
 
-    const allScores = Object.keys(map).map(stuId => {
+    let allScores = Object.keys(map).map(stuId => {
       const s = dbStudents.find(x => x.id === stuId);
       if (!s) return null;
+      if (selectedClass !== 'ALL' && s.class !== selectedClass) return null;
       return { 
         name: s.name, 
         class: s.class, 
@@ -1449,12 +1598,11 @@
     let html = '';
 
     if (activeLeaderboardTab === 'daily') {
-      // Daily: 1st Rank Boy & 1st Rank Girl
       const topBoy = boys[0];
       const topGirl = girls[0];
 
       if (!topBoy && !topGirl) {
-        document.getElementById('leaderboardList').innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center;">വിവരങ്ങൾ ലഭ്യമല്ല</p>';
+        document.getElementById('leaderboardList').innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:15px 0;">വിവരങ്ങൾ ലഭ്യമല്ല</p>';
         return;
       }
 
@@ -1490,7 +1638,6 @@
         `;
       }
     } else {
-      // Weekly & Monthly: Separate Top 3 Boys and Top 3 Girls
       const rankLabels = ["1st Rank", "2nd Rank", "3rd Rank"];
 
       html += `<div class="rank-section-title">👦 ആൺകുട്ടികൾ (Boys Ranking)</div>`;
@@ -1598,7 +1745,7 @@
           <td>${getBadgeHTML(rec?.maghrib)}</td>
           <td>${getBadgeHTML(rec?.isha)}</td>
           <td style="white-space:nowrap;">
-            <button class="btn-action" style="padding:3px 6px; font-size:10px;" onclick="openTeacherPrayerEdit('${s.id}', '${date}')">✏️ Edit/Clear</button>
+            <button class="btn-action" style="padding:3px 6px; font-size:10px;" onclick="openTeacherPrayerEdit('${s.id}', '${date}')">✏️ Edit</button>
             ${waAction}
           </td>
         </tr>
@@ -1672,7 +1819,7 @@
           <td>${getBadgeHTML(rec?.maghrib)}</td>
           <td>${getBadgeHTML(rec?.isha)}</td>
           <td style="white-space:nowrap;">
-            <button class="btn-action" style="padding:3px 6px; font-size:10px;" onclick="openTeacherPrayerEdit('${s.id}', '${date}')">✏️ Edit/Clear</button>
+            <button class="btn-action" style="padding:3px 6px; font-size:10px;" onclick="openTeacherPrayerEdit('${s.id}', '${date}')">✏️ Edit</button>
             ${waAction}
           </td>
         </tr>
@@ -1721,12 +1868,9 @@
     const date = document.getElementById('tEditTargetDate').value;
     const pKeys = ['subh', 'dhuhr', 'asr', 'maghrib', 'isha'];
 
-    // Check if any prayer is missing selection
     for (let key of pKeys) {
       const selected = document.querySelector(`input[name="tedit_${key}"]:checked`);
-      if (!selected) {
-        return alert("ദയവായി എല്ലാ നിസ്കാരങ്ങളുടെയും വിവരങ്ങൾ തിരഞ്ഞെടുക്കുക!");
-      }
+      if (!selected) return alert("ദയവായി എല്ലാ നിസ്കാരങ്ങളുടെയും അവസ്ഥ തിരഞ്ഞെടുക്കുക!");
     }
 
     const payload = {
@@ -1825,8 +1969,9 @@
           <td style="text-align:left;">${s.name} (${s.gender === 'Female' ? 'F' : 'M'})</td>
           <td><b style="color:var(--primary);">${s.pass || '-'}</b></td>
           <td style="white-space:nowrap;">
-            <button class="btn-action" onclick="openEditStudentModal('${s.id}')">Edit</button>
-            <button class="btn-del" onclick="deleteStudent('${s.id}')">Delete</button>
+            <button class="btn-action" style="background:#059669; padding:3px 6px; font-size:10px;" onclick="viewStudentIndividualReport('${s.id}')">📊 Report</button>
+            <button class="btn-action" style="padding:3px 6px; font-size:10px;" onclick="openEditStudentModal('${s.id}')">Edit</button>
+            <button class="btn-del" style="padding:3px 6px; font-size:10px;" onclick="deleteStudent('${s.id}')">Delete</button>
           </td>
         </tr>
       `;
@@ -1850,12 +1995,119 @@
           <td style="text-align:left;">${s.name} <span style="font-size:9px; color:#64748b;">(${s.gender === 'Female' ? 'F' : 'M'})</span></td>
           <td><b style="color:var(--primary);">${s.pass || '-'}</b></td>
           <td style="white-space:nowrap;">
-            <button class="btn-action" onclick="openEditStudentModal('${s.id}')">Edit</button>
-            <button class="btn-del" onclick="deleteStudent('${s.id}')">Delete</button>
+            <button class="btn-action" style="background:#059669; padding:3px 6px; font-size:10px;" onclick="viewStudentIndividualReport('${s.id}')">📊 Report</button>
+            <button class="btn-action" style="padding:3px 6px; font-size:10px;" onclick="openEditStudentModal('${s.id}')">Edit</button>
+            <button class="btn-del" style="padding:3px 6px; font-size:10px;" onclick="deleteStudent('${s.id}')">Delete</button>
           </td>
         </tr>
       `;
     });
+  }
+
+  // --- INDIVIDUAL STUDENT COMPREHENSIVE REPORT & PDF ---
+  function viewStudentIndividualReport(studentId) {
+    const s = dbStudents.find(x => x.id === studentId);
+    if (!s) return;
+    selectedStudentForReport = s;
+
+    const sEntries = dbPrayers.filter(e => e.studentId === s.id);
+    let totals = { jam: 0, ada: 0, qad: 0, nil: 0, exc: 0 };
+    sEntries.forEach(e => {
+      [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
+        if (st === 'ജമാഅത്ത്') totals.jam++;
+        else if (st === 'അദാഅ്') totals.ada++;
+        else if (st === 'ഖളാഅ്') totals.qad++;
+        else if (st === 'ഇളവ്') totals.exc++;
+        else totals.nil++;
+      });
+    });
+
+    const totalPrayed = totals.jam + totals.ada + totals.qad;
+    const totalScore = (totals.jam * 5) + (totals.ada * 3) + (totals.qad * 1);
+
+    const container = document.getElementById('studentDetailContent');
+    container.innerHTML = `
+      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:12px; padding:14px; margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <img src="${s.photo || defaultAvatar}" class="avatar-lg">
+          <div>
+            <h4 style="color:var(--primary); font-size:16px;">${s.name}</h4>
+            <div style="font-size:12px; color:var(--text-muted);">Adm No: <b>${s.adm}</b> | Roll No: <b>${s.rollNo || '-'}</b> | Class: <b>${s.class}</b></div>
+            <div style="font-size:12px; color:var(--text-muted);">Gender: <b>${s.gender || 'Male'}</b> | Phone: <b>${s.phone || '-'}</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; text-align:center; font-size:11px; margin-bottom:12px;">
+        <div style="background:#d1fae5; padding:8px; border-radius:8px;">ജമാഅത്ത് (5):<br><b style="font-size:14px;">${totals.jam}</b></div>
+        <div style="background:#dcfce7; padding:8px; border-radius:8px;">അദാഅ് (3):<br><b style="font-size:14px;">${totals.ada}</b></div>
+        <div style="background:#fef3c7; padding:8px; border-radius:8px;">ഖളാഅ് (1):<br><b style="font-size:14px;">${totals.qad}</b></div>
+        <div style="background:#fee2e2; padding:8px; border-radius:8px;">നിസ്കരിക്കാത്തത്:<br><b style="font-size:14px;">${totals.nil}</b></div>
+        ${s.gender === 'Female' ? `<div style="background:#ede9fe; padding:8px; border-radius:8px;">ഇളവ്:<br><b style="font-size:14px;">${totals.exc}</b></div>` : ''}
+        <div style="background:#e0f2fe; padding:8px; border-radius:8px;">ആകെ സ്കോർ:<br><b style="font-size:14px; color:var(--primary);">${totalScore}</b></div>
+      </div>
+
+      <h4 style="font-size:12px; color:var(--primary-dark); margin:10px 0 4px;">Recent Entries (${sEntries.length} Recorded Days)</h4>
+      <div style="max-height:180px; overflow-y:auto; border:1px solid #e2e8f0; border-radius:8px;">
+        <table>
+          <thead><tr><th>Date</th><th>Subh</th><th>Dhuhr</th><th>Asr</th><th>Maghrib</th><th>Isha</th></tr></thead>
+          <tbody>
+            ${sEntries.sort((a,b)=>b.date.localeCompare(a.date)).map(e => `
+              <tr>
+                <td>${e.date}</td>
+                <td>${getBadgeHTML(e.subh)}</td>
+                <td>${getBadgeHTML(e.dhuhr)}</td>
+                <td>${getBadgeHTML(e.asr)}</td>
+                <td>${getBadgeHTML(e.maghrib)}</td>
+                <td>${getBadgeHTML(e.isha)}</td>
+              </tr>
+            `).join('') || '<tr><td colspan="6">No Entries found</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    document.getElementById('studentDetailReportModal').style.display = 'flex';
+  }
+
+  function downloadIndividualStudentPDF() {
+    if (!selectedStudentForReport) return;
+    const s = selectedStudentForReport;
+    const sEntries = dbPrayers.filter(e => e.studentId === s.id).sort((a,b)=>a.date.localeCompare(b.date));
+
+    let jam = 0, ada = 0, qad = 0, nil = 0, exc = 0;
+    sEntries.forEach(e => {
+      [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
+        if (st === 'ജമാഅത്ത്') jam++;
+        else if (st === 'അദാഅ്') ada++;
+        else if (st === 'ഖളാഅ്') qad++;
+        else if (st === 'ഇളവ്') exc++;
+        else nil++;
+      });
+    });
+    const totalScore = (jam * 5) + (ada * 3) + (qad * 1);
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(14); doc.text("MALHARUL ULOOM MADRASA KALLOOR", 14, 15);
+    doc.setFontSize(10); doc.text(`Individual Prayer Record - ${s.name} (Adm: ${s.adm}, Class: ${s.class})`, 14, 22);
+    doc.setFontSize(9); doc.text(`Total Days: ${sEntries.length} | Jam: ${jam} | Ada: ${ada} | Qad: ${qad} | Nil: ${nil} | Total Score: ${totalScore}`, 14, 28);
+
+    const rows = sEntries.map(e => [
+      e.date, e.subh, e.dhuhr, e.asr, e.maghrib, e.isha
+    ]);
+
+    doc.autoTable({
+      startY: 32,
+      head: [['Date', 'Subh', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']],
+      body: rows,
+      theme: 'grid',
+      headStyles: { fillColor: [4, 120, 87] },
+      styles: { fontSize: 8, cellPadding: 2, halign: 'center' }
+    });
+
+    doc.save(`MUM_Student_${s.adm}_${s.name}.pdf`);
   }
 
   function openEditStudentModal(id) {
@@ -1915,6 +2167,7 @@
 
   async function saveTeacherByAdmin() {
     const name = document.getElementById('admTName').value.trim();
+    const phone = document.getElementById('admTPhone').value.trim();
     const pass = document.getElementById('admTPass').value.trim();
     const clsInput = document.getElementById('admTClasses').value.trim();
     const photoFile = document.getElementById('admTPhoto').files[0];
@@ -1923,9 +2176,10 @@
     const classes = clsInput.split(',').map(c => c.trim()).filter(Boolean);
     try {
       const photoBase64 = await compressImage(photoFile);
-      await db.collection("teachers").add({ name, pass, classes, photo: photoBase64 });
+      await db.collection("teachers").add({ name, phone, pass, classes, photo: photoBase64 });
       alert("Teacher added!");
       document.getElementById('admTName').value = '';
+      document.getElementById('admTPhone').value = '';
       document.getElementById('admTPass').value = '';
       document.getElementById('admTClasses').value = '';
       document.getElementById('admTPhoto').value = '';
@@ -1944,6 +2198,7 @@
         <tr>
           <td><img src="${t.photo || defaultAvatar}" class="avatar-sm" style="margin:0 auto;"></td>
           <td>${t.name}</td>
+          <td>${t.phone || '-'}</td>
           <td>${clsList}</td>
           <td>${t.pass}</td>
           <td style="white-space:nowrap;">
@@ -1960,6 +2215,7 @@
     if (!t) return;
     document.getElementById('editTeacherDocId').value = t.id;
     document.getElementById('editTeacherName').value = t.name || '';
+    document.getElementById('editTeacherPhone').value = t.phone || '';
     document.getElementById('editTeacherPass').value = t.pass || '';
     document.getElementById('editTeacherClasses').value = Array.isArray(t.classes) ? t.classes.join(',') : (t.class || '');
     const prev = document.getElementById('editTeacherPhotoPrev');
@@ -1971,6 +2227,7 @@
   async function updateTeacherData() {
     const id = document.getElementById('editTeacherDocId').value;
     const name = document.getElementById('editTeacherName').value.trim();
+    const phone = document.getElementById('editTeacherPhone').value.trim();
     const pass = document.getElementById('editTeacherPass').value.trim();
     const clsInput = document.getElementById('editTeacherClasses').value.trim();
     const photoFile = document.getElementById('editTeacherPhoto').files[0];
@@ -1979,7 +2236,7 @@
     const classes = clsInput.split(',').map(c => c.trim()).filter(Boolean);
 
     try {
-      const payload = { name, pass, classes };
+      const payload = { name, phone, pass, classes };
       if (photoFile) payload.photo = await compressImage(photoFile);
       await db.collection("teachers").doc(id).update(payload);
       alert("Teacher updated!");
@@ -2079,16 +2336,21 @@
     if (!student) return alert("വിദ്യാർത്ഥിയുടെ അഡ്മിഷൻ നമ്പറോ പേരോ ശരിയല്ല!");
 
     if (classLockSettings[student.class] === true) {
-      return alert(`നിങ്ങളുടെ ക്ലാസിലെ (${student.class}) നിസ്കാരം രേഖപ്പെടുത്താനുള്ള സമയം ഇപ്പോൾ ക്ലാസ് അധ്യാപകൻ ലോക്ക് ചെയ്തിരിക്കുന്നു. എന്തെങ്കിലും ആവശ്യമുണ്ടെങ്കിൽ ക്ലാസ് അധ്യാപകനെ ബന്ധപ്പെടുക.`);
+      alert(`നിങ്ങളുടെ ക്ലാസിലെ (${student.class}) നിസ്കാരം രേഖപ്പെടുത്താനുള്ള സമയം ഇപ്പോൾ ക്ലാസ് അധ്യാപകൻ ലോക്ക് ചെയ്തിരിക്കുന്നു. എന്തെങ്കിലും ആവശ്യമുണ്ടെങ്കിൽ ക്ലാസ് അധ്യാപകനെ ബന്ധപ്പെടുക.`);
+      openTeachersContactModal(student.class);
+      return;
     }
 
     if (!student.pass || student.pass !== password) {
-      return alert("നൽകിയ പാസ്‌വേഡ് തെറ്റാണ്! അധ്യാപകൻ നൽകിയ ശരിയായ പാസ്‌വേഡ് നൽകുക.");
+      alert("നൽകിയ പാസ്‌വേഡ് തെറ്റാണ്! അധ്യാപകൻ നൽകിയ ശരിയായ പാസ്‌വേഡ് നൽകുക.");
+      openTeachersContactModal(student.class);
+      return;
     }
 
     const existing = dbPrayers.find(e => e.studentId === student.id && e.date === todayStr);
     if (existing) {
       alert("ഈ വിദ്യാർത്ഥി ഇന്ന് ഇതിനകം നിസ്കാരം രേഖപ്പെടുത്തിയിട്ടുണ്ട്! മാറ്റങ്ങൾ വരുത്തണമെങ്കിൽ ക്ലാസ് അധ്യാപകനെ ബന്ധപ്പെടുക.");
+      openTeachersContactModal(student.class);
       closeModal('prayerModal');
       return;
     }
@@ -2141,7 +2403,6 @@
       isha: 'ഇശാ'
     };
 
-    // Check if student selected an option for each prayer
     for (let key of pKeys) {
       const selected = document.querySelector(`input[name="${key}"]:checked`);
       if (!selected) {
@@ -2215,19 +2476,32 @@
     `;
   }
 
-  function getProcessedMonthlyData(source) {
+  // --- REPORT PROCESSING (MONTHLY & OVERALL CUMULATIVE) ---
+  function toggleReportTypeInputs(source) {
+    const repType = source === 'teacher' ? document.getElementById('tRepType').value : document.getElementById('admRepType').value;
+    const group = source === 'teacher' ? document.getElementById('tRepMonthGroup') : document.getElementById('admRepMonthGroup');
+    group.style.display = repType === 'overall' ? 'none' : 'block';
+  }
+
+  function getProcessedReportData(source) {
     const cls = source === 'teacher' ? document.getElementById('tRepClass').value : document.getElementById('admRepClass').value;
+    const repType = source === 'teacher' ? document.getElementById('tRepType').value : document.getElementById('admRepType').value;
     const month = source === 'teacher' ? document.getElementById('tRepMonth').value : document.getElementById('admRepMonth').value;
 
-    if (!month) { alert("Select Month!"); return null; }
+    if (repType === 'monthly' && !month) { alert("Select Month!"); return null; }
+    
     let students = dbStudents;
     if (cls !== 'ALL') students = students.filter(s => s.class === cls);
     students = sortStudentsBoyFirst(students);
-    const allEntries = dbPrayers.filter(e => e.date && e.date.startsWith(month));
+
+    let entries = dbPrayers;
+    if (repType === 'monthly') {
+      entries = entries.filter(e => e.date && e.date.startsWith(month));
+    }
 
     const tableData = [];
     students.forEach((s, idx) => {
-      const sEntries = allEntries.filter(e => e.studentId === s.id);
+      const sEntries = entries.filter(e => e.studentId === s.id);
       let jam = 0, ada = 0, qad = 0, nil = 0, exc = 0;
       sEntries.forEach(e => {
         [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
@@ -2251,15 +2525,22 @@
         totalScore
       });
     });
-    return { cls, month, tableData };
+    return { cls, repType, month, tableData };
   }
 
-  function viewMonthlyReportOnScreen(source) {
-    const data = getProcessedMonthlyData(source);
+  function viewReportOnScreen(source) {
+    const data = getProcessedReportData(source);
     if (!data) return;
 
     const boxId = source === 'teacher' ? 'tMonthlyViewBox' : 'admMonthlyViewBox';
     const tbodyId = source === 'teacher' ? 'tMonthlyTableBody' : 'admMonthlyTableBody';
+    const titleId = source === 'teacher' ? 'tRepSummaryTitle' : 'admRepSummaryTitle';
+
+    const titleText = data.repType === 'overall' 
+      ? `All-Time Cumulative Summary (Class: ${data.cls})` 
+      : `Monthly Summary - Month: ${data.month} (Class: ${data.cls})`;
+    document.getElementById(titleId).innerText = titleText;
+
     const tbody = document.getElementById(tbodyId);
     tbody.innerHTML = '';
 
@@ -2281,6 +2562,74 @@
       `;
     });
     document.getElementById(boxId).style.display = 'block';
+  }
+
+  function downloadReportPDF(source) {
+    const data = getProcessedReportData(source);
+    if (!data) return;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(14); doc.text("MALHARUL ULOOM MADRASA KALLOOR", 14, 15);
+    const subTitle = data.repType === 'overall'
+      ? `Prayer Performance Report - Class: ${data.cls} | All-Time Cumulative Total`
+      : `Prayer Performance Report - Class: ${data.cls} | Month: ${data.month}`;
+    doc.setFontSize(10); doc.text(subTitle, 14, 22);
+
+    const rows = data.tableData.map(r => [
+      r.roll, r.adm, r.name, `Cls ${r.cls}`, r.days, r.jam, r.ada, r.qad, r.nil, r.exc, r.totalPrayed, r.totalScore
+    ]);
+
+    doc.autoTable({
+      startY: 26,
+      head: [['Roll', 'Adm', 'Name', 'Class', 'Days', 'Jam(5)', 'Ada(3)', 'Qad(1)', 'Nil', 'Exc', 'Total', 'Score']],
+      body: rows,
+      theme: 'grid',
+      headStyles: { fillColor: [4, 120, 87] },
+      styles: { fontSize: 8, cellPadding: 2, halign: 'center' },
+      columnStyles: { 2: { halign: 'left' } }
+    });
+    
+    const fileName = data.repType === 'overall'
+      ? `MUM_Report_AllTime_Class_${data.cls}.pdf`
+      : `MUM_Report_${data.cls}_${data.month}.pdf`;
+    doc.save(fileName);
+  }
+
+  function printReportData(source) {
+    const data = getProcessedReportData(source);
+    if (!data) return;
+
+    let rowsHtml = '';
+    data.tableData.forEach(r => {
+      rowsHtml += `
+        <tr>
+          <td>${r.roll}</td><td><b>${r.adm}</b></td><td style="text-align:left;">${r.name}</td>
+          <td>Class ${r.cls}</td><td>${r.days}</td><td>${r.jam}</td><td>${r.ada}</td><td>${r.qad}</td>
+          <td>${r.nil}</td><td>${r.exc}</td><td><b>${r.totalPrayed}</b></td>
+          <td style="font-weight:bold; color:#047857;">${r.totalScore}</td>
+        </tr>
+      `;
+    });
+
+    const printTitle = data.repType === 'overall' ? 'All-Time Cumulative Report' : `Monthly Report (${data.month})`;
+    const printWin = window.open('', '', 'width=900,height=700');
+    printWin.document.write(`
+      <html><head><title>MUM Report - ${printTitle}</title>
+      <style>
+        body { font-family: system-ui, sans-serif; padding: 20px; color: #111; }
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #047857; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
+        th, td { border: 1px solid #cbd5e1; padding: 6px 4px; text-align: center; }
+        th { background: #f1f5f9; }
+        @media print { .no-print { display: none; } }
+      </style></head><body>
+      <div class="no-print" style="margin-bottom: 16px;"><button onclick="window.print()" style="background:#047857; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">Print / Save PDF</button></div>
+      <div class="header"><h2>MALHARUL ULOOM MADRASA KALLOOR</h2><p>${printTitle} | Class: ${data.cls}</p></div>
+      <table><thead><tr><th>Roll</th><th>Adm</th><th>Name</th><th>Class</th><th>Days</th><th>Jam(5)</th><th>Ada(3)</th><th>Qad(1)</th><th>Nil</th><th>Exc</th><th>Total</th><th>Score</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+      </body></html>
+    `);
+    printWin.document.close();
   }
 
   function downloadDailyPDF(source) {
@@ -2323,66 +2672,6 @@
       columnStyles: { 2: { halign: 'left' } }
     });
     doc.save(`MUM_Daily_Report_${cls}_${date}.pdf`);
-  }
-
-  function downloadClassPDF(source) {
-    const data = getProcessedMonthlyData(source);
-    if (!data) return;
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.setFontSize(14); doc.text("MALHARUL ULOOM MADRASA KALLOOR", 14, 15);
-    doc.setFontSize(10); doc.text(`Prayer Monthly Report - Class: ${data.cls} | Month: ${data.month}`, 14, 22);
-
-    const rows = data.tableData.map(r => [
-      r.roll, r.adm, r.name, `Cls ${r.cls}`, r.days, r.jam, r.ada, r.qad, r.nil, r.exc, r.totalPrayed, r.totalScore
-    ]);
-
-    doc.autoTable({
-      startY: 26,
-      head: [['Roll', 'Adm', 'Name', 'Class', 'Days', 'Jam(5)', 'Ada(3)', 'Qad(1)', 'Nil', 'Exc', 'Total', 'Score']],
-      body: rows,
-      theme: 'grid',
-      headStyles: { fillColor: [4, 120, 87] },
-      styles: { fontSize: 8, cellPadding: 2, halign: 'center' },
-      columnStyles: { 2: { halign: 'left' } }
-    });
-    doc.save(`MUM_Report_${data.cls}_${data.month}.pdf`);
-  }
-
-  function printClassReport(source) {
-    const data = getProcessedMonthlyData(source);
-    if (!data) return;
-
-    let rowsHtml = '';
-    data.tableData.forEach(r => {
-      rowsHtml += `
-        <tr>
-          <td>${r.roll}</td><td><b>${r.adm}</b></td><td style="text-align:left;">${r.name}</td>
-          <td>Class ${r.cls}</td><td>${r.days}</td><td>${r.jam}</td><td>${r.ada}</td><td>${r.qad}</td>
-          <td>${r.nil}</td><td>${r.exc}</td><td><b>${r.totalPrayed}</b></td>
-          <td style="font-weight:bold; color:#047857;">${r.totalScore}</td>
-        </tr>
-      `;
-    });
-
-    const printWin = window.open('', '', 'width=900,height=700');
-    printWin.document.write(`
-      <html><head><title>MUM Monthly Report - ${data.month}</title>
-      <style>
-        body { font-family: system-ui, sans-serif; padding: 20px; color: #111; }
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #047857; padding-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
-        th, td { border: 1px solid #cbd5e1; padding: 6px 4px; text-align: center; }
-        th { background: #f1f5f9; }
-        @media print { .no-print { display: none; } }
-      </style></head><body>
-      <div class="no-print" style="margin-bottom: 16px;"><button onclick="window.print()" style="background:#047857; color:#fff; border:none; padding:10px 18px; border-radius:6px; cursor:pointer;">Print / Save PDF</button></div>
-      <div class="header"><h2>MALHARUL ULOOM MADRASA KALLOOR</h2><p>Prayer Monthly Report | Class: ${data.cls} | Month: ${data.month}</p></div>
-      <table><thead><tr><th>Roll</th><th>Adm</th><th>Name</th><th>Class</th><th>Days</th><th>Jam(5)</th><th>Ada(3)</th><th>Qad(1)</th><th>Nil</th><th>Exc</th><th>Total</th><th>Score</th></tr></thead><tbody>${rowsHtml}</tbody></table>
-      </body></html>
-    `);
-    printWin.document.close();
   }
 </script>
 </body>
