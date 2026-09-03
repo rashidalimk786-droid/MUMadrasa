@@ -59,37 +59,30 @@
       position: relative;
     }
 
-    /* SEAMLESS CONTINUOUS SMOOTH MARQUEE (NO GAPS, SLOW FLOW) */
-    .marquee-bar {
+    /* CLEAN OVERLAP-FREE SEAMLESS TICKER */
+    .marquee-container {
       background: #022c22;
       color: #a7f3d0;
       padding: 9px 0;
       overflow: hidden;
-      display: flex;
-      user-select: none;
+      white-space: nowrap;
       border-bottom: 1.5px solid #059669;
       font-size: 13px;
       font-weight: 600;
+      position: relative;
     }
-    .marquee-track {
-      display: flex;
-      flex-shrink: 0;
-      white-space: nowrap;
-      animation: smoothScroll 55s linear infinite;
+    .marquee-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marqueeScroll 42s linear infinite;
     }
-    .marquee-bar:hover .marquee-track,
-    .marquee-bar:active .marquee-track {
+    .marquee-container:hover .marquee-text,
+    .marquee-container:active .marquee-text {
       animation-play-state: paused;
     }
-    .marquee-item {
-      display: flex;
-      align-items: center;
-      padding-right: 28px;
-    }
-    .ticker-sep {
-      color: #f59e0b;
-      margin: 0 16px;
-      font-size: 14px;
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
     }
     .ticker-badge {
       background: #047857;
@@ -98,13 +91,9 @@
       border-radius: 12px;
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: 0.5px;
-      margin-right: 10px;
+      margin: 0 10px;
     }
-    @keyframes smoothScroll {
-      from { transform: translateX(0); }
-      to { transform: translateX(-100%); }
-    }
+    .ticker-sep { color: #f59e0b; margin: 0 12px; }
 
     .top-bar {
       background: var(--primary-dark);
@@ -248,7 +237,6 @@
     }
     input:focus, select:focus { border-color: var(--accent); }
 
-    /* Live Search Suggestions Dropdown */
     .search-suggestions {
       position: absolute;
       top: 100%;
@@ -422,48 +410,16 @@
 <body>
 
 <div class="app-shell">
-  <!-- Seamless Continuous Smooth Moving Status Ticker (No Gaps) -->
-  <div class="marquee-bar">
-    <div class="marquee-track">
-      <div class="marquee-item">
-        <span class="ticker-badge">MUM</span>
-        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
-        <span class="ticker-sep">🕌</span>
-        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span>
-        <span class="ticker-sep">✨</span>
-        <span style="color:#6ee7b7; font-weight:700;">مدرسة مظهر العلوم كلور (MUM Kalloor)</span>
-        <span class="ticker-sep">📖</span>
-      </div>
-      <div class="marquee-item">
-        <span class="ticker-badge">MUM</span>
-        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
-        <span class="ticker-sep">🕌</span>
-        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span>
-        <span class="ticker-sep">✨</span>
-        <span style="color:#6ee7b7; font-weight:700;">مدرسة مظهر العلوم كلور (MUM Kalloor)</span>
-        <span class="ticker-sep">📖</span>
-      </div>
-    </div>
-    <!-- Duplicate track for absolute seamless infinite loop -->
-    <div class="marquee-track" aria-hidden="true">
-      <div class="marquee-item">
-        <span class="ticker-badge">MUM</span>
-        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
-        <span class="ticker-sep">🕌</span>
-        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span>
-        <span class="ticker-sep">✨</span>
-        <span style="color:#6ee7b7; font-weight:700;">مدرسة مظهر العلوم كلور </span>
-        <span class="ticker-sep">📖</span>
-      </div>
-      <div class="marquee-item">
-        <span class="ticker-badge">MUM</span>
-        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
-        <span class="ticker-sep">🕌</span>
-        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith." ​﴿ إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا ﴾  ✦  Establish prayer on time  ✦  Keep up your daily prayers!  </span>
-        <span class="ticker-sep">✨</span>
-        <span style="color:#6ee7b7; font-weight:700;">مدرسة مظهر العلوم كلور</span>
-        <span class="ticker-sep">📖</span>
-      </div>
+  <!-- Clean Seamless Scrolling Header Bar -->
+  <div class="marquee-container">
+    <div class="marquee-text">
+      <span class="ticker-badge">MUM</span>
+      <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
+      <span class="ticker-sep">🕌</span>
+      <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span>
+      <span class="ticker-sep">✨</span>
+      <span style="color:#6ee7b7; font-weight:700;">مدرسة مظهر العلوم كلور (MUM Kalloor-Koothali)</span>
+      <span class="ticker-sep">📖</span>
     </div>
   </div>
 
@@ -532,22 +488,30 @@
         <p style="font-size:12px; color:var(--text-muted);" id="tClassListDisplay"></p>
       </div>
 
-      <!-- Entry Access Switch -->
+      <!-- Class-Specific Entry Access Switch -->
       <div class="card">
+        <div class="card-title">Class-wise Entry Access Lock/Unlock</div>
+        <div class="form-group">
+          <label>Select Your Class to Configure Access</label>
+          <select id="tLockClassSelect" onchange="updateClassLockUI()"></select>
+        </div>
         <div class="toggle-bar">
           <div>
-            <b>Student Prayer Entry Window</b>
-            <div style="font-size:11px; color:var(--text-muted);" id="entryStatusDesc">Loading...</div>
+            <b>Prayer Entry Window</b>
+            <div style="font-size:11px; color:var(--text-muted);" id="classEntryStatusDesc">Checking...</div>
           </div>
-          <button class="btn-action" id="toggleEntryBtn" onclick="toggleEntryStatus()">Toggle Access</button>
+          <button class="btn-action" id="toggleClassEntryBtn" onclick="toggleClassEntryStatus()">Toggle Access</button>
         </div>
       </div>
 
-      <!-- Daily View & Edit for Teachers -->
+      <!-- Daily View & Edit for Teachers with Bulk WhatsApp Alert -->
       <div class="card">
         <div class="card-title">
           <span>Daily Prayer Inspection</span>
-          <button class="btn-action" onclick="downloadDailyPDF('teacher')">📄 Daily PDF</button>
+          <div style="display:flex; gap:6px;">
+            <button class="btn-action" style="background:#25D366;" onclick="openBulkWhatsAppModal()">📢 Bulk WA Alert</button>
+            <button class="btn-action" onclick="downloadDailyPDF('teacher')">📄 Daily PDF</button>
+          </div>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div class="form-group">
@@ -571,7 +535,7 @@
         </div>
       </div>
 
-      <!-- Student Registration -->
+      <!-- Student Registration with Password -->
       <div class="card">
         <div class="card-title">➕ Add New Student</div>
         <div class="form-group"><label>Class</label><select id="tRegClass"></select></div>
@@ -580,7 +544,10 @@
           <div class="form-group"><label>Admission No</label><input type="text" id="tRegAdm"></div>
         </div>
         <div class="form-group"><label>Student Name</label><input type="text" id="tRegName"></div>
-        <div class="form-group"><label>WhatsApp No</label><input type="tel" id="tRegPhone" placeholder="10 Digits"></div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          <div class="form-group"><label>Parent's WhatsApp No</label><input type="tel" id="tRegPhone" placeholder="10 Digits"></div>
+          <div class="form-group"><label>Student Password (PIN)</label><input type="text" id="tRegPass" placeholder="e.g. 1234"></div>
+        </div>
         <div class="form-group"><label>Gender</label>
           <select id="tRegGender">
             <option value="Male">Boy (Male)</option>
@@ -595,16 +562,16 @@
         <button class="btn-main" onclick="saveStudentByTeacher()">Save Student</button>
       </div>
 
-      <!-- Manage Students -->
+      <!-- Manage Students (Shows Student Password to Teacher) -->
       <div class="card">
-        <div class="card-title">Student Management</div>
+        <div class="card-title">Student Management (With Passwords)</div>
         <div class="form-group">
           <label>Filter Class</label>
           <select id="tFilterClass" onchange="renderTeacherStudentList()"></select>
         </div>
         <div style="overflow-x:auto;">
           <table>
-            <thead><tr><th>No</th><th>Photo</th><th>Adm</th><th>Name</th><th>Action</th></tr></thead>
+            <thead><tr><th>No</th><th>Photo</th><th>Adm</th><th>Name</th><th>Password</th><th>Action</th></tr></thead>
             <tbody id="tStudentTable"></tbody>
           </table>
         </div>
@@ -672,9 +639,9 @@
         </div>
       </div>
 
-      <!-- Admin Student Management & Edit -->
+      <!-- Admin Student Management & Edit (With Passwords) -->
       <div class="card">
-        <div class="card-title">All Students (Admin Edit)</div>
+        <div class="card-title">All Students (Admin Edit & Passwords)</div>
         <div class="form-group">
           <label>Filter Class</label>
           <select id="admFilterClass" onchange="renderAdminStudentList()">
@@ -684,7 +651,7 @@
         </div>
         <div style="overflow-x:auto;">
           <table>
-            <thead><tr><th>Cls</th><th>No</th><th>Photo</th><th>Adm</th><th>Name</th><th>Action</th></tr></thead>
+            <thead><tr><th>Cls</th><th>No</th><th>Photo</th><th>Adm</th><th>Name</th><th>Password</th><th>Action</th></tr></thead>
             <tbody id="admStudentTable"></tbody>
           </table>
         </div>
@@ -765,7 +732,10 @@
 
     <div class="form-group"><label>Admission Number</label><input type="text" id="editStuAdm"></div>
     <div class="form-group"><label>Student Name</label><input type="text" id="editStuName"></div>
-    <div class="form-group"><label>WhatsApp Number</label><input type="tel" id="editStuPhone"></div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+      <div class="form-group"><label>WhatsApp Number</label><input type="tel" id="editStuPhone"></div>
+      <div class="form-group"><label>Student Password</label><input type="text" id="editStuPass"></div>
+    </div>
     <div class="form-group"><label>Gender</label>
       <select id="editStuGender">
         <option value="Male">Boy (Male)</option>
@@ -815,6 +785,16 @@
   </div>
 </div>
 
+<!-- MODAL: BULK WHATSAPP ALERT (ONE-CLICK BROADCAST LIST) -->
+<div id="bulkWhatsAppModal" class="modal-overlay">
+  <div style="background:#fff; width:100%; max-width:460px; border-radius:18px; padding:20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height:90vh; overflow-y:auto;">
+    <h3 style="color:var(--primary); margin-bottom:6px;">📢 Unrecorded Prayers WhatsApp Alert</h3>
+    <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;" id="bulkWAModalDesc"></p>
+    <div id="bulkWAListContainer"></div>
+    <button class="btn-main" style="background:#94a3b8; margin-top:12px;" onclick="closeModal('bulkWhatsAppModal')">Close</button>
+  </div>
+</div>
+
 <!-- MODAL: LOGIN WITH BIOMETRICS (TEACHERS & ADMIN) -->
 <div id="loginModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:360px; border-radius:18px; padding:20px; text-align:center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
@@ -837,7 +817,7 @@
   </div>
 </div>
 
-<!-- MODAL: DAILY PRAYER ENTRY (WITH SMART LIVE AUTOCOMPLETE) -->
+<!-- MODAL: DAILY PRAYER ENTRY (STUDENT PASSWORD PROTECTED) -->
 <div id="prayerModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:440px; border-radius:18px; padding:20px; max-height:90vh; overflow-y:auto;">
     <h3 style="color:var(--primary); margin-bottom:12px;">ഇന്നത്തെ നിസ്കാരം രേഖപ്പെടുത്തുക</h3>
@@ -852,6 +832,12 @@
       <label>അല്ലെങ്കിൽ വിദ്യാർത്ഥിയുടെ പേര്</label>
       <input type="text" id="pNameInput" placeholder="പേര് ടൈപ്പ് ചെയ്യുക..." oninput="handleSmartSearch(this.value, 'pNameSuggestions', selectEntryStudent)" autocomplete="off">
       <div id="pNameSuggestions" class="search-suggestions"></div>
+    </div>
+
+    <div class="form-group">
+      <label>വിദ്യാർത്ഥിയുടെ രഹസ്യ പാസ്‌വേഡ് (Password / PIN)</label>
+      <input type="password" id="pPasswordInput" placeholder="പാസ്‌വേഡ് നൽകുക">
+      <button class="btn-main" style="margin-top:6px; background:#0284c7; padding:9px;" onclick="verifyAndOpenPrayerForm()">തുടരുക</button>
     </div>
 
     <div id="pStudentInfo" style="display:none; font-size:12px; background:#dcfce7; padding:10px; border-radius:10px; margin-bottom:10px; align-items:center;"></div>
@@ -927,7 +913,7 @@
   let dbPrayers = [];
   let adminPassword = "mumadminpass";
   let activeLeaderboardTab = 'daily';
-  let isEntryAllowedGlobal = true;
+  let classLockSettings = {}; // Stores lock state per class: { '1': false, '2': true, ... }
 
   const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
 
@@ -979,37 +965,51 @@
     if (currentUser?.role === 'admin') renderDailyAdminView();
   });
 
-  db.collection("settings").doc("config").onSnapshot(doc => {
+  // Class-specific Lock Configurations Listener
+  db.collection("settings").doc("classLocks").onSnapshot(doc => {
     if (doc.exists) {
-      const data = doc.data();
-      if (data.adminPass) adminPassword = data.adminPass;
-      isEntryAllowedGlobal = data.isEntryAllowed !== undefined ? data.isEntryAllowed : true;
-      updateEntryUIStatus();
+      classLockSettings = doc.data() || {};
     } else {
-      db.collection("settings").doc("config").set({ adminPass: "772625", isEntryAllowed: true }, { merge: true });
+      classLockSettings = {};
+    }
+    if (currentUser?.role === 'teacher') updateClassLockUI();
+  });
+
+  db.collection("settings").doc("config").onSnapshot(doc => {
+    if (doc.exists && doc.data().adminPass) {
+      adminPassword = doc.data().adminPass;
+    } else {
+      db.collection("settings").doc("config").set({ adminPass: "772625" }, { merge: true });
     }
   });
 
-  function updateEntryUIStatus() {
-    const el = document.getElementById('entryStatusDesc');
-    const btn = document.getElementById('toggleEntryBtn');
-    if (!el || !btn) return;
-    if (isEntryAllowedGlobal) {
-      el.innerHTML = '<span style="color:#047857; font-weight:bold;">Active (Open for students)</span>';
-      btn.innerText = "Lock / Close Access";
+  // --- CLASS LOCK / UNLOCK LOGIC ---
+  function updateClassLockUI() {
+    const cls = document.getElementById('tLockClassSelect').value;
+    const el = document.getElementById('classEntryStatusDesc');
+    const btn = document.getElementById('toggleClassEntryBtn');
+    if (!el || !btn || !cls) return;
+
+    const isLocked = classLockSettings[cls] === true; // default is false (unlocked)
+    if (!isLocked) {
+      el.innerHTML = `<span style="color:#047857; font-weight:bold;">Unlocked (Class ${cls} entries are open)</span>`;
+      btn.innerText = `Lock Class ${cls} Access`;
       btn.style.background = "#dc2626";
     } else {
-      el.innerHTML = '<span style="color:#dc2626; font-weight:bold;">Locked (Disabled by Teacher)</span>';
-      btn.innerText = "Unlock / Open Access";
+      el.innerHTML = `<span style="color:#dc2626; font-weight:bold;">Locked (Class ${cls} entries are closed)</span>`;
+      btn.innerText = `Unlock Class ${cls} Access`;
       btn.style.background = "#047857";
     }
   }
 
-  async function toggleEntryStatus() {
+  async function toggleClassEntryStatus() {
+    const cls = document.getElementById('tLockClassSelect').value;
+    if (!cls) return;
+    const currentState = classLockSettings[cls] === true;
     try {
-      await db.collection("settings").doc("config").set({ isEntryAllowed: !isEntryAllowedGlobal }, { merge: true });
+      await db.collection("settings").doc("classLocks").set({ [cls]: !currentState }, { merge: true });
     } catch (e) {
-      alert("Error changing status: " + e.message);
+      alert("Error updating class lock: " + e.message);
     }
   }
 
@@ -1077,7 +1077,7 @@
     });
   }
 
-  // --- ROBUST BIOMETRIC (TEACHER & ADMIN) ---
+  // --- BIOMETRIC (TEACHER & ADMIN) ---
   async function handleBiometricLogin() {
     if (!window.PublicKeyCredential) {
       return alert("Fingerprint/Biometric is not supported on this browser!");
@@ -1161,19 +1161,13 @@
     const pass = document.getElementById('loginPass').value.trim();
 
     if (role === 'admin') {
-      if (pass === adminPassword) {
-        loginAsAdmin();
-      } else {
-        alert("Admin password is wrong!");
-      }
+      if (pass === adminPassword) loginAsAdmin();
+      else alert("Admin password is wrong!");
     } else {
       const tId = document.getElementById('loginTeacherSelect').value;
       const t = dbTeachers.find(x => x.id === tId && x.pass === pass);
-      if (t) {
-        loginAsTeacher(t);
-      } else {
-        alert("Incorrect Teacher or Password!");
-      }
+      if (t) loginAsTeacher(t);
+      else alert("Incorrect Teacher or Password!");
     }
   }
 
@@ -1206,7 +1200,9 @@
     document.getElementById('tFilterClass').innerHTML = clsOpts;
     document.getElementById('tRepClass').innerHTML = clsOpts;
     document.getElementById('tDailyClass').innerHTML = clsOpts;
+    document.getElementById('tLockClassSelect').innerHTML = clsOpts;
 
+    updateClassLockUI();
     renderTeacherStudentList();
     renderDailyTeacherView();
     closeModal('loginModal');
@@ -1354,6 +1350,47 @@
     });
   }
 
+  // --- BULK WHATSAPP ALERT MODAL LOGIC ---
+  function openBulkWhatsAppModal() {
+    const cls = document.getElementById('tDailyClass').value;
+    const date = document.getElementById('tDailyDate').value;
+    if (!cls || !date) return alert("Select Class and Date!");
+
+    let students = dbStudents.filter(s => s.class === cls);
+    const dayPrayers = dbPrayers.filter(p => p.date === date);
+    
+    // Filter students who haven't entered anything today
+    const unrecordedStudents = students.filter(s => !dayPrayers.some(p => p.studentId === s.id));
+    document.getElementById('bulkWAModalDesc').innerText = `Class ${cls} | Date: ${date} - Total Unrecorded: ${unrecordedStudents.length}`;
+
+    const container = document.getElementById('bulkWAListContainer');
+    if (unrecordedStudents.length === 0) {
+      container.innerHTML = `<p style="font-size:13px; color:#047857; text-align:center; padding:10px;">All students have recorded their prayers for this date! 🎉</p>`;
+    } else {
+      let html = '<div style="display:flex; flex-direction:column; gap:8px;">';
+      unrecordedStudents.forEach(s => {
+        let phone = (s.phone || '').trim().replace(/[^0-9]/g, '');
+        if (phone.length === 10) phone = '91' + phone;
+
+        const msg = `അസ്സലാമു അലൈക്കും,\nമൽഹറുൽ ഉലൂം മദ്റസ കലൂർ അറിയിപ്പ്: നിങ്ങളുടെ മകൻ/മകൾ *${s.name}* (Adm: ${s.adm}, Class ${s.class}) ഇന്നത്തെ (${date}) നിസ്കാര വിവരങ്ങൾ പോർട്ടലിൽ ഇതുവരെ രേഖപ്പെടുത്തിയിട്ടില്ല എന്ന് കാണുന്നു. ഉടൻ തന്നെ രേഖപ്പെടുത്തുമല്ലോ.`;
+        const waLink = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}` : '#';
+
+        html += `
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1;">
+            <div>
+              <b>${s.name}</b> (Adm: ${s.adm})<br>
+              <span style="font-size:11px; color:var(--text-muted);">${s.phone || 'No Phone'}</span>
+            </div>
+            ${phone ? `<a href="${waLink}" target="_blank" class="btn-wa">Send WhatsApp</a>` : `<span style="font-size:10px; color:#dc2626;">No Number</span>`}
+          </div>
+        `;
+      });
+      html += '</div>';
+      container.innerHTML = html;
+    }
+    document.getElementById('bulkWhatsAppModal').style.display = 'flex';
+  }
+
   // Admin Daily View
   function renderDailyAdminView() {
     const cls = document.getElementById('admDailyClass').value;
@@ -1455,7 +1492,6 @@
     }
   }
 
-  // Clear / Delete prayer record for selected date
   async function clearStudentDailyPrayer() {
     const studentId = document.getElementById('tEditTargetStudentId').value;
     const date = document.getElementById('tEditTargetDate').value;
@@ -1476,24 +1512,26 @@
     }
   }
 
-  // Student Registration
+  // Student Registration with Password
   async function saveStudentByTeacher() {
     const cls = document.getElementById('tRegClass').value;
     const rollNo = document.getElementById('tRegRoll').value.trim();
     const adm = document.getElementById('tRegAdm').value.trim();
     const name = document.getElementById('tRegName').value.trim();
     const phone = document.getElementById('tRegPhone').value.trim();
+    const pass = document.getElementById('tRegPass').value.trim();
     const gender = document.getElementById('tRegGender').value;
     const photoFile = document.getElementById('tRegPhoto').files[0];
 
     if (!adm || !name) return alert("Admission No and Name required!");
+    if (!pass) return alert("Please set a password for the student!");
     if (dbStudents.some(s => s.adm.toLowerCase() === adm.toLowerCase())) return alert("Admission number already exists!");
 
     try {
       const photoBase64 = await compressImage(photoFile);
       await db.collection("students").add({
         rollNo: rollNo ? parseInt(rollNo) : null,
-        adm, name, phone, class: cls, gender,
+        adm, name, phone, pass, class: cls, gender,
         photo: photoBase64,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
@@ -1502,6 +1540,7 @@
       document.getElementById('tRegAdm').value = '';
       document.getElementById('tRegName').value = '';
       document.getElementById('tRegPhone').value = '';
+      document.getElementById('tRegPass').value = '';
       document.getElementById('tRegPhoto').value = '';
       document.getElementById('tPhotoPreview').style.display = 'none';
     } catch (e) {
@@ -1522,6 +1561,7 @@
           <td><img src="${s.photo || defaultAvatar}" class="avatar-sm" style="margin:0 auto;"></td>
           <td>${s.adm}</td>
           <td style="text-align:left;">${s.name} (${s.gender === 'Female' ? 'F' : 'M'})</td>
+          <td><b style="color:var(--primary);">${s.pass || '-'}</b></td>
           <td style="white-space:nowrap;">
             <button class="btn-action" onclick="openEditStudentModal('${s.id}')">Edit</button>
             <button class="btn-del" onclick="deleteStudent('${s.id}')">Delete</button>
@@ -1546,6 +1586,7 @@
           <td><img src="${s.photo || defaultAvatar}" class="avatar-sm" style="margin:0 auto;"></td>
           <td>${s.adm}</td>
           <td style="text-align:left;">${s.name} <span style="font-size:9px; color:#64748b;">(${s.gender === 'Female' ? 'F' : 'M'})</span></td>
+          <td><b style="color:var(--primary);">${s.pass || '-'}</b></td>
           <td style="white-space:nowrap;">
             <button class="btn-action" onclick="openEditStudentModal('${s.id}')">Edit</button>
             <button class="btn-del" onclick="deleteStudent('${s.id}')">Delete</button>
@@ -1564,6 +1605,7 @@
     document.getElementById('editStuAdm').value = s.adm || '';
     document.getElementById('editStuName').value = s.name || '';
     document.getElementById('editStuPhone').value = s.phone || '';
+    document.getElementById('editStuPass').value = s.pass || '';
     document.getElementById('editStuGender').value = s.gender || 'Male';
     document.getElementById('editStuPhoto').value = '';
     const prev = document.getElementById('editPhotoPreview');
@@ -1579,13 +1621,15 @@
     const adm = document.getElementById('editStuAdm').value.trim();
     const name = document.getElementById('editStuName').value.trim();
     const phone = document.getElementById('editStuPhone').value.trim();
+    const pass = document.getElementById('editStuPass').value.trim();
     const gender = document.getElementById('editStuGender').value;
     const photoFile = document.getElementById('editStuPhoto').files[0];
 
     if (!adm || !name) return alert("Admission No and Name required!");
+    if (!pass) return alert("Student password cannot be empty!");
 
     try {
-      const payload = { class: cls, rollNo: rollNo ? parseInt(rollNo) : null, adm, name, phone, gender };
+      const payload = { class: cls, rollNo: rollNo ? parseInt(rollNo) : null, adm, name, phone, pass, gender };
       if (photoFile) payload.photo = await compressImage(photoFile);
       await db.collection("students").doc(id).update(payload);
       alert("Student updated!");
@@ -1752,15 +1796,12 @@
     document.getElementById('pNameInput').value = s.name;
     document.getElementById('pAdmSuggestions').style.display = 'none';
     document.getElementById('pNameSuggestions').style.display = 'none';
-    loadPrayerFormForStudent(s);
   }
 
   function openPrayerEntryModal() {
-    if (!isEntryAllowedGlobal) {
-      return alert("നിസ്കാരം രേഖപ്പെടുത്താനുള്ള സമയം ഇപ്പോൾ അവസാനിച്ചിരിക്കുന്നു. എന്തെങ്കിലും മാറ്റങ്ങൾ വരുത്തണമെങ്കിൽ ക്ലാസ് അധ്യാപകനെ ബന്ധപ്പെടുക.");
-    }
     document.getElementById('pAdmInput').value = '';
     document.getElementById('pNameInput').value = '';
+    document.getElementById('pPasswordInput').value = '';
     document.getElementById('pAdmSuggestions').style.display = 'none';
     document.getElementById('pNameSuggestions').style.display = 'none';
     document.getElementById('pStudentInfo').style.display = 'none';
@@ -1768,7 +1809,25 @@
     document.getElementById('prayerModal').style.display = 'flex';
   }
 
-  function loadPrayerFormForStudent(student) {
+  function verifyAndOpenPrayerForm() {
+    const adm = document.getElementById('pAdmInput').value.trim();
+    const name = document.getElementById('pNameInput').value.trim();
+    const password = document.getElementById('pPasswordInput').value.trim();
+
+    const student = dbStudents.find(s => s.adm.toLowerCase() === adm.toLowerCase() || s.name.toLowerCase() === name.toLowerCase());
+    if (!student) return alert("വിദ്യാർത്ഥിയുടെ അഡ്മിഷൻ നമ്പറോ പേരോ ശരിയല്ല!");
+
+    // Class-specific Lock Verification
+    if (classLockSettings[student.class] === true) {
+      return alert(`നിങ്ങളുടെ ക്ലാസിലെ (${student.class}) നിസ്കാരം രേഖപ്പെടുത്താനുള്ള സമയം ഇപ്പോൾ ക്ലാസ് അധ്യാപകൻ ലോക്ക് ചെയ്തിരിക്കുന്നു. എന്തെങ്കിലും ആവശ്യമുണ്ടെങ്കിൽ ക്ലാസ് അധ്യാപകനെ ബന്ധപ്പെടുക.`);
+    }
+
+    // Password check
+    if (!student.pass || student.pass !== password) {
+      return alert("നൽകിയ പാസ്‌വേഡ് തെറ്റാണ്! അധ്യാപകൻ നൽകിയ ശരിയായ പാസ്‌വേഡ് നൽകുക.");
+    }
+
+    // Daily Entry Duplication Check
     const existing = dbPrayers.find(e => e.studentId === student.id && e.date === todayStr);
     if (existing) {
       alert("ഈ വിദ്യാർത്ഥി ഇന്ന് ഇതിനകം നിസ്കാരം രേഖപ്പെടുത്തിയിട്ടുണ്ട്! മാറ്റങ്ങൾ വരുത്തണമെങ്കിൽ ക്ലാസ് അധ്യാപകനെ ബന്ധപ്പെടുക.");
@@ -1776,6 +1835,10 @@
       return;
     }
 
+    loadPrayerFormForStudent(student);
+  }
+
+  function loadPrayerFormForStudent(student) {
     activeStudentForEntry = student;
     const pInfo = document.getElementById('pStudentInfo');
     pInfo.style.display = 'flex';
@@ -1914,7 +1977,6 @@
     return { cls, month, tableData };
   }
 
-  // VIEW MONTHLY REPORT ON SCREEN
   function viewMonthlyReportOnScreen(source) {
     const data = getProcessedMonthlyData(source);
     if (!data) return;
