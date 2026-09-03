@@ -16,10 +16,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
-  <!-- Firebase App & Firestore -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
   <style>
     :root {
       --primary: #047857;
@@ -33,7 +29,7 @@
       --text: #0f172a;
       --text-muted: #64748b;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body {
       background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #0f766e 100%);
       min-height: 100vh;
@@ -44,7 +40,7 @@
     }
     .app-shell {
       width: 100%;
-      max-width: 650px;
+      max-width: 620px;
       background: var(--bg);
       border-radius: 24px;
       overflow: hidden;
@@ -54,6 +50,7 @@
       position: relative;
     }
 
+    /* CONTINUOUS SCROLLING QURAN/HADITH TICKER */
     .marquee-container {
       background: #022c22;
       color: #a7f3d0;
@@ -61,20 +58,20 @@
       overflow: hidden;
       white-space: nowrap;
       border-bottom: 1.5px solid #059669;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
     }
     .marquee-text {
       display: inline-block;
       padding-left: 100%;
-      animation: marqueeScroll 35s linear infinite;
+      animation: marqueeScroll 34s linear infinite;
     }
     @keyframes marqueeScroll {
       0% { transform: translateX(0%); }
       100% { transform: translateX(-100%); }
     }
 
-    /* COMPACT 2-LINE ROTATING NOTICE BAR */
+    /* SLIDING NOTICE BAR (2 Lines Compact, Crisp) */
     .notice-slider-bar {
       background: #fef3c7;
       border-bottom: 1px solid #fde68a;
@@ -88,7 +85,7 @@
       color: #fff;
       font-size: 9px;
       font-weight: 800;
-      padding: 2px 6px;
+      padding: 3px 6px;
       border-radius: 4px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
@@ -96,18 +93,18 @@
     }
     .notice-msg-text {
       flex: 1;
-      font-size: 11px;
-      font-weight: 600;
-      line-height: 1.35;
+      font-size: 11.5px;
+      font-weight: 700;
+      line-height: 1.3;
       color: #92400e;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: clip;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
+    /* TOP BAR */
     .top-bar {
       background: var(--primary-dark);
       color: #fff;
@@ -119,36 +116,40 @@
     }
     .top-bar h3 { font-size: 15px; font-weight: 800; letter-spacing: 0.5px; }
     .btn-top {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.18);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.4);
+      border: 1px solid rgba(255,255,255,0.35);
       padding: 6px 14px;
       border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 800;
       cursor: pointer;
+      text-transform: uppercase;
     }
-    .main-body { padding: 16px; overflow-y: auto; max-height: 85vh; }
+
+    .main-body { padding: 14px; overflow-y: auto; max-height: 85vh; }
     
     .hero {
       text-align: center;
       background: #ffffff;
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 16px;
       margin-bottom: 14px;
       border: 1px solid #d1fae5;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
     }
-    .hero .arabic-greeting { font-size: 24px; color: var(--primary); font-family: serif; font-weight: bold; }
-    .hero h1 { font-size: 15px; color: var(--primary-dark); font-weight: 800; }
-    .hero p { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+    .hero .arabic-greeting { font-size: 24px; color: var(--primary); font-family: serif; font-weight: bold; margin-bottom: 2px; }
+    .hero h1 { font-size: 15px; color: var(--primary-dark); font-weight: 800; line-height: 1.3; }
+    .hero p { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-top: 4px; }
 
+    /* ACTION BUTTON */
     .pulse-btn {
       width: 100%;
       background: linear-gradient(135deg, #059669, #10b981);
       color: white;
       border: none;
       padding: 14px;
-      border-radius: 14px;
+      border-radius: 16px;
       font-size: 16px;
       font-weight: 800;
       cursor: pointer;
@@ -156,7 +157,9 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.4);
+      border: 1.5px solid #a7f3d0;
     }
 
     .card {
@@ -165,47 +168,50 @@
       padding: 14px;
       margin-bottom: 14px;
       border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
     .card-title {
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--primary-dark);
       margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
+
+    /* TABS */
     .tab-container {
       display: flex;
       gap: 4px;
       margin-bottom: 10px;
       background: #f1f5f9;
       padding: 3px;
-      border-radius: 8px;
+      border-radius: 10px;
     }
     .tab-btn {
       flex: 1;
       padding: 6px 4px;
       border: none;
       background: transparent;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--text-muted);
       cursor: pointer;
     }
-    .tab-btn.active { background: #fff; color: var(--primary-dark); }
+    .tab-btn.active { background: #fff; color: var(--primary-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-    /* LEADERBOARD STYLES */
+    /* LEADERBOARD ITEM STYLES */
     .gender-sec-title {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: #475569;
+      color: #64748b;
       margin: 10px 0 6px 0;
       border-bottom: 1px dashed #cbd5e1;
-      padding-bottom: 2px;
+      padding-bottom: 3px;
       display: flex;
       justify-content: space-between;
     }
@@ -214,7 +220,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 8px 10px;
-      border-radius: 8px;
+      border-radius: 10px;
       background: #f8fafc;
       margin-bottom: 6px;
       font-size: 12px;
@@ -226,7 +232,7 @@
       font-weight: 800;
       font-size: 9px;
       color: #fff;
-      margin-right: 6px;
+      margin-right: 8px;
     }
     .rank-1 { background: #f59e0b; }
     .rank-2 { background: #64748b; }
@@ -248,14 +254,56 @@
       background: var(--primary);
       color: white;
       border: none;
-      padding: 10px;
-      border-radius: 8px;
-      font-weight: 700;
+      padding: 11px;
+      border-radius: 10px;
+      font-weight: 800;
       cursor: pointer;
       font-size: 13px;
     }
+    .btn-action {
+      background: #0284c7;
+      color: #fff;
+      border: none;
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .btn-del {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 700;
+    }
 
-    /* PRAYER MODAL */
+    /* FLOATING CONTACT TRIGGER */
+    .floating-contact-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #047857;
+      color: white;
+      border: 2px solid #a7f3d0;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 1000;
+      transition: transform 0.2s ease;
+    }
+    .floating-contact-btn:hover { transform: scale(1.08); }
+
+    /* MODALS */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -268,27 +316,61 @@
     }
     .modal-box {
       background: #fff;
-      border-radius: 16px;
+      border-radius: 18px;
       width: 100%;
       max-width: 500px;
       max-height: 90vh;
       overflow-y: auto;
       padding: 16px;
     }
+
+    /* TEACHER CONTACT CARD IN MODAL */
+    .teacher-card-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 8px;
+    }
+    .teacher-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+      background: #e2e8f0;
+      flex-shrink: 0;
+    }
+    .btn-call {
+      background: #10b981;
+      color: #fff;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* PRAYER STATUS RADIOS */
     .prayer-box {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 8px;
       margin-bottom: 8px;
     }
-    .prayer-name { font-weight: 700; font-size: 12px; margin-bottom: 5px; }
+    .prayer-name { font-weight: 800; font-size: 12px; margin-bottom: 5px; color: var(--primary-dark); }
     .status-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 4px;
     }
-    .status-grid.girls { grid-template-columns: repeat(5, 1fr); }
     .status-grid input { display: none; }
     .status-lbl {
       text-align: center;
@@ -298,41 +380,24 @@
       background: #fff;
       border: 1px solid #cbd5e1;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 700;
     }
     .status-grid input:checked + .status-lbl { color: #fff; border-color: transparent; }
     .status-grid input[value="ജമാഅത്ത്"]:checked + .status-lbl { background: #047857; }
     .status-grid input[value="അദാഅ്"]:checked + .status-lbl { background: #10b981; }
     .status-grid input[value="ഖളാഅ്"]:checked + .status-lbl { background: #f59e0b; }
     .status-grid input[value="നിസ്കരിച്ചില്ല"]:checked + .status-lbl { background: #ef4444; }
-    .status-grid input[value="ഇളവ്"]:checked + .status-lbl { background: #8b5cf6; }
 
-    .search-suggestions {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: #fff;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      max-height: 150px;
-      overflow-y: auto;
-      display: none;
-      z-index: 100;
-    }
-    .suggestion-item {
-      padding: 8px 10px;
-      font-size: 12px;
-      cursor: pointer;
-      border-bottom: 1px solid #f1f5f9;
-    }
-    .suggestion-item:hover { background: #f0fdf4; color: var(--primary); }
-    .footer { text-align: center; font-size: 11px; color: var(--primary-dark); margin-top: 12px; font-weight: 800; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px; }
+    th, td { border: 1px solid #e2e8f0; padding: 6px 4px; text-align: center; }
+    th { background: #f1f5f9; font-weight: 700; }
+    .footer { text-align: center; font-size: 11px; color: var(--primary-dark); margin-top: 14px; font-weight: 800; }
   </style>
 </head>
 <body>
 
 <div class="app-shell">
+  <!-- Top Marquee -->
   <div class="marquee-container">
     <div class="marquee-text">
       <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
@@ -343,76 +408,197 @@
     </div>
   </div>
 
-  <!-- Rotating Notice Bar (2 Lines, Small Badge, Full Text) -->
+  <!-- Sliding Notice Bar (Cycles 4 rules + teacher dynamic window) -->
   <div class="notice-slider-bar">
     <span class="notice-badge">NOTICE</span>
-    <span id="rotatingNoticeText" class="notice-msg-text">Loading instructions...</span>
+    <span id="rotatingNoticeText" class="notice-msg-text">ദിവസവും നിസ്കാരം ഇശാഇന് ശേഷം രേഖപ്പെടുത്തുക</span>
   </div>
 
+  <!-- Top Navigation -->
   <div class="top-bar">
     <h3>MUM TRACKER</h3>
-    <button class="btn-top" onclick="alert('Teacher login system available in admin panel')">LOGIN</button>
+    <button class="btn-top" id="authNavBtn" onclick="toggleAuthView()">Teacher Portal</button>
   </div>
 
-  <div class="main-body">
-    <div class="hero">
-      <div class="arabic-greeting">السلام عليكم</div>
-      <h1>MALHARUL ULOOM MADRASA<br>KALOOR</h1>
-      <p>Prayer Monitoring Portal</p>
+  <div class="main-body" id="mainBody">
+    <!-- PUBLIC DASHBOARD -->
+    <div id="publicView">
+      <div class="hero">
+        <div class="arabic-greeting">السلام عليكم</div>
+        <h1>MALHARUL ULOOM MADRASA<br>KALOOR</h1>
+        <p>Prayer Monitoring Portal</p>
+      </div>
+
+      <button class="pulse-btn" onclick="openEntryModal()">
+        <span>🕌</span> എന്റെ ഇന്നത്തെ നിസ്കാരം
+      </button>
+
+      <!-- LEADERBOARD CARD (100% English, Filterable, Gender Split) -->
+      <div class="card">
+        <div class="card-title">
+          <span id="rankHeaderTxt">🏆 DAILY TOP RANKERS</span>
+          <span style="font-size:11px; color:var(--text-muted);" id="boardDate">Today</span>
+        </div>
+
+        <!-- Class Filter Dropdown -->
+        <div class="form-group" style="margin-bottom: 8px;">
+          <select id="leaderboardClassFilter" onchange="renderCurrentLeaderboard()">
+            <option value="ALL">All Classes</option>
+            <option value="Class 1">Class 1</option>
+            <option value="Class 2">Class 2</option>
+            <option value="Class 3">Class 3</option>
+            <option value="Class 4">Class 4</option>
+            <option value="Class 5">Class 5</option>
+            <option value="Class 6">Class 6</option>
+            <option value="Class 7">Class 7</option>
+          </select>
+        </div>
+
+        <div class="tab-container">
+          <button class="tab-btn active" onclick="setLeaderboardMode('daily', this)">Daily</button>
+          <button class="tab-btn" onclick="setLeaderboardMode('weekly', this)">Weekly</button>
+          <button class="tab-btn" onclick="setLeaderboardMode('monthly', this)">Monthly</button>
+        </div>
+
+        <div id="leaderboardContainer">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- STUDENT STATUS & INDIVIDUAL LIFETIME DOWNLOAD -->
+      <div class="card">
+        <div class="card-title">🔍 CHECK STATUS & CUMULATIVE SUMMARY</div>
+        <div class="form-group">
+          <input type="text" id="srchInput" placeholder="Admission Number or Name..." autocomplete="off">
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="btn-main" style="flex:1;" onclick="checkStatus()">View Status</button>
+          <button class="btn-action" style="flex:1; background:#0284c7;" onclick="downloadStudentLifetimePDF()">📄 Full Cumulative PDF</button>
+        </div>
+        <div id="statusResult" style="margin-top: 10px;"></div>
+      </div>
+
+      <div class="footer">MUM KALLOOR-KOOTHALI</div>
     </div>
 
-    <button class="pulse-btn" onclick="openEntryModal()">
-      <span>🕌</span> എന്റെ ഇന്നത്തെ നിസ്കാരം
-    </button>
-
-    <!-- Leaderboard Card (All English) -->
-    <div class="card">
-      <div class="card-title">
-        <span id="rankHeaderTxt">🏆 DAILY TOP RANKERS</span>
-        <span style="font-size:11px; color:var(--text-muted);" id="boardDate">Today</span>
+    <!-- TEACHER PORTAL VIEW -->
+    <div id="teacherView" style="display: none;">
+      <div class="card">
+        <div class="card-title">
+          <span>Teacher Management Console</span>
+          <button class="btn-del" onclick="toggleAuthView()">Logout</button>
+        </div>
+        <p style="font-size:12px; color:var(--text-muted);">Manage student entries, access locks, and download records.</p>
       </div>
 
-      <!-- Class Filter Option -->
-      <div class="form-group" style="margin-bottom: 8px;">
-        <select id="leaderboardClassFilter" onchange="renderCurrentLeaderboard()">
-          <option value="ALL">All Classes</option>
-          <option value="Class 1">Class 1</option>
-          <option value="Class 2">Class 2</option>
-          <option value="Class 3">Class 3</option>
-          <option value="Class 4">Class 4</option>
-          <option value="Class 5">Class 5</option>
-          <option value="Class 6">Class 6</option>
-          <option value="Class 7">Class 7</option>
-        </select>
+      <!-- Access Lock & Notification Controller -->
+      <div class="card">
+        <div class="card-title">Class Access Window Control</div>
+        <div class="form-group">
+          <label>Select Your Class</label>
+          <select id="lockClassSelect">
+            <option value="Class 5">Class 5</option>
+            <option value="Class 6">Class 6</option>
+          </select>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:10px; border-radius:10px; border:1px solid #cbd5e1;">
+          <div>
+            <b id="accessStateTxt">Entry Window: OPEN</b>
+            <div style="font-size:10px; color:#64748b;">Controls if students can submit prayers</div>
+          </div>
+          <button class="btn-action" onclick="toggleEntryWindow()">Toggle Window</button>
+        </div>
       </div>
 
-      <div class="tab-container">
-        <button class="tab-btn active" onclick="setLeaderboardMode('daily', this)">Daily</button>
-        <button class="tab-btn" onclick="setLeaderboardMode('weekly', this)">Weekly</button>
-        <button class="tab-btn" onclick="setLeaderboardMode('monthly', this)">Monthly</button>
+      <!-- Teacher Profile / Contact Setup -->
+      <div class="card">
+        <div class="card-title">My Public Teacher Profile</div>
+        <div class="form-group">
+          <label>Teacher Name</label>
+          <input type="text" id="tNameInput" value="Usthad Abdul Rasheed">
+        </div>
+        <div class="form-group">
+          <label>Phone / WhatsApp Number</label>
+          <input type="tel" id="tPhoneInput" value="9876543210">
+        </div>
+        <div class="form-group">
+          <label>Assigned Classes (Hold multiple)</label>
+          <input type="text" id="tClassesInput" value="Class 5, Class 6">
+        </div>
+        <div class="form-group">
+          <label>Photo URL (Optional)</label>
+          <input type="text" id="tPhotoInput" placeholder="https://...">
+        </div>
+        <button class="btn-main" onclick="saveTeacherProfile()">Update Contact Info</button>
       </div>
 
-      <div id="leaderboardContainer">
-        <!-- Injected via JS -->
+      <!-- Class Records & PDF Downloads -->
+      <div class="card">
+        <div class="card-title">
+          <span>Class Records & Downloads</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="form-group">
+            <label>Select Class</label>
+            <select id="tReportClass">
+              <option value="Class 5">Class 5</option>
+              <option value="Class 6">Class 6</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="tReportDate">
+          </div>
+        </div>
+        <div style="display:flex; gap:6px; margin-bottom:10px;">
+          <button class="btn-action" style="flex:1;" onclick="downloadClassDailyPDF()">📄 Daily Class PDF</button>
+          <button class="btn-action" style="flex:1; background:#047857;" onclick="downloadClassMonthlyPDF()">📊 Monthly Summary PDF</button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Adm</th><th>Name</th><th>Subh</th><th>Dhuhr</th><th>Asr</th><th>Maghrib</th><th>Isha</th>
+              </tr>
+            </thead>
+            <tbody id="tPrayerPreviewTable">
+              <tr>
+                <td>101</td><td>Muhammed Raihan</td><td>ജമാഅത്ത്</td><td>ജമാഅത്ത്</td><td>ജമാഅത്ത്</td><td>ജമാഅത്ത്</td><td>ജമാഅത്ത്</td>
+              </tr>
+              <tr>
+                <td>103</td><td>Fathima Hiba</td><td>അദാഅ്</td><td>ജമാഅത്ത്</td><td>ജമാഅത്ത്</td><td>അദാഅ്</td><td>ജമാഅത്ത്</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-
-    <!-- Status Search -->
-    <div class="card">
-      <div class="card-title">🔍 CHECK STATUS</div>
-      <div class="form-group">
-        <input type="text" id="srchInput" placeholder="Admission number or Name..." oninput="handleSearch(this.value)" autocomplete="off">
-        <div id="searchSuggestions" class="search-suggestions"></div>
-      </div>
-      <button class="btn-main" onclick="checkStatus()">View Details</button>
-      <div id="statusResult" style="margin-top: 10px; font-size: 12px;"></div>
-    </div>
-
-    <div class="footer">MUM KALLOOR-KOOTHALI</div>
   </div>
 </div>
 
-<!-- Prayer Entry Modal -->
+<!-- FLOATING CONTACT ICON (Always on screen) -->
+<button class="floating-contact-btn" onclick="openTeacherContactModal()" title="അധ്യാപകരെ ബന്ധപ്പെടുക">
+  📞
+</button>
+
+<!-- TEACHER CONTACT DIRECTORY MODAL -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <div>
+        <h3 style="font-size:14px; color:var(--primary-dark);">അധ്യാപകരുടെ വിവരങ്ങൾ</h3>
+        <p style="font-size:10px; color:#64748b;">സംശയങ്ങൾക്കും പ്രശ്നങ്ങൾക്കും അധ്യാപകരെ നേരിട്ട് ബന്ധപ്പെടുക</p>
+      </div>
+      <button style="border:none; background:none; font-size:18px; cursor:pointer;" onclick="closeContactModal()">✕</button>
+    </div>
+
+    <div id="teacherContactList">
+      <!-- Injected via JavaScript -->
+    </div>
+  </div>
+</div>
+
+<!-- PRAYER ENTRY MODAL -->
 <div class="modal-overlay" id="entryModal">
   <div class="modal-box">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -421,52 +607,77 @@
     </div>
 
     <div class="form-group">
-      <label>അഡ്മിഷൻ നമ്പർ / പേര്</label>
-      <input type="text" id="entryAdm" placeholder="ടൈപ്പ് ചെയ്യുക...">
+      <label>അഡ്മിഷൻ നമ്പർ</label>
+      <input type="text" id="entryAdm" placeholder="ഉദാ: 101">
     </div>
 
-    <div id="prayerFields">
-      <!-- Prayer items -->
-    </div>
+    <div id="prayerFields"></div>
 
     <button class="btn-main" onclick="savePrayerEntry()" style="margin-top:10px;">SAVE ENTRY</button>
   </div>
 </div>
 
 <script>
-  // Dynamic Notices Array (Rotating sequentially)
-  const notices = [
-    "ഇശാഇന് ശേഷം ഇന്നത്തെ നിസ്കാരങ്ങൾ കൃത്യമായി എൻട്രി ചെയ്യുക.",
-    "നിസ്കാരം കൃത്യസമയത്ത് അദാആയി തന്നെ നിർവ്വഹിക്കാൻ കുട്ടികൾ ശ്രദ്ധിക്കുക.",
-    "ജമാഅത്തായി നിസ്കരിക്കുന്നവർക്ക് കൂടുതൽ പോയിന്റുകൾ ലഭിക്കുന്നതാണ്.",
-    "എല്ലാ ദിവസവും രക്ഷിതാക്കൾ കുട്ടികളുടെ നിസ്കാരം ഉറപ്പുവരുത്തുക."
+  // TEACHERS DIRECTORY (Handles multiple classes together)
+  let teachersList = [
+    {
+      name: "Usthad Abdul Rasheed",
+      phone: "9876543210",
+      classes: ["Class 5", "Class 6"],
+      photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces"
+    },
+    {
+      name: "Usthad Mohammed Swalih",
+      phone: "9123456780",
+      classes: ["Class 3", "Class 4"],
+      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces"
+    },
+    {
+      name: "Usthad Koya Musliyar",
+      phone: "9988776655",
+      classes: ["Class 1", "Class 2", "Class 7"],
+      photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces"
+    }
   ];
-  let noticeIndex = 0;
+
+  // SLIDING NOTICES (The 4 essential points + Dynamic teacher status)
+  let baseNotices = [
+    "1. ദിവസവും നിസ്കാരം ഇശാഇന് ശേഷം രേഖപ്പെടുത്തുക.",
+    "2. ഇന്നത്തെ നിസ്കാരം നാളെ രേഖപ്പെടുത്താൻ കഴിയില്ല.",
+    "3. ആപ്പ് സത്യസന്ധമായി കൈകാര്യം ചെയ്യുക.",
+    "4. മാതാപിതാക്കളുടെ സാന്നിധ്യം ഉറപ്പുവരുത്തുക."
+  ];
+  let dynamicTeacherNotice = "";
+  let activeNoticeIndex = 0;
   const noticeElem = document.getElementById("rotatingNoticeText");
 
   setInterval(() => {
+    let currentPool = [...baseNotices];
+    if (dynamicTeacherNotice) {
+      currentPool.unshift(dynamicTeacherNotice);
+    }
     noticeElem.style.opacity = "0";
     setTimeout(() => {
-      noticeIndex = (noticeIndex + 1) % notices.length;
-      noticeElem.textContent = notices[noticeIndex];
+      activeNoticeIndex = (activeNoticeIndex + 1) % currentPool.length;
+      noticeElem.textContent = currentPool[activeNoticeIndex];
       noticeElem.style.opacity = "1";
     }, 300);
-  }, 4500);
+  }, 4200);
 
-  // Mock Students & Prayers Data
+  // MOCK STUDENTS DATA
   const sampleStudents = [
-    { adm: "101", name: "Muhammed Raihan", gender: "Boy", class: "Class 5", scoreDaily: 25, scoreWeekly: 175, scoreMonthly: 720 },
-    { adm: "102", name: "Ameen K", gender: "Boy", class: "Class 5", scoreDaily: 23, scoreWeekly: 168, scoreMonthly: 690 },
-    { adm: "103", name: "Fathima Hiba", gender: "Girl", class: "Class 5", scoreDaily: 25, scoreWeekly: 172, scoreMonthly: 710 },
-    { adm: "104", name: "Ayisha Rida", gender: "Girl", class: "Class 5", scoreDaily: 24, scoreWeekly: 165, scoreMonthly: 695 },
-    { adm: "105", name: "Zayan Ali", gender: "Boy", class: "Class 4", scoreDaily: 22, scoreWeekly: 150, scoreMonthly: 620 },
-    { adm: "106", name: "Maryam Noor", gender: "Girl", class: "Class 4", scoreDaily: 24, scoreWeekly: 169, scoreMonthly: 700 }
+    { adm: "101", name: "Muhammed Raihan", gender: "Boy", class: "Class 5", scoreDaily: 25, scoreWeekly: 175, scoreMonthly: 720, totalJama: 320, totalAda: 80, totalQada: 5, totalLeave: 0 },
+    { adm: "102", name: "Ameen K", gender: "Boy", class: "Class 5", scoreDaily: 23, scoreWeekly: 168, scoreMonthly: 690, totalJama: 290, totalAda: 95, totalQada: 12, totalLeave: 0 },
+    { adm: "103", name: "Fathima Hiba", gender: "Girl", class: "Class 5", scoreDaily: 25, scoreWeekly: 172, scoreMonthly: 710, totalJama: 310, totalAda: 85, totalQada: 2, totalLeave: 8 },
+    { adm: "104", name: "Ayisha Rida", gender: "Girl", class: "Class 5", scoreDaily: 24, scoreWeekly: 165, scoreMonthly: 695, totalJama: 280, totalAda: 110, totalQada: 4, totalLeave: 6 },
+    { adm: "105", name: "Zayan Ali", gender: "Boy", class: "Class 4", scoreDaily: 22, scoreWeekly: 150, scoreMonthly: 620, totalJama: 260, totalAda: 100, totalQada: 20, totalLeave: 0 },
+    { adm: "106", name: "Maryam Noor", gender: "Girl", class: "Class 4", scoreDaily: 24, scoreWeekly: 169, scoreMonthly: 700, totalJama: 305, totalAda: 80, totalQada: 5, totalLeave: 10 }
   ];
 
-  let currentMode = "daily";
+  let currentRankMode = "daily";
 
   function setLeaderboardMode(mode, btn) {
-    currentMode = mode;
+    currentRankMode = mode;
     document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     
@@ -482,23 +693,22 @@
     const container = document.getElementById("leaderboardContainer");
     container.innerHTML = "";
 
-    // Filter by class
     let list = sampleStudents;
     if (filterClass !== "ALL") {
       list = list.filter(s => s.class === filterClass);
     }
 
-    const sortKey = currentMode === "daily" ? "scoreDaily" : currentMode === "weekly" ? "scoreWeekly" : "scoreMonthly";
+    const sortKey = currentRankMode === "daily" ? "scoreDaily" : currentRankMode === "weekly" ? "scoreWeekly" : "scoreMonthly";
     const boys = list.filter(s => s.gender === "Boy").sort((a, b) => b[sortKey] - a[sortKey]);
     const girls = list.filter(s => s.gender === "Girl").sort((a, b) => b[sortKey] - a[sortKey]);
 
-    // BOYS SECTION
+    // Boys Section
     container.innerHTML += `<div class="gender-sec-title"><span>👦 BOYS</span><span>SCORE</span></div>`;
-    renderListSection(container, boys, currentMode === "daily" ? 1 : 3, sortKey);
+    renderListSection(container, boys, currentRankMode === "daily" ? 1 : 3, sortKey);
 
-    // GIRLS SECTION
-    container.innerHTML += `<div class="gender-sec-title" style="margin-top:14px;"><span>👧 GIRLS</span><span>SCORE</span></div>`;
-    renderListSection(container, girls, currentMode === "daily" ? 1 : 3, sortKey);
+    // Girls Section
+    container.innerHTML += `<div class="gender-sec-title" style="margin-top:12px;"><span>👧 GIRLS</span><span>SCORE</span></div>`;
+    renderListSection(container, girls, currentRankMode === "daily" ? 1 : 3, sortKey);
   }
 
   function renderListSection(container, arr, limit, sortKey) {
@@ -516,40 +726,38 @@
           <span class="rank-badge ${rankBadge}">#${index + 1}</span>
           <div>
             <b>${item.name}</b>
-            <div style="font-size:10px; color:#64748b;">${item.class} (Adm: ${item.adm})</div>
+            <div style="font-size:10px; color:#64748b;">${item.class} • Adm: ${item.adm}</div>
           </div>
         </div>
-        <span style="font-weight:700; color:var(--primary); font-size:12px;">${item[sortKey]} pts</span>
+        <span style="font-weight:800; color:var(--primary); font-size:12px;">${item[sortKey]} pts</span>
       `;
       container.appendChild(div);
     });
   }
 
-  // Web Audio API Bell Sound (Clean ding-dong chime)
+  // AUDIO FEEDBACK (Clean chime)
   function playSuccessBell() {
     try {
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const playTone = (freq, startTime, duration) => {
+      const playTone = (freq, start, dur) => {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, startTime);
-        gain.gain.setValueAtTime(0.3, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.25, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-        osc.start(startTime);
-        osc.stop(startTime + duration);
+        osc.start(start);
+        osc.stop(start + dur);
       };
-      const now = audioCtx.currentTime;
-      playTone(587.33, now, 0.4); // D5
-      playTone(880.00, now + 0.15, 0.7); // A5
-    } catch (e) {
-      console.log("Audio not supported / interact needed", e);
-    }
+      const t = audioCtx.currentTime;
+      playTone(587.33, t, 0.4);
+      playTone(880.00, t + 0.15, 0.6);
+    } catch(e) {}
   }
 
-  // Prayer Modal Handling
+  // PRAYER ENTRY DIALOG
   const prayers = ["സുബ്ഹ്", "ളുഹ്ർ", "അസ്വർ", "മഗ്രിബ്", "ഇശാഅ്"];
   function openEntryModal() {
     const box = document.getElementById("prayerFields");
@@ -569,69 +777,191 @@
     });
     document.getElementById("entryModal").style.display = "flex";
   }
-
-  function closeModal() {
-    document.getElementById("entryModal").style.display = "none";
-  }
+  function closeModal() { document.getElementById("entryModal").style.display = "none"; }
 
   function savePrayerEntry() {
-    const adm = document.getElementById("entryAdm").value;
+    const adm = document.getElementById("entryAdm").value.trim();
     if (!adm) {
       alert("ദയവായി അഡ്മിഷൻ നമ്പർ നൽകുക");
       return;
     }
-    // Play Bell Sound Immediately
     playSuccessBell();
     alert("നിസ്കാരം വിജയകരമായി രേഖപ്പെടുത്തി! ✅");
     closeModal();
     document.getElementById("entryAdm").value = "";
   }
 
-  // Search Suggestion
-  function handleSearch(val) {
-    const container = document.getElementById("searchSuggestions");
-    if (!val.trim()) {
-      container.style.display = "none";
-      return;
-    }
-    const filtered = sampleStudents.filter(s => s.name.toLowerCase().includes(val.toLowerCase()) || s.adm.includes(val));
-    if (filtered.length === 0) {
-      container.style.display = "none";
-      return;
-    }
-    container.innerHTML = "";
-    filtered.forEach(item => {
-      const div = document.createElement("div");
-      div.className = "suggestion-item";
-      div.textContent = `${item.name} (${item.class} - Adm: ${item.adm})`;
-      div.onclick = () => {
-        document.getElementById("srchInput").value = item.adm;
-        container.style.display = "none";
-      };
-      container.appendChild(div);
+  // CONTACT DIRECTORY MODAL
+  function openTeacherContactModal() {
+    const list = document.getElementById("teacherContactList");
+    list.innerHTML = "";
+    teachersList.forEach(t => {
+      list.innerHTML += `
+        <div class="teacher-card-item">
+          <img src="${t.photo || 'https://via.placeholder.com/60'}" class="teacher-img" alt="Usthad">
+          <div style="flex:1;">
+            <b style="font-size:13px; color:var(--primary-dark);">${t.name}</b>
+            <div style="font-size:11px; color:#475569; font-weight:600; margin:2px 0;">ക്ലാസുകൾ: ${t.classes.join(', ')}</div>
+            <div style="font-size:11px; color:#64748b;">ഫോൺ: ${t.phone}</div>
+          </div>
+          <div>
+            <a href="https://wa.me/91${t.phone}?text=അസ്സലാമു അലൈക്കും ഉസ്താദ്," target="_blank" class="btn-call">
+              💬 WhatsApp
+            </a>
+          </div>
+        </div>
+      `;
     });
-    container.style.display = "block";
+    document.getElementById("contactModal").style.display = "flex";
+  }
+  function closeContactModal() { document.getElementById("contactModal").style.display = "none"; }
+
+  // TEACHER PORTAL TOGGLE
+  function toggleAuthView() {
+    const pub = document.getElementById("publicView");
+    const teach = document.getElementById("teacherView");
+    const btn = document.getElementById("authNavBtn");
+    if (pub.style.display === "none") {
+      pub.style.display = "block";
+      teach.style.display = "none";
+      btn.textContent = "Teacher Portal";
+    } else {
+      pub.style.display = "none";
+      teach.style.display = "block";
+      btn.textContent = "Student Portal";
+    }
   }
 
+  // TEACHER ACCESS WINDOW TOGGLE & NOTIFICATION DISPATCH
+  let isWindowOpen = true;
+  function toggleEntryWindow() {
+    const selClass = document.getElementById("lockClassSelect").value;
+    isWindowOpen = !isWindowOpen;
+    document.getElementById("accessStateTxt").textContent = isWindowOpen ? "Entry Window: OPEN" : "Entry Window: LOCKED";
+    
+    if (isWindowOpen) {
+      dynamicTeacherNotice = `📢 ${selClass} അധ്യാപകൻ നിസ്കാര എൻട്രി വിൻഡോ ഓപ്പൺ ചെയ്തിരിക്കുന്നു. ഉടൻ രേഖപ്പെടുത്തുക!`;
+    } else {
+      dynamicTeacherNotice = `🔒 ${selClass} ഇന്നത്തെ നിസ്കാര എൻട്രി സമയം അവസാനിച്ചിരിക്കുന്നു.`;
+    }
+    alert(`${selClass} access status updated.`);
+  }
+
+  function saveTeacherProfile() {
+    const name = document.getElementById("tNameInput").value;
+    const phone = document.getElementById("tPhoneInput").value;
+    const classes = document.getElementById("tClassesInput").value.split(",").map(c => c.trim());
+    const photo = document.getElementById("tPhotoInput").value;
+    teachersList[0] = { name, phone, classes, photo };
+    alert("Profile updated successfully!");
+  }
+
+  // STATUS INQUIRY
   function checkStatus() {
     const val = document.getElementById("srchInput").value.trim();
     const res = document.getElementById("statusResult");
-    const st = sampleStudents.find(s => s.adm === val || s.name.toLowerCase() === val.toLowerCase());
+    const st = sampleStudents.find(s => s.adm === val || s.name.toLowerCase().includes(val.toLowerCase()));
     if (!st) {
-      res.innerHTML = `<span style="color:#ef4444;">Student not found!</span>`;
+      res.innerHTML = `<span style="color:#ef4444; font-size:12px;">Student not found! Check Admission Number.</span>`;
       return;
     }
     res.innerHTML = `
-      <div style="background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
-        <b>${st.name}</b> (${st.class})<br>
-        Daily Score: <b>${st.scoreDaily}</b> | Weekly: <b>${st.scoreWeekly}</b> | Monthly: <b>${st.scoreMonthly}</b>
+      <div style="background:#f8fafc; padding:10px; border-radius:10px; border:1px solid #cbd5e1; font-size:12px;">
+        <b style="color:var(--primary-dark); font-size:13px;">${st.name}</b> (${st.class} • Adm: ${st.adm})<br>
+        Daily: <b>${st.scoreDaily} pts</b> | Weekly: <b>${st.scoreWeekly} pts</b> | Monthly: <b>${st.scoreMonthly} pts</b>
+        <div style="margin-top:6px; font-size:11px; color:#475569;">
+          ആകെ നിസ്കാരങ്ങൾ: ജമാഅത്ത്: <b>${st.totalJama}</b> | അദാഅ്: <b>${st.totalAda}</b> | ഖളാഅ്: <b>${st.totalQada}</b>
+        </div>
       </div>
     `;
   }
 
-  // Init
+  // PDF 1: LIFETIME CUMULATIVE SUMMARY REPORT (Per Student)
+  function downloadStudentLifetimePDF() {
+    const val = document.getElementById("srchInput").value.trim();
+    const st = sampleStudents.find(s => s.adm === val || s.name.toLowerCase().includes(val.toLowerCase()));
+    if (!st) {
+      alert("ദയവായി അഡ്മിഷൻ നമ്പർ അല്ലെങ്കിൽ പേര് നൽകി തിരയുക");
+      return;
+    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFillColor(4, 120, 87);
+    doc.rect(0, 0, 210, 28, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.text("MALHARUL ULOOM MADRASA KALLOOR", 105, 14, { align: "center" });
+    doc.setFontSize(11);
+    doc.text("STUDENT LIFETIME CUMULATIVE PRAYER REPORT", 105, 22, { align: "center" });
+
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(11);
+    doc.text(`Student Name: ${st.name}`, 14, 38);
+    doc.text(`Admission No: ${st.adm}`, 14, 45);
+    doc.text(`Class: ${st.class}`, 14, 52);
+    doc.text(`Report Generated On: ${new Date().toLocaleDateString('en-US')}`, 140, 38);
+
+    const data = [
+      ["Category", "Total Count", "Points Multiplier", "Total Contribution"],
+      ["Jama'ath (ജമാഅത്ത്)", st.totalJama.toString(), "5 pts each", `${st.totalJama * 5} pts`],
+      ["Ada'a (അദാഅ്)", st.totalAda.toString(), "4 pts each", `${st.totalAda * 4} pts`],
+      ["Qada'a (ഖളാഅ്)", st.totalQada.toString(), "2 pts each", `${st.totalQada * 2} pts`],
+      ["Excused / Leave (ഇളവ്)", st.totalLeave.toString(), "Neutral", "--"],
+      ["Total Cumulative Score", "--", "--", `${(st.totalJama * 5) + (st.totalAda * 4) + (st.totalQada * 2)} Points`]
+    ];
+
+    doc.autoTable({
+      startY: 60,
+      head: [data[0]],
+      body: data.slice(1),
+      theme: 'grid',
+      headStyles: { fillColor: [6, 78, 59] },
+      styles: { fontSize: 10, cellPadding: 5 }
+    });
+
+    doc.save(`${st.name}_Cumulative_Prayer_Report.pdf`);
+  }
+
+  // PDF 2: DAILY CLASS REPORT
+  function downloadClassDailyPDF() {
+    const cls = document.getElementById("tReportClass").value;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.text(`MUM KALLOOR - DAILY REPORT (${cls})`, 14, 15);
+    doc.autoTable({
+      startY: 25,
+      head: [['Adm', 'Name', 'Subh', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']],
+      body: [
+        ['101', 'Muhammed Raihan', 'Jama', 'Jama', 'Jama', 'Jama', 'Jama'],
+        ['102', 'Ameen K', 'Ada', 'Jama', 'Jama', 'Jama', 'Jama'],
+        ['103', 'Fathima Hiba', 'Ada', 'Jama', 'Jama', 'Ada', 'Jama']
+      ]
+    });
+    doc.save(`${cls}_Daily_Inspection.pdf`);
+  }
+
+  // PDF 3: MONTHLY CLASS SUMMARY
+  function downloadClassMonthlyPDF() {
+    const cls = document.getElementById("tReportClass").value;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.text(`MUM KALLOOR - MONTHLY SUMMARY (${cls})`, 14, 15);
+    doc.autoTable({
+      startY: 25,
+      head: [['Adm', 'Name', 'Total Jama', 'Total Ada', 'Total Qada', 'Monthly Pts']],
+      body: [
+        ['101', 'Muhammed Raihan', '120', '25', '2', '720'],
+        ['102', 'Ameen K', '110', '32', '5', '690'],
+        ['103', 'Fathima Hiba', '118', '24', '1', '710']
+      ]
+    });
+    doc.save(`${cls}_Monthly_Summary.pdf`);
+  }
+
+  // INIT
   document.getElementById("boardDate").textContent = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  noticeElem.textContent = notices[0];
+  document.getElementById("tReportDate").valueAsDate = new Date();
   renderCurrentLeaderboard();
 </script>
 
