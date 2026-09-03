@@ -59,11 +59,11 @@
       position: relative;
     }
 
-    /* CLEAN OVERLAP-FREE SEAMLESS TICKER */
+    /* CONTINUOUS SCROLLING HEADER TICKER */
     .marquee-container {
       background: #022c22;
       color: #a7f3d0;
-      padding: 9px 0;
+      padding: 8px 0;
       overflow: hidden;
       white-space: nowrap;
       border-bottom: 1.5px solid #059669;
@@ -95,6 +95,38 @@
     }
     .ticker-sep { color: #f59e0b; margin: 0 12px; }
 
+    /* ROTATING SMART NOTICE BAR */
+    .notice-slider-bar {
+      background: #fef3c7;
+      border-bottom: 1px solid #fde68a;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #92400e;
+    }
+    .notice-badge {
+      background: #d97706;
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .notice-msg-text {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: opacity 0.4s ease-in-out;
+    }
+
     .top-bar {
       background: var(--primary-dark);
       color: #fff;
@@ -116,7 +148,7 @@
       cursor: pointer;
       text-transform: uppercase;
     }
-    .main-body { padding: 18px; overflow-y: auto; max-height: 88vh; }
+    .main-body { padding: 18px; overflow-y: auto; max-height: 85vh; }
     .hero {
       text-align: center;
       background: #ffffff;
@@ -421,6 +453,12 @@
       <span style="color:#6ee7b7; font-weight:700;">مدرسة مظهر العلوم كلور (MUM Kalloor-Koothali)</span>
       <span class="ticker-sep">📖</span>
     </div>
+  </div>
+
+  <!-- Rotating Status / Instructions Notice Bar -->
+  <div class="notice-slider-bar">
+    <span class="notice-badge">🔔 നോട്ടിഫിക്കേഷൻ</span>
+    <span id="rotatingNoticeText" class="notice-msg-text">ഇശാഇന് ശേഷം നിസ്കാരങ്ങൾ എൻട്രി ചെയ്യുക</span>
   </div>
 
   <!-- Top Navigation -->
@@ -928,7 +966,27 @@
   let currentUser = null;
   let activeStudentForEntry = null;
 
-  // Restore Persistent Session from LocalStorage on page load
+  // ROTATING NOTICE MESSAGES
+  const rotatingNotices = [
+    "ഇശാഇന് ശേഷം നിസ്കാരങ്ങൾ എൻട്രി ചെയ്യുക",
+    "ഒരു ദിവസം ഒരു തവണ മാത്രമേ എൻട്രി ചെയ്യാൻ സാധിക്കുകയുള്ളൂ",
+    "സത്യസന്ധമായി വിവരങ്ങൾ രേഖപ്പെടുത്തുക",
+    "രക്ഷിതാക്കളുടെ സാന്നിധ്യം ഉറപ്പുവരുത്തുക",
+    "കൂടുതൽ വിവരങ്ങൾക്ക് ക്ലാസ് ടീച്ചറെ ബന്ധപ്പെടുക"
+  ];
+  let currentNoticeIndex = 0;
+  setInterval(() => {
+    const el = document.getElementById('rotatingNoticeText');
+    if (!el) return;
+    el.style.opacity = '0';
+    setTimeout(() => {
+      currentNoticeIndex = (currentNoticeIndex + 1) % rotatingNotices.length;
+      el.innerText = rotatingNotices[currentNoticeIndex];
+      el.style.opacity = '1';
+    }, 400);
+  }, 4000);
+
+  // Restore Persistent Session
   (function restorePersistentSession() {
     try {
       const savedUser = localStorage.getItem('mum_logged_session');
@@ -942,7 +1000,6 @@
   function updateTopNavBtn() {
     const btn = document.getElementById('authBtn');
     if (currentUser) {
-      // If user is currently on public view, offer quick jump to portal
       const isPublicVisible = document.getElementById('publicView').style.display !== 'none';
       btn.innerText = isPublicVisible ? 'Portal' : 'Public Site';
     } else {
@@ -977,7 +1034,6 @@
 
   db.collection("teachers").onSnapshot(snapshot => {
     dbTeachers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    // If teacher updated in DB while logged in, update session data
     if (currentUser?.role === 'teacher') {
       const updatedTeacher = dbTeachers.find(t => t.id === currentUser.data.id);
       if (updatedTeacher) {
@@ -993,17 +1049,89 @@
     renderLeaderboard();
     if (currentUser?.role === 'teacher') renderDailyTeacherView();
     if (currentUser?.role === 'admin') renderDailyAdminView();
+    checkAppBadgeStatus();
   });
 
-  // Class-specific Lock Configurations Listener
-  db.collection("settings").doc("classLocks").onSnapshot(doc => {
-    if (doc.exists) {
-      classLockSettings = doc.data() || {};
-    } else {
-      classLockSettings = {};
+  // System App Icon Badge Management
+  function setAppBadgeCount(count) {
+    if ('setAppBadge' in navigator) {
+      if (count > 0) navigator.setAppBadge(count).catch(() => {});
+      else navigator.clearAppBadge().catch(() => {});
     }
+  }
+
+  function checkAppBadgeStatus() {
+    const activeStudentId = localStorage.getItem('mum_last_active_student');
+    if (activeStudentId) {
+      const todayEntry = dbPrayers.find(p => p.studentId === activeStudentId && p.date === todayStr);
+      if (todayEntry) setAppBadgeCount(0);
+    }
+  }
+
+  // Class-specific Lock Configurations Listener & Automated Push Notifications
+  let prevLocks = {};
+  db.collection("settings").doc("classLocks").onSnapshot(doc => {
+    const newLocks = doc.exists ? (doc.data() || {}) : {};
+    
+    // Check if any class got unlocked by teacher
+    Object.keys(newLocks).forEach(cls => {
+      if (prevLocks[cls] === true && newLocks[cls] === false) {
+        onClassUnlockedTrigger(cls);
+      }
+    });
+
+    prevLocks = newLocks;
+    classLockSettings = newLocks;
     if (currentUser?.role === 'teacher') updateClassLockUI();
   });
+
+  // Trigger Notifications & 10 Min Reminder when teacher unlocks entry
+  function onClassUnlockedTrigger(cls) {
+    const activeStudentId = localStorage.getItem('mum_last_active_student');
+    const myStudent = dbStudents.find(s => s.id === activeStudentId);
+
+    // If device belongs to student of this class
+    if (!myStudent || myStudent.class !== cls) return;
+
+    const alreadyDone = dbPrayers.some(p => p.studentId === myStudent.id && p.date === todayStr);
+    if (alreadyDone) return;
+
+    // Notification 1: Immediate Unlock Alert
+    sendDeviceNotification(
+      "🕌 നിസ്കാരം രേഖപ്പെടുത്താം!",
+      `ക്ലാസ് ${cls}-ലെ ഇന്നത്തെ നിസ്കാര വിവരങ്ങൾ രേഖപ്പെടുത്താനുള്ള സമയം ആരംഭിച്ചിരിക്കുന്നു.`
+    );
+    setAppBadgeCount(1);
+
+    // Notification 2: 10-Minute Reminder if not entered
+    setTimeout(() => {
+      const isDoneNow = dbPrayers.some(p => p.studentId === myStudent.id && p.date === todayStr);
+      if (!isDoneNow) {
+        sendDeviceNotification(
+          "⚠️ നിസ്കാര എൻട്രി ഓർമ്മപ്പെടുത്തൽ",
+          "നിങ്ങൾ ഇതുവരെ ഇന്നത്തെ നിസ്കാരങ്ങൾ രേഖപ്പെടുത്തിയിട്ടില്ല! ഉടൻ രേഖപ്പെടുത്തുക."
+        );
+        setAppBadgeCount(1);
+      } else {
+        setAppBadgeCount(0);
+      }
+    }, 10 * 60 * 1000); // 10 Minutes
+  }
+
+  function sendDeviceNotification(title, body) {
+    if (!("Notification" in window)) return;
+    if (Notification.permission === "granted") {
+      new Notification(title, {
+        body: body,
+        icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23047857'/%3E%3Ctext x='50%25' y='50%25' font-size='180' fill='%23fff' text-anchor='middle' dominant-baseline='central'%3E🕌%3C/text%3E%3C/svg%3E",
+        vibrate: [200, 100, 200]
+      });
+    } else if (Notification.permission !== "denied") {
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") sendDeviceNotification(title, body);
+      });
+    }
+  }
 
   db.collection("settings").doc("config").onSnapshot(doc => {
     if (doc.exists && doc.data().adminPass) {
@@ -1079,16 +1207,13 @@
     }
   }
 
-  // Persistent navigation between Public and Dashboard without Logging Out
   function toggleAuthAction() {
     if (currentUser) {
       const isPublicVisible = document.getElementById('publicView').style.display !== 'none';
       if (isPublicVisible) {
-        // Go back to portal
         if (currentUser.role === 'admin') loginAsAdmin(false);
         else loginAsTeacher(currentUser.data, false);
       } else {
-        // Switch to public view
         document.getElementById('publicView').style.display = 'block';
         document.getElementById('teacherView').style.display = 'none';
         document.getElementById('adminView').style.display = 'none';
@@ -1259,7 +1384,6 @@
     closeModal('loginModal');
   }
 
-  // Manual explicit Logout removes persistent session
   function logout() {
     currentUser = null;
     localStorage.removeItem('mum_logged_session');
@@ -1364,7 +1488,7 @@
     return `<a href="https://wa.me/${phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn-wa">💬 WA</a>`;
   }
 
-  // Teacher Daily View with Edit and Clear Option
+  // Teacher Daily View
   function renderDailyTeacherView() {
     const cls = document.getElementById('tDailyClass').value;
     const date = document.getElementById('tDailyDate').value;
@@ -1403,7 +1527,7 @@
     });
   }
 
-  // --- BULK WHATSAPP ALERT MODAL LOGIC ---
+  // Bulk WhatsApp Modal
   function openBulkWhatsAppModal() {
     const cls = document.getElementById('tDailyClass').value;
     const date = document.getElementById('tDailyDate').value;
@@ -1412,7 +1536,6 @@
     let students = dbStudents.filter(s => s.class === cls);
     const dayPrayers = dbPrayers.filter(p => p.date === date);
     
-    // Filter students who haven't entered anything today
     const unrecordedStudents = students.filter(s => !dayPrayers.some(p => p.studentId === s.id));
     document.getElementById('bulkWAModalDesc').innerText = `Class ${cls} | Date: ${date} - Total Unrecorded: ${unrecordedStudents.length}`;
 
@@ -1806,7 +1929,7 @@
     }
   }
 
-  // --- SMART LIVE AUTOCOMPLETE SEARCH LOGIC ---
+  // --- SMART AUTOCOMPLETE ---
   function handleSmartSearch(val, containerId, selectCallback) {
     const query = val.trim().toLowerCase();
     const box = document.getElementById(containerId);
@@ -1870,17 +1993,14 @@
     const student = dbStudents.find(s => s.adm.toLowerCase() === adm.toLowerCase() || s.name.toLowerCase() === name.toLowerCase());
     if (!student) return alert("വിദ്യാർത്ഥിയുടെ അഡ്മിഷൻ നമ്പറോ പേരോ ശരിയല്ല!");
 
-    // Class-specific Lock Verification
     if (classLockSettings[student.class] === true) {
       return alert(`നിങ്ങളുടെ ക്ലാസിലെ (${student.class}) നിസ്കാരം രേഖപ്പെടുത്താനുള്ള സമയം ഇപ്പോൾ ക്ലാസ് അധ്യാപകൻ ലോക്ക് ചെയ്തിരിക്കുന്നു. എന്തെങ്കിലും ആവശ്യമുണ്ടെങ്കിൽ ക്ലാസ് അധ്യാപകനെ ബന്ധപ്പെടുക.`);
     }
 
-    // Password check
     if (!student.pass || student.pass !== password) {
       return alert("നൽകിയ പാസ്‌വേഡ് തെറ്റാണ്! അധ്യാപകൻ നൽകിയ ശരിയായ പാസ്‌വേഡ് നൽകുക.");
     }
 
-    // Daily Entry Duplication Check
     const existing = dbPrayers.find(e => e.studentId === student.id && e.date === todayStr);
     if (existing) {
       alert("ഈ വിദ്യാർത്ഥി ഇന്ന് ഇതിനകം നിസ്കാരം രേഖപ്പെടുത്തിയിട്ടുണ്ട്! മാറ്റങ്ങൾ വരുത്തണമെങ്കിൽ ക്ലാസ് അധ്യാപകനെ ബന്ധപ്പെടുക.");
@@ -1888,6 +2008,8 @@
       return;
     }
 
+    // Save active student ID for push reminders on this device
+    localStorage.setItem('mum_last_active_student', student.id);
     loadPrayerFormForStudent(student);
   }
 
@@ -1939,6 +2061,8 @@
     try {
       await db.collection("prayers").add(entry);
       alert("വിജയകരമായി രേഖപ്പെടുത്തി! അല്ലാഹു സ്വീകരിക്കട്ടെ.");
+      // Clear App Notification Badge
+      setAppBadgeCount(0);
       closeModal('prayerModal');
     } catch (e) {
       alert("ഡാറ്റ സേവ് ചെയ്യാൻ കഴിഞ്ഞില്ല: " + e.message);
@@ -1990,7 +2114,7 @@
     `;
   }
 
-  // --- MONTHLY DATA HELPER ---
+  // Monthly Helper
   function getProcessedMonthlyData(source) {
     const cls = source === 'teacher' ? document.getElementById('tRepClass').value : document.getElementById('admRepClass').value;
     const month = source === 'teacher' ? document.getElementById('tRepMonth').value : document.getElementById('admRepMonth').value;
@@ -2030,7 +2154,6 @@
     return { cls, month, tableData };
   }
 
-  // VIEW MONTHLY REPORT ON SCREEN
   function viewMonthlyReportOnScreen(source) {
     const data = getProcessedMonthlyData(source);
     if (!data) return;
