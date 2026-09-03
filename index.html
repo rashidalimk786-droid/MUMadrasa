@@ -9,11 +9,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MUM Tracker">
-  <meta name="application-name" content="MUM Tracker">
 
-  <!-- Crisp Green MUM App Icon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23047857' stroke='%2310b981' stroke-width='14'/%3E%3Ctext x='50%25' y='45%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='800' font-size='38' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23047857' stroke='%2310b981' stroke-width='14'/%3E%3Ctext x='50%25' y='45%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='800' font-size='38' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23047857' stroke='%2310b981' stroke-width='14'/%3E%3Ctext x='50%25' y='45%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='800' font-size='38' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
 
   <!-- jsPDF & AutoTable -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -57,15 +54,14 @@
       position: relative;
     }
 
-    /* HEADER TICKER */
     .marquee-container {
       background: #022c22;
       color: #a7f3d0;
-      padding: 8px 0;
+      padding: 6px 0;
       overflow: hidden;
       white-space: nowrap;
       border-bottom: 1.5px solid #059669;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
     }
     .marquee-text {
@@ -73,59 +69,49 @@
       padding-left: 100%;
       animation: marqueeScroll 35s linear infinite;
     }
-    .marquee-container:hover .marquee-text {
-      animation-play-state: paused;
-    }
     @keyframes marqueeScroll {
       0% { transform: translateX(0%); }
       100% { transform: translateX(-100%); }
     }
-    .ticker-badge {
-      background: #047857;
-      color: #ffffff;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 800;
-      margin: 0 10px;
-    }
-    .ticker-sep { color: #f59e0b; margin: 0 12px; }
 
-    /* SMART NOTICE BAR (TEXT WRAPPING - NO TRUNCATION) */
+    /* COMPACT 2-LINE ROTATING NOTICE BAR */
     .notice-slider-bar {
       background: #fef3c7;
       border-bottom: 1px solid #fde68a;
-      padding: 8px 14px;
+      padding: 6px 12px;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #92400e;
-      line-height: 1.4;
     }
     .notice-badge {
-      background: #d97706;
+      background: #b45309;
       color: #fff;
       font-size: 9px;
+      font-weight: 800;
       padding: 2px 6px;
       border-radius: 4px;
-      text-transform: uppercase;
-      font-weight: 800;
       letter-spacing: 0.5px;
+      text-transform: uppercase;
       flex-shrink: 0;
-      margin-top: 1px;
     }
     .notice-msg-text {
       flex: 1;
-      white-space: normal;
-      word-break: break-word;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.35;
+      color: #92400e;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: clip;
+      transition: opacity 0.3s ease;
     }
 
     .top-bar {
       background: var(--primary-dark);
       color: #fff;
-      padding: 14px 18px;
+      padding: 12px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -136,181 +122,167 @@
       background: rgba(255,255,255,0.2);
       color: #fff;
       border: 1px solid rgba(255,255,255,0.4);
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
-      text-transform: uppercase;
     }
-    .main-body { padding: 18px; overflow-y: auto; max-height: 85vh; }
+    .main-body { padding: 16px; overflow-y: auto; max-height: 85vh; }
+    
     .hero {
       text-align: center;
       background: #ffffff;
-      border-radius: 18px;
+      border-radius: 16px;
       padding: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       border: 1px solid #d1fae5;
     }
-    .hero .arabic-greeting {
-      font-size: 24px;
-      color: var(--primary);
-      font-family: serif;
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
-    .hero h1 { font-size: 15px; color: var(--primary-dark); font-weight: 800; line-height: 1.3; }
-    .hero p { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-weight: 600; text-transform: uppercase; }
-    
-    @keyframes pulse-glow {
-      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { transform: scale(1.02); box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
-      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-    }
+    .hero .arabic-greeting { font-size: 24px; color: var(--primary); font-family: serif; font-weight: bold; }
+    .hero h1 { font-size: 15px; color: var(--primary-dark); font-weight: 800; }
+    .hero p { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+
     .pulse-btn {
       width: 100%;
       background: linear-gradient(135deg, #059669, #10b981);
       color: white;
       border: none;
-      padding: 15px;
-      border-radius: 16px;
+      padding: 14px;
+      border-radius: 14px;
       font-size: 16px;
       font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      animation: pulse-glow 2s infinite;
+      gap: 8px;
       margin-bottom: 16px;
-      border: 2px solid #a7f3d0;
     }
+
     .card {
       background: #fff;
       border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
       border: 1px solid #e2e8f0;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
     }
     .card-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--primary-dark);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 6px;
     }
     .tab-container {
       display: flex;
-      gap: 6px;
-      margin-bottom: 12px;
+      gap: 4px;
+      margin-bottom: 10px;
       background: #f1f5f9;
-      padding: 4px;
-      border-radius: 10px;
+      padding: 3px;
+      border-radius: 8px;
     }
     .tab-btn {
       flex: 1;
-      padding: 7px 4px;
+      padding: 6px 4px;
       border: none;
       background: transparent;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 11px;
       font-weight: 700;
       color: var(--text-muted);
       cursor: pointer;
     }
-    .tab-btn.active {
-      background: #fff;
-      color: var(--primary-dark);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    
-    .gender-section {
-      margin-bottom: 14px;
-    }
-    .gender-title {
-      font-size: 12px;
+    .tab-btn.active { background: #fff; color: var(--primary-dark); }
+
+    /* LEADERBOARD STYLES */
+    .gender-sec-title {
+      font-size: 11px;
       font-weight: 800;
-      color: #334155;
-      padding: 4px 8px;
-      background: #e2e8f0;
-      border-radius: 6px;
-      margin-bottom: 6px;
-      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #475569;
+      margin: 10px 0 6px 0;
+      border-bottom: 1px dashed #cbd5e1;
+      padding-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
     }
     .rank-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 8px 10px;
-      border-radius: 10px;
+      border-radius: 8px;
       background: #f8fafc;
       margin-bottom: 6px;
-      font-size: 13px;
+      font-size: 12px;
       border: 1px solid #f1f5f9;
     }
     .rank-badge {
-      padding: 3px 8px;
-      border-radius: 8px;
+      padding: 3px 6px;
+      border-radius: 6px;
       font-weight: 800;
-      font-size: 10px;
+      font-size: 9px;
       color: #fff;
-      margin-right: 8px;
-      flex-shrink: 0;
+      margin-right: 6px;
     }
     .rank-1 { background: #f59e0b; }
     .rank-2 { background: #64748b; }
     .rank-3 { background: #d97706; }
-    
-    .form-group { margin-bottom: 12px; position: relative; }
-    label { display: block; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 4px; }
+
+    .form-group { margin-bottom: 10px; position: relative; }
+    label { display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px; }
     input, select {
       width: 100%;
-      padding: 10px 12px;
+      padding: 8px 10px;
       border: 1px solid #cbd5e1;
-      border-radius: 10px;
+      border-radius: 8px;
       font-size: 13px;
       outline: none;
       background: #fff;
     }
-    input:focus, select:focus { border-color: var(--accent); }
-
-    .search-suggestions {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: #fff;
-      border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-      z-index: 1000;
-      max-height: 180px;
-      overflow-y: auto;
-      display: none;
-    }
-    .suggestion-item {
-      padding: 9px 12px;
-      font-size: 13px;
+    .btn-main {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
       cursor: pointer;
-      border-bottom: 1px solid #f1f5f9;
-      display: flex;
-      justify-content: space-between;
+      font-size: 13px;
     }
-    .suggestion-item:hover { background: #f0fdf4; color: var(--primary); }
-    
+
+    /* PRAYER MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      z-index: 9999;
+    }
+    .modal-box {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 16px;
+    }
     .prayer-box {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 10px;
+      border-radius: 8px;
+      padding: 8px;
       margin-bottom: 8px;
     }
-    .prayer-name { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+    .prayer-name { font-weight: 700; font-size: 12px; margin-bottom: 5px; }
     .status-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -320,8 +292,8 @@
     .status-grid input { display: none; }
     .status-lbl {
       text-align: center;
-      font-size: 11px;
-      padding: 7px 2px;
+      font-size: 10px;
+      padding: 6px 2px;
       border-radius: 6px;
       background: #fff;
       border: 1px solid #cbd5e1;
@@ -335,319 +307,333 @@
     .status-grid input[value="നിസ്കരിച്ചില്ല"]:checked + .status-lbl { background: #ef4444; }
     .status-grid input[value="ഇളവ്"]:checked + .status-lbl { background: #8b5cf6; }
 
-    .btn-main {
-      width: 100%;
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .btn-main:hover { background: var(--primary-dark); }
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.65);
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 9999;
-    }
-    .modal-card {
+    .search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
       background: #fff;
-      width: 100%;
-      max-width: 500px;
-      border-radius: 20px;
-      padding: 18px;
-      max-height: 90vh;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      max-height: 150px;
       overflow-y: auto;
+      display: none;
+      z-index: 100;
     }
-    .footer { text-align: center; font-size: 12px; color: var(--primary-dark); margin-top: 16px; padding: 12px; font-weight: 800; letter-spacing: 0.5px; }
+    .suggestion-item {
+      padding: 8px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .suggestion-item:hover { background: #f0fdf4; color: var(--primary); }
+    .footer { text-align: center; font-size: 11px; color: var(--primary-dark); margin-top: 12px; font-weight: 800; }
   </style>
 </head>
 <body>
 
 <div class="app-shell">
-  <!-- Top Marquee Bar -->
   <div class="marquee-container">
     <div class="marquee-text">
-      <span class="ticker-badge">MUM</span>
       <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
-      <span class="ticker-sep">🕌</span>
+      <span style="margin: 0 10px;">🕌</span>
       <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span>
-      <span class="ticker-sep">✨</span>
-      <span style="color:#6ee7b7; font-weight:700;">മدرسة مظهر العلوم كلور (MUM Kalloor-Koothali)</span>
-      <span class="ticker-sep">📖</span>
+      <span style="margin: 0 10px;">✨</span>
+      <span>مدرسة مظهر العلوم كلور (MUM Kalloor-Koothali)</span>
     </div>
   </div>
 
-  <!-- Smart Wrap Notice Bar -->
+  <!-- Rotating Notice Bar (2 Lines, Small Badge, Full Text) -->
   <div class="notice-slider-bar">
     <span class="notice-badge">NOTICE</span>
-    <span id="rotatingNoticeText" class="notice-msg-text">ഇശാഇന് ശേഷം കൃത്യമായി ഇന്നത്തെ നിസ്കാരങ്ങൾ എൻട്രി ചെയ്യുക. സമയബന്ധിതമായി രേഖപ്പെടുത്തുന്നത് ശീലമാക്കുക.</span>
+    <span id="rotatingNoticeText" class="notice-msg-text">Loading instructions...</span>
   </div>
 
-  <!-- Top Navigation -->
   <div class="top-bar">
-    <h3 id="appHeaderTitle">MUM TRACKER</h3>
-    <button class="btn-top" id="authBtn" onclick="alert('Teacher Login feature active')">Login</button>
+    <h3>MUM TRACKER</h3>
+    <button class="btn-top" onclick="alert('Teacher login system available in admin panel')">LOGIN</button>
   </div>
 
-  <div class="main-body" id="mainBody">
-    <div id="publicView">
-      <div class="hero">
-        <div class="arabic-greeting">السلام عليكم</div>
-        <h1>MALHARUL ULOOM MADRASA<br>KALOOR</h1>
-        <p>Prayer Monitoring Portal</p>
+  <div class="main-body">
+    <div class="hero">
+      <div class="arabic-greeting">السلام عليكم</div>
+      <h1>MALHARUL ULOOM MADRASA<br>KALOOR</h1>
+      <p>Prayer Monitoring Portal</p>
+    </div>
+
+    <button class="pulse-btn" onclick="openEntryModal()">
+      <span>🕌</span> എന്റെ ഇന്നത്തെ നിസ്കാരം
+    </button>
+
+    <!-- Leaderboard Card (All English) -->
+    <div class="card">
+      <div class="card-title">
+        <span id="rankHeaderTxt">🏆 DAILY TOP RANKERS</span>
+        <span style="font-size:11px; color:var(--text-muted);" id="boardDate">Today</span>
       </div>
 
-      <!-- Action Button -->
-      <button class="pulse-btn" onclick="openPrayerEntryModal()">
-        <span>🕌</span> എന്റെ ഇന്നത്തെ നിസ്കാരം
-      </button>
-
-      <!-- Leaderboard Section with Class Filter -->
-      <div class="card">
-        <div class="card-title">
-          <span id="rankTitleHeader">🏆 Top Rankers</span>
-          <span style="font-size:11px; color:var(--text-muted);" id="todayDateLabel"></span>
-        </div>
-
-        <!-- Class Filter for Leaderboard -->
-        <div class="form-group" style="margin-bottom: 8px;">
-          <label style="font-size:11px;">ക്ലാസ് തിരഞ്ഞെടുക്കുക (Class Filter):</label>
-          <select id="leaderboardClassSelect" onchange="renderLeaderboard()">
-            <option value="ALL">എല്ലാ ക്ലാസുകളും (All Classes)</option>
-            <option value="Class 1">Class 1</option>
-            <option value="Class 2">Class 2</option>
-            <option value="Class 3">Class 3</option>
-            <option value="Class 4">Class 4</option>
-            <option value="Class 5">Class 5</option>
-            <option value="Class 6">Class 6</option>
-            <option value="Class 7">Class 7</option>
-            <option value="Class 8">Class 8</option>
-            <option value="Class 9">Class 9</option>
-            <option value="Class 10">Class 10</option>
-          </select>
-        </div>
-
-        <div class="tab-container">
-          <button class="tab-btn active" onclick="switchLeaderboard('daily', this)">Daily Rank</button>
-          <button class="tab-btn" onclick="switchLeaderboard('weekly', this)">Weekly Rank</button>
-          <button class="tab-btn" onclick="switchLeaderboard('monthly', this)">Monthly Rank</button>
-        </div>
-
-        <div id="leaderboardList">
-          <!-- Dynamic Content Rendered by JS -->
-        </div>
+      <!-- Class Filter Option -->
+      <div class="form-group" style="margin-bottom: 8px;">
+        <select id="leaderboardClassFilter" onchange="renderCurrentLeaderboard()">
+          <option value="ALL">All Classes</option>
+          <option value="Class 1">Class 1</option>
+          <option value="Class 2">Class 2</option>
+          <option value="Class 3">Class 3</option>
+          <option value="Class 4">Class 4</option>
+          <option value="Class 5">Class 5</option>
+          <option value="Class 6">Class 6</option>
+          <option value="Class 7">Class 7</option>
+        </select>
       </div>
 
-      <!-- Search Record -->
-      <div class="card">
-        <div class="card-title">🔍 Check Your Status</div>
-        <div class="form-group">
-          <input type="text" id="srchAdm" placeholder="അഡ്മിഷൻ നമ്പർ നൽകുക..." autocomplete="off">
-        </div>
-        <button class="btn-main" onclick="alert('Search initiated')">View Status</button>
+      <div class="tab-container">
+        <button class="tab-btn active" onclick="setLeaderboardMode('daily', this)">Daily</button>
+        <button class="tab-btn" onclick="setLeaderboardMode('weekly', this)">Weekly</button>
+        <button class="tab-btn" onclick="setLeaderboardMode('monthly', this)">Monthly</button>
       </div>
 
-      <div class="footer">
-        MUM KALLOOR-KOOTHALI
+      <div id="leaderboardContainer">
+        <!-- Injected via JS -->
       </div>
     </div>
+
+    <!-- Status Search -->
+    <div class="card">
+      <div class="card-title">🔍 CHECK STATUS</div>
+      <div class="form-group">
+        <input type="text" id="srchInput" placeholder="Admission number or Name..." oninput="handleSearch(this.value)" autocomplete="off">
+        <div id="searchSuggestions" class="search-suggestions"></div>
+      </div>
+      <button class="btn-main" onclick="checkStatus()">View Details</button>
+      <div id="statusResult" style="margin-top: 10px; font-size: 12px;"></div>
+    </div>
+
+    <div class="footer">MUM KALLOOR-KOOTHALI</div>
   </div>
 </div>
 
-<!-- Modal for Prayer Entry -->
+<!-- Prayer Entry Modal -->
 <div class="modal-overlay" id="entryModal">
-  <div class="modal-card">
+  <div class="modal-box">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <h3 style="font-size:16px; font-weight:800; color:var(--primary-dark);">നിസ്കാരം രേഖപ്പെടുത്തുക</h3>
-      <button onclick="closePrayerEntryModal()" style="border:none; background:none; font-size:20px; cursor:pointer;">&times;</button>
+      <h3 style="font-size:14px; color:var(--primary-dark);">നിസ്കാരം രേഖപ്പെടുത്തുക</h3>
+      <button style="border:none; background:none; font-size:16px; cursor:pointer;" onclick="closeModal()">✕</button>
     </div>
 
     <div class="form-group">
-      <label>ലിംഗഭേദം (Gender)</label>
-      <select id="pGender" onchange="toggleGenderFields()">
-        <option value="Boy">Boy (ആൺകുട്ടി)</option>
-        <option value="Girl">Girl (പെൺകുട്ടി)</option>
-      </select>
+      <label>അഡ്മിഷൻ നമ്പർ / പേര്</label>
+      <input type="text" id="entryAdm" placeholder="ടൈപ്പ് ചെയ്യുക...">
     </div>
 
-    <div class="form-group">
-      <label>വിദ്യാർത്ഥിയുടെ പേര്</label>
-      <input type="text" id="pStudentName" placeholder="പേര് ടൈപ്പ് ചെയ്യുക">
+    <div id="prayerFields">
+      <!-- Prayer items -->
     </div>
 
-    <div class="form-group">
-      <label>ക്ലാസ്</label>
-      <select id="pClass">
-        <option value="Class 1">Class 1</option>
-        <option value="Class 2">Class 2</option>
-        <option value="Class 3">Class 3</option>
-        <option value="Class 4">Class 4</option>
-        <option value="Class 5">Class 5</option>
-        <option value="Class 6">Class 6</option>
-        <option value="Class 7">Class 7</option>
-        <option value="Class 8">Class 8</option>
-        <option value="Class 9">Class 9</option>
-        <option value="Class 10">Class 10</option>
-      </select>
-    </div>
-
-    <div id="prayersContainer"></div>
-
-    <button class="btn-main" style="margin-top:12px;" onclick="savePrayerData()">സേവ് ചെയ്യുക</button>
+    <button class="btn-main" onclick="savePrayerEntry()" style="margin-top:10px;">SAVE ENTRY</button>
   </div>
 </div>
 
 <script>
-  // Web Audio API Bell Sound Generator (Zero External Dependency)
-  function playSuccessBell() {
-    try {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContext) return;
-      const ctx = new AudioContext();
-      
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+  // Dynamic Notices Array (Rotating sequentially)
+  const notices = [
+    "ഇശാഇന് ശേഷം ഇന്നത്തെ നിസ്കാരങ്ങൾ കൃത്യമായി എൻട്രി ചെയ്യുക.",
+    "നിസ്കാരം കൃത്യസമയത്ത് അദാആയി തന്നെ നിർവ്വഹിക്കാൻ കുട്ടികൾ ശ്രദ്ധിക്കുക.",
+    "ജമാഅത്തായി നിസ്കരിക്കുന്നവർക്ക് കൂടുതൽ പോയിന്റുകൾ ലഭിക്കുന്നതാണ്.",
+    "എല്ലാ ദിവസവും രക്ഷിതാക്കൾ കുട്ടികളുടെ നിസ്കാരം ഉറപ്പുവരുത്തുക."
+  ];
+  let noticeIndex = 0;
+  const noticeElem = document.getElementById("rotatingNoticeText");
 
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(830, ctx.currentTime); // High clear bell tone (Ab5)
-      osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 1.2);
+  setInterval(() => {
+    noticeElem.style.opacity = "0";
+    setTimeout(() => {
+      noticeIndex = (noticeIndex + 1) % notices.length;
+      noticeElem.textContent = notices[noticeIndex];
+      noticeElem.style.opacity = "1";
+    }, 300);
+  }, 4500);
 
-      gain.gain.setValueAtTime(0.7, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start();
-      osc.stop(ctx.currentTime + 1.2);
-    } catch (e) {
-      console.error("Audio playback error:", e);
-    }
-  }
-
-  // Sample Mock Data structure
-  const mockStudents = [
-    { name: "Muhammed Raihan", gender: "Boy", class: "Class 5", dailyScore: 50, weeklyScore: 340, monthlyScore: 1400 },
-    { name: "Ahmed Shaheem", gender: "Boy", class: "Class 5", dailyScore: 48, weeklyScore: 330, monthlyScore: 1350 },
-    { name: "Ameen Zayan", gender: "Boy", class: "Class 6", dailyScore: 45, weeklyScore: 310, monthlyScore: 1320 },
-    { name: "Fathima Hiba", gender: "Girl", class: "Class 5", dailyScore: 50, weeklyScore: 345, monthlyScore: 1420 },
-    { name: "Aysha Minha", gender: "Girl", class: "Class 6", dailyScore: 48, weeklyScore: 335, monthlyScore: 1390 },
-    { name: "Mariyam Naja", gender: "Girl", class: "Class 5", dailyScore: 46, weeklyScore: 320, monthlyScore: 1300 }
+  // Mock Students & Prayers Data
+  const sampleStudents = [
+    { adm: "101", name: "Muhammed Raihan", gender: "Boy", class: "Class 5", scoreDaily: 25, scoreWeekly: 175, scoreMonthly: 720 },
+    { adm: "102", name: "Ameen K", gender: "Boy", class: "Class 5", scoreDaily: 23, scoreWeekly: 168, scoreMonthly: 690 },
+    { adm: "103", name: "Fathima Hiba", gender: "Girl", class: "Class 5", scoreDaily: 25, scoreWeekly: 172, scoreMonthly: 710 },
+    { adm: "104", name: "Ayisha Rida", gender: "Girl", class: "Class 5", scoreDaily: 24, scoreWeekly: 165, scoreMonthly: 695 },
+    { adm: "105", name: "Zayan Ali", gender: "Boy", class: "Class 4", scoreDaily: 22, scoreWeekly: 150, scoreMonthly: 620 },
+    { adm: "106", name: "Maryam Noor", gender: "Girl", class: "Class 4", scoreDaily: 24, scoreWeekly: 169, scoreMonthly: 700 }
   ];
 
-  let currentTab = 'daily';
+  let currentMode = "daily";
 
-  const prayers = ["സുബ്ഹ് (Subh)", "ദുഹ്ർ (Dhuhr)", "അസ്വർ (Asr)", "മഗ്‌രിബ് (Maghrib)", "ഇശാഅ് (Isha)"];
+  function setLeaderboardMode(mode, btn) {
+    currentMode = mode;
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    
+    document.getElementById("rankHeaderTxt").textContent = 
+      mode === "daily" ? "🏆 DAILY TOP RANKERS" :
+      mode === "weekly" ? "🏆 WEEKLY TOP RANKERS" : "🏆 MONTHLY TOP RANKERS";
 
-  function setupPrayerInputs() {
-    const isGirl = document.getElementById("pGender").value === "Girl";
-    const container = document.getElementById("prayersContainer");
+    renderCurrentLeaderboard();
+  }
+
+  function renderCurrentLeaderboard() {
+    const filterClass = document.getElementById("leaderboardClassFilter").value;
+    const container = document.getElementById("leaderboardContainer");
     container.innerHTML = "";
 
-    prayers.forEach((p, idx) => {
-      const pKey = "p_" + idx;
-      const html = `
-        <div class="prayer-box">
-          <div class="prayer-name">${p}</div>
-          <div class="status-grid ${isGirl ? 'girls' : ''}">
-            <label><input type="radio" name="${pKey}" value="ജമാഅത്ത്" checked><div class="status-lbl">ജമാഅത്ത്</div></label>
-            <label><input type="radio" name="${pKey}" value="അദാഅ്"><div class="status-lbl">അദാഅ്</div></label>
-            <label><input type="radio" name="${pKey}" value="ഖളാഅ്"><div class="status-lbl">ഖളാഅ്</div></label>
-            <label><input type="radio" name="${pKey}" value="നിസ്കരിച്ചില്ല"><div class="status-lbl">ഇല്ല</div></label>
-            ${isGirl ? '<label><input type="radio" name="'+pKey+'" value="ഇളവ്"><div class="status-lbl">ഇളവ്</div></label>' : ''}
+    // Filter by class
+    let list = sampleStudents;
+    if (filterClass !== "ALL") {
+      list = list.filter(s => s.class === filterClass);
+    }
+
+    const sortKey = currentMode === "daily" ? "scoreDaily" : currentMode === "weekly" ? "scoreWeekly" : "scoreMonthly";
+    const boys = list.filter(s => s.gender === "Boy").sort((a, b) => b[sortKey] - a[sortKey]);
+    const girls = list.filter(s => s.gender === "Girl").sort((a, b) => b[sortKey] - a[sortKey]);
+
+    // BOYS SECTION
+    container.innerHTML += `<div class="gender-sec-title"><span>👦 BOYS</span><span>SCORE</span></div>`;
+    renderListSection(container, boys, currentMode === "daily" ? 1 : 3, sortKey);
+
+    // GIRLS SECTION
+    container.innerHTML += `<div class="gender-sec-title" style="margin-top:14px;"><span>👧 GIRLS</span><span>SCORE</span></div>`;
+    renderListSection(container, girls, currentMode === "daily" ? 1 : 3, sortKey);
+  }
+
+  function renderListSection(container, arr, limit, sortKey) {
+    if (!arr || arr.length === 0) {
+      container.innerHTML += `<p style="font-size:11px; color:#94a3b8; text-align:center; padding:6px;">No entries recorded</p>`;
+      return;
+    }
+    const sliced = arr.slice(0, limit);
+    sliced.forEach((item, index) => {
+      const rankBadge = index === 0 ? "rank-1" : index === 1 ? "rank-2" : "rank-3";
+      const div = document.createElement("div");
+      div.className = "rank-item";
+      div.innerHTML = `
+        <div style="display:flex; align-items:center;">
+          <span class="rank-badge ${rankBadge}">#${index + 1}</span>
+          <div>
+            <b>${item.name}</b>
+            <div style="font-size:10px; color:#64748b;">${item.class} (Adm: ${item.adm})</div>
           </div>
         </div>
+        <span style="font-weight:700; color:var(--primary); font-size:12px;">${item[sortKey]} pts</span>
       `;
-      container.innerHTML += html;
+      container.appendChild(div);
     });
   }
 
-  function toggleGenderFields() {
-    setupPrayerInputs();
+  // Web Audio API Bell Sound (Clean ding-dong chime)
+  function playSuccessBell() {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const playTone = (freq, startTime, duration) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, startTime);
+        gain.gain.setValueAtTime(0.3, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      };
+      const now = audioCtx.currentTime;
+      playTone(587.33, now, 0.4); // D5
+      playTone(880.00, now + 0.15, 0.7); // A5
+    } catch (e) {
+      console.log("Audio not supported / interact needed", e);
+    }
   }
 
-  function openPrayerEntryModal() {
+  // Prayer Modal Handling
+  const prayers = ["സുബ്ഹ്", "ളുഹ്ർ", "അസ്വർ", "മഗ്രിബ്", "ഇശാഅ്"];
+  function openEntryModal() {
+    const box = document.getElementById("prayerFields");
+    box.innerHTML = "";
+    prayers.forEach(p => {
+      box.innerHTML += `
+        <div class="prayer-box">
+          <div class="prayer-name">${p}</div>
+          <div class="status-grid">
+            <label><input type="radio" name="${p}" value="ജമാഅത്ത്" checked><div class="status-lbl">ജമാഅത്ത്</div></label>
+            <label><input type="radio" name="${p}" value="അദാഅ്"><div class="status-lbl">അദാഅ്</div></label>
+            <label><input type="radio" name="${p}" value="ഖളാഅ്"><div class="status-lbl">ഖളാഅ്</div></label>
+            <label><input type="radio" name="${p}" value="നിസ്കരിച്ചില്ല"><div class="status-lbl">ഇല്ല</div></label>
+          </div>
+        </div>
+      `;
+    });
     document.getElementById("entryModal").style.display = "flex";
-    setupPrayerInputs();
   }
 
-  function closePrayerEntryModal() {
+  function closeModal() {
     document.getElementById("entryModal").style.display = "none";
   }
 
-  function savePrayerData() {
-    // Play Bell Sound immediately
-    playSuccessBell();
-
-    setTimeout(() => {
-      alert("വിവരങ്ങൾ വിജയകരമായി സേവ് ചെയ്തു!");
-      closePrayerEntryModal();
-    }, 200);
-  }
-
-  function switchLeaderboard(type, el) {
-    currentTab = type;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-    renderLeaderboard();
-  }
-
-  function renderLeaderboard() {
-    const selectedClass = document.getElementById("leaderboardClassSelect").value;
-    const scoreKey = currentTab + 'Score';
-
-    let filtered = mockStudents.filter(s => selectedClass === "ALL" || s.class === selectedClass);
-
-    let boys = filtered.filter(s => s.gender === "Boy").sort((a,b) => b[scoreKey] - a[scoreKey]);
-    let girls = filtered.filter(s => s.gender === "Girl").sort((a,b) => b[scoreKey] - a[scoreKey]);
-
-    const container = document.getElementById("leaderboardList");
-    container.innerHTML = "";
-
-    // If Daily: Only display Rank 1 for boys and girls
-    const limit = currentTab === 'daily' ? 1 : 3;
-
-    function buildSection(title, list, icon) {
-      if (!list.length) return `<div class="gender-section"><div class="gender-title">${icon} ${title}</div><p style="font-size:11px; color:#94a3b8; padding:4px;">വിവരങ്ങൾ ലഭ്യമല്ല</p></div>`;
-      
-      let html = `<div class="gender-section"><div class="gender-title">${icon} ${title}</div>`;
-      list.slice(0, limit).forEach((item, index) => {
-        const badgeClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : 'rank-3');
-        html += `
-          <div class="rank-item">
-            <div style="display:flex; align-items:center;">
-              <span class="rank-badge ${badgeClass}">#${index + 1}</span>
-              <div>
-                <b>${item.name}</b>
-                <div style="font-size:10px; color:#64748b;">${item.class}</div>
-              </div>
-            </div>
-            <span style="font-weight:800; color:var(--primary); font-size:12px;">${item[scoreKey]} Pts</span>
-          </div>
-        `;
-      });
-      html += `</div>`;
-      return html;
+  function savePrayerEntry() {
+    const adm = document.getElementById("entryAdm").value;
+    if (!adm) {
+      alert("ദയവായി അഡ്മിഷൻ നമ്പർ നൽകുക");
+      return;
     }
-
-    container.innerHTML += buildSection("Boys (ആൺകുട്ടികൾ)", boys, "👦");
-    container.innerHTML += buildSection("Girls (പെൺകുട്ടികൾ)", girls, "👧");
+    // Play Bell Sound Immediately
+    playSuccessBell();
+    alert("നിസ്കാരം വിജയകരമായി രേഖപ്പെടുത്തി! ✅");
+    closeModal();
+    document.getElementById("entryAdm").value = "";
   }
 
-  // Set today's date label and initialize
-  window.addEventListener('DOMContentLoaded', () => {
-    const d = new Date();
-    document.getElementById("todayDateLabel").innerText = d.toLocaleDateString('en-GB');
-    renderLeaderboard();
-  });
+  // Search Suggestion
+  function handleSearch(val) {
+    const container = document.getElementById("searchSuggestions");
+    if (!val.trim()) {
+      container.style.display = "none";
+      return;
+    }
+    const filtered = sampleStudents.filter(s => s.name.toLowerCase().includes(val.toLowerCase()) || s.adm.includes(val));
+    if (filtered.length === 0) {
+      container.style.display = "none";
+      return;
+    }
+    container.innerHTML = "";
+    filtered.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "suggestion-item";
+      div.textContent = `${item.name} (${item.class} - Adm: ${item.adm})`;
+      div.onclick = () => {
+        document.getElementById("srchInput").value = item.adm;
+        container.style.display = "none";
+      };
+      container.appendChild(div);
+    });
+    container.style.display = "block";
+  }
+
+  function checkStatus() {
+    const val = document.getElementById("srchInput").value.trim();
+    const res = document.getElementById("statusResult");
+    const st = sampleStudents.find(s => s.adm === val || s.name.toLowerCase() === val.toLowerCase());
+    if (!st) {
+      res.innerHTML = `<span style="color:#ef4444;">Student not found!</span>`;
+      return;
+    }
+    res.innerHTML = `
+      <div style="background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
+        <b>${st.name}</b> (${st.class})<br>
+        Daily Score: <b>${st.scoreDaily}</b> | Weekly: <b>${st.scoreWeekly}</b> | Monthly: <b>${st.scoreMonthly}</b>
+      </div>
+    `;
+  }
+
+  // Init
+  document.getElementById("boardDate").textContent = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  noticeElem.textContent = notices[0];
+  renderCurrentLeaderboard();
 </script>
+
 </body>
 </html>
