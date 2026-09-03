@@ -59,34 +59,51 @@
       position: relative;
     }
 
-    /* Seamless Infinite Slow Marquee Bar */
+    /* SEAMLESS CONTINUOUS SMOOTH MARQUEE (NO GAPS, SLOW FLOW) */
     .marquee-bar {
       background: #022c22;
       color: #a7f3d0;
-      padding: 8px 0;
+      padding: 9px 0;
       overflow: hidden;
       display: flex;
-      border-bottom: 1px solid #059669;
+      user-select: none;
+      border-bottom: 1.5px solid #059669;
       font-size: 13px;
       font-weight: 600;
     }
     .marquee-track {
       display: flex;
-      width: max-content;
-      animation: seamlessScroll 45s linear infinite;
+      flex-shrink: 0;
+      white-space: nowrap;
+      animation: smoothScroll 55s linear infinite;
     }
-    .marquee-track:hover {
+    .marquee-bar:hover .marquee-track,
+    .marquee-bar:active .marquee-track {
       animation-play-state: paused;
     }
     .marquee-item {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      white-space: nowrap;
-      padding-right: 40px;
+      padding-right: 28px;
     }
-    @keyframes seamlessScroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+    .ticker-sep {
+      color: #f59e0b;
+      margin: 0 16px;
+      font-size: 14px;
+    }
+    .ticker-badge {
+      background: #047857;
+      color: #ffffff;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-right: 10px;
+    }
+    @keyframes smoothScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
     }
 
     .top-bar {
@@ -231,6 +248,7 @@
     }
     input:focus, select:focus { border-color: var(--accent); }
 
+    /* Live Search Suggestions Dropdown */
     .search-suggestions {
       position: absolute;
       top: 100%;
@@ -404,29 +422,47 @@
 <body>
 
 <div class="app-shell">
-  <!-- Seamless Infinite Slow Marquee Banner -->
+  <!-- Seamless Continuous Smooth Moving Status Ticker (No Gaps) -->
   <div class="marquee-bar">
     <div class="marquee-track">
-      <!-- Item Set 1 -->
       <div class="marquee-item">
-        <span><b>...MUM...</b></span> &nbsp;&nbsp;
-        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span> &nbsp;&nbsp;
-        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span> &nbsp;&nbsp;
-        <span style="color:#6ee7b7;">مدرسة مظهر العلوم كلور</span>
+        <span class="ticker-badge">MUM</span>
+        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
+        <span class="ticker-sep">🕌</span>
+        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span>
+        <span class="ticker-sep">✨</span>
+        <span style="color:#6ee7b7; font-weight:700;">مدرسة مظهر العلوم كلور (MUM Kalloor)</span>
+        <span class="ticker-sep">📖</span>
       </div>
-      <!-- Item Set 2 (Continuous Loop) -->
       <div class="marquee-item">
-        <span><b>...MUM...</b></span> &nbsp;&nbsp;
-        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span> &nbsp;&nbsp;
-        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span> &nbsp;&nbsp;
-        <span style="color:#6ee7b7;">مدرسة مظهر العلوم كلور</span>
+        <span class="ticker-badge">MUM</span>
+        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
+        <span class="ticker-sep">🕌</span>
+        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span>
+        <span class="ticker-sep">✨</span>
+        <span style="color:#6ee7b7; font-weight:700;">مدرسة مظهر العلوم كلور (MUM Kalloor)</span>
+        <span class="ticker-sep">📖</span>
       </div>
-      <!-- Item Set 3 (Buffer) -->
+    </div>
+    <!-- Duplicate track for absolute seamless infinite loop -->
+    <div class="marquee-track" aria-hidden="true">
       <div class="marquee-item">
-        <span><b>...MUM...</b></span> &nbsp;&nbsp;
-        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span> &nbsp;&nbsp;
-        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span> &nbsp;&nbsp;
-        <span style="color:#6ee7b7;">مدرسة مظهر العلوم كلور</span>
+        <span class="ticker-badge">MUM</span>
+        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
+        <span class="ticker-sep">🕌</span>
+        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span>
+        <span class="ticker-sep">✨</span>
+        <span style="color:#6ee7b7; font-weight:700;">مدرسة مظهر العلوم كلور (MUM Kalloor)</span>
+        <span class="ticker-sep">📖</span>
+      </div>
+      <div class="marquee-item">
+        <span class="ticker-badge">MUM</span>
+        <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
+        <span class="ticker-sep">🕌</span>
+        <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span>
+        <span class="ticker-sep">✨</span>
+        <span style="color:#6ee7b7; font-weight:700;">مدرسة مظهر العلوم كلور (MUM Kalloor)</span>
+        <span class="ticker-sep">📖</span>
       </div>
     </div>
   </div>
@@ -1419,6 +1455,7 @@
     }
   }
 
+  // Clear / Delete prayer record for selected date
   async function clearStudentDailyPrayer() {
     const studentId = document.getElementById('tEditTargetStudentId').value;
     const date = document.getElementById('tEditTargetDate').value;
