@@ -130,7 +130,7 @@
     .top-bar {
       background: var(--primary-dark);
       color: #fff;
-      padding: 10px 14px;
+      padding: 8px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -139,45 +139,48 @@
     .top-bar-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .hamburger-btn {
       background: transparent;
       border: none;
       color: #fff;
-      font-size: 20px;
+      font-size: 19px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2px;
+      padding: 3px;
     }
-    .top-bar h3 { font-size: 14px; font-weight: 800; letter-spacing: 0.5px; }
-    .top-actions { display: flex; gap: 6px; align-items: center; }
+    .top-bar h3 { font-size: 13.5px; font-weight: 800; letter-spacing: 0.5px; }
+    .top-actions { display: flex; gap: 5px; align-items: center; }
     
+    /* Neatly Adjusted Teachers Button */
     .btn-contact {
       background: #059669;
       color: #fff;
       border: 1px solid rgba(255,255,255,0.3);
-      padding: 4px 10px;
-      border-radius: 16px;
-      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 14px;
+      font-size: 10.5px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 3px;
+      white-space: nowrap;
     }
     .btn-top {
       background: rgba(255,255,255,0.2);
       color: #fff;
       border: 1px solid rgba(255,255,255,0.4);
-      padding: 4px 12px;
-      border-radius: 16px;
-      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 14px;
+      font-size: 10.5px;
       font-weight: 700;
       cursor: pointer;
       text-transform: uppercase;
+      white-space: nowrap;
     }
     .main-body { padding: 14px; overflow-y: auto; max-height: 86vh; }
     .hero {
@@ -613,7 +616,7 @@
 <body>
 
 <div class="app-shell">
-  <!-- Clean Scrolling Header Bar -->
+  <!-- Scrolling Header Bar -->
   <div class="marquee-container">
     <div class="marquee-text">
       <span class="ticker-badge">MUM</span>
@@ -632,7 +635,7 @@
     <span id="rotatingNoticeText" class="notice-msg-text">🕌 ഇശാ നിസ്കാരത്തിന് ശേഷം എൻട്രി ചെയ്യുക.</span>
   </div>
 
-  <!-- Top Navigation with Hamburger Menu -->
+  <!-- Top Navigation with Hamburger Menu & Compact Teachers Button -->
   <div class="top-bar">
     <div class="top-bar-left">
       <button class="hamburger-btn" onclick="toggleDrawer(true)" title="Menu">☰</button>
@@ -650,7 +653,7 @@
       <div class="drawer-header">
         <div>
           <h4 style="font-size:15px; font-weight:800;">MUM TRACKER</h4>
-          <p style="font-size:11px; color:#a7f3d0;">കലൂർ - കൂത്താളി</p>
+          <p style="font-size:11px; color:#a7f3d0;">കല്ലൂർ - കൂത്താളി</p>
         </div>
         <button onclick="toggleDrawer(false)" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
       </div>
@@ -658,18 +661,18 @@
         <li class="drawer-item" onclick="toggleDrawer(false); openAboutModal();">
           <span>ℹ️</span> About App
         </li>
+        <li class="drawer-item" onclick="toggleDrawer(false); openPublicVideoModal();">
+          <span>🎥</span> വീഡിയോകൾ (Watch & Download)
+        </li>
         <li class="drawer-item" onclick="toggleDrawer(false); openFeedbackWhatsApp();">
           <span>💬</span> Send Feedback
         </li>
         <li class="drawer-item" onclick="toggleDrawer(false); openTeachersContactModal();">
           <span>📞</span> അധ്യാപകരുടെ വിവരങ്ങൾ
         </li>
-        <li class="drawer-item" onclick="toggleDrawer(false); scrollToVideoSection();">
-          <span>🎥</span> വീഡിയോകൾ (Watch & Download)
-        </li>
       </ul>
       <div style="margin-top:auto; padding:14px; font-size:11px; text-align:center; color:var(--text-muted); border-top:1px solid #f1f5f9;">
-        Version 2.5 • MUM Kalloor-Koothali
+        Version 2.6 • MUM Kalloor-Koothali
       </div>
     </div>
   </div>
@@ -688,7 +691,7 @@
         <span>🕌</span> എന്റെ ഇന്നത്തെ നിസ്കാരം
       </button>
 
-      <!-- Compact Clean Leaderboard with Class Filtering (Retains previous day's ranks until 6:30 AM) -->
+      <!-- Compact Clean Leaderboard with Class Filtering -->
       <div class="card">
         <div class="card-title">
           <span id="rankTitleHeader">🏆 Daily Top Rankers</span>
@@ -711,14 +714,6 @@
 
         <div class="leaderboard-scroll-box" id="leaderboardList">
           <p style="font-size:11px; color:var(--text-muted); text-align:center; padding:10px 0;">No Data Available</p>
-        </div>
-      </div>
-
-      <!-- Video Watch & Download Public Section -->
-      <div class="card" id="publicVideoSection">
-        <div class="card-title">🎥 മോട്ടിവേഷൻ & മാർഗ്ഗനിർദ്ദേശ വീഡിയോകൾ</div>
-        <div id="publicVideoContainer">
-          <p style="font-size:11.5px; color:var(--text-muted); text-align:center; padding:6px 0;">പുതിയ വീഡിയോകൾ ലഭ്യമല്ല</p>
         </div>
       </div>
 
@@ -894,9 +889,7 @@
           </div>
         </div>
         
-        <div class="class-checkbox-grid" id="adminClassCheckboxContainer">
-          <!-- Class Checkboxes 1 to 10 -->
-        </div>
+        <div class="class-checkbox-grid" id="adminClassCheckboxContainer"></div>
 
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:8px;">
           <button class="btn-main" style="background:#047857;" onclick="applyMultiClassStatus(false)">🔓 സെലക്ട് ചെയ്തവ ഓപ്പൺ ചെയ്യുക</button>
@@ -907,6 +900,20 @@
         </p>
       </div>
 
+      <!-- About App Editor for Admin -->
+      <div class="card">
+        <div class="card-title">ℹ️ 'About App' ടെക്സ്റ്റ് എഡിറ്റ് ചെയ്യുക</div>
+        <div class="form-group">
+          <label>വിവരണം (Description Text)</label>
+          <textarea id="adminAboutDesc" rows="4" placeholder="ആപ്പിനെക്കുറിച്ചുള്ള വിവരണം ടൈപ്പ് ചെയ്യുക..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>മേൽനോട്ട വിവരങ്ങൾ (Footer / Authority Text)</label>
+          <input type="text" id="adminAboutAuth" placeholder="പോർട്ടൽ മേൽനോട്ടം...">
+        </div>
+        <button class="btn-main" onclick="saveAboutAppAdmin()">സേവ് ചെയ്യുക</button>
+      </div>
+
       <!-- Video Management for Admin -->
       <div class="card">
         <div class="card-title">🎥 വീഡിയോ അപ്‌ലോഡ് / മാനേജ്മെന്റ്</div>
@@ -915,7 +922,7 @@
           <input type="text" id="adminVideoTitle" placeholder="ഉദാ: നിസ്കാരം കൃത്യമായി നിർവ്വഹിക്കാം">
         </div>
         <div class="form-group">
-          <label>ഡയറക്ട് വീഡിയോ ലിങ്ക് / എംബെഡ് ലിങ്ക് (MP4 / Direct Link)</label>
+          <label>ഡയറക്ട് വീഡിയോ ലിങ്ക് (MP4 Link)</label>
           <input type="url" id="adminVideoUrl" placeholder="https://.../video.mp4">
         </div>
         <div class="form-group">
@@ -1054,16 +1061,30 @@
 
 <!-- MODAL: ABOUT APP -->
 <div id="aboutAppModal" class="modal-overlay">
-  <div style="background:#fff; width:100%; max-width:400px; border-radius:16px; padding:18px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+  <div style="background:#fff; width:100%; max-width:420px; border-radius:16px; padding:18px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
     <h3 style="color:var(--primary); font-size:16px; margin-bottom:8px;">🕌 About MUM Tracker</h3>
-    <p style="font-size:12px; color:#334155; line-height:1.6; margin-bottom:10px;">
+    <p id="displayAboutDesc" style="font-size:12px; color:#334155; line-height:1.6; margin-bottom:10px;">
       <b>മദ്രസ മള്ഹറുൽ ഉലൂം കല്ലൂർ - കൂത്താളി</b>യിലെ വിദ്യാർത്ഥികളുടെ നിത്യേനയുള്ള അഞ്ചു വഖ്ത് നിസ്കാരങ്ങൾ രേഖപ്പെടുത്തുന്നതിനും കൃത്യനിഷ്ഠയും ആത്മീയ ചിട്ടയും പരിപോഷിപ്പിക്കുന്നതിനും വേണ്ടി തയ്യാറാക്കിയ പോർട്ടലാണിത്.
     </p>
-    <div style="background:#f8fafc; padding:8px 12px; border-radius:8px; border:1px solid #e2e8f0; font-size:11.5px; color:var(--text-muted); margin-bottom:12px;">
+    <div style="background:#f8fafc; padding:8px 12px; border-radius:8px; border:1px solid #e2e8f0; font-size:11.5px; color:var(--text-muted); margin-bottom:12px;" id="displayAboutAuth">
       📍 സ്ഥലം: കല്ലൂർ - കൂത്താളി (1283)<br>
       ⚡ പോർട്ടൽ മേൽനോട്ടം: റഷീദലി ഫൈസി & അധ്യാപക സമിതി
     </div>
     <button class="btn-main" onclick="closeModal('aboutAppModal')">ശരി</button>
+  </div>
+</div>
+
+<!-- MODAL: VIDEOS (OPENED EXCLUSIVELY VIA HAMBURGER MENU) -->
+<div id="publicVideoModal" class="modal-overlay">
+  <div style="background:#fff; width:100%; max-width:480px; border-radius:16px; padding:18px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height:88vh; overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #e2e8f0; padding-bottom:6px;">
+      <h3 style="color:var(--primary); font-size:15px;">🎥 മോട്ടിവേഷൻ & മാർഗ്ഗനിർദ്ദേശ വീഡിയോകൾ</h3>
+      <button onclick="closeModal('publicVideoModal')" style="background:none; border:none; font-size:18px; cursor:pointer; color:#64748b;">✕</button>
+    </div>
+    <div id="publicVideoContainer">
+      <p style="font-size:11.5px; color:var(--text-muted); text-align:center; padding:10px 0;">പുതിയ വീഡിയോകൾ ലഭ്യമല്ല</p>
+    </div>
+    <button class="btn-main" style="background:#94a3b8; margin-top:10px;" onclick="closeModal('publicVideoModal')">Close</button>
   </div>
 </div>
 
@@ -1164,7 +1185,7 @@
   </div>
 </div>
 
-<!-- MODAL: BULK WHATSAPP WITH MULTI-CHECKBOX BROADCAST -->
+<!-- MODAL: BULK WHATSAPP -->
 <div id="bulkWhatsAppModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:480px; border-radius:16px; padding:18px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height:88vh; overflow-y:auto;">
     <h3 style="color:var(--primary); margin-bottom:5px;">📢 Bulk Unrecorded WhatsApp Alert</h3>
@@ -1256,7 +1277,6 @@
 
 <script>
   // --- 6:30 AM CUTOFF LOGICAL DATE CALCULATION ---
-  // If time is before 06:30 AM, logical date belongs to previous day
   function getLogicalPrayerDate() {
     const now = new Date();
     const hours = now.getHours();
@@ -1334,12 +1354,11 @@
   // --- AUTOMATIC UNLOCK AT 8:00 PM CHECKER ---
   function checkAutoUnlockSchedule() {
     const now = new Date();
-    // 8:00 PM is hour 20
     if (now.getHours() === 20 && now.getMinutes() === 0) {
       const needUnlock = Array.from({length: 10}, (_, i) => String(i + 1)).some(c => classLockSettings[c] === true);
       if (needUnlock) {
         const updateObj = {};
-        for (let i = 1; i <= 10; i++) updateObj[String(i)] = false; // Open all
+        for (let i = 1; i <= 10; i++) updateObj[String(i)] = false;
         db.collection("settings").doc("classLocks").set(updateObj, { merge: true }).catch(()=>{});
       }
     }
@@ -1456,10 +1475,25 @@
   });
 
   db.collection("settings").doc("config").onSnapshot(doc => {
-    if (doc.exists && doc.data().adminPass) {
-      adminPassword = doc.data().adminPass;
+    if (doc.exists) {
+      const data = doc.data();
+      if (data.adminPass) adminPassword = data.adminPass;
+      if (data.aboutDesc) {
+        document.getElementById('displayAboutDesc').innerHTML = data.aboutDesc;
+        const inputDesc = document.getElementById('adminAboutDesc');
+        if (inputDesc) inputDesc.value = data.aboutDesc;
+      }
+      if (data.aboutAuth) {
+        document.getElementById('displayAboutAuth').innerHTML = data.aboutAuth;
+        const inputAuth = document.getElementById('adminAboutAuth');
+        if (inputAuth) inputAuth.value = data.aboutAuth;
+      }
     } else {
-      db.collection("settings").doc("config").set({ adminPass: "772625" }, { merge: true });
+      db.collection("settings").doc("config").set({ 
+        adminPass: "772625",
+        aboutDesc: "<b>മദ്രസ മള്ഹറുൽ ഉലൂം കല്ലൂർ - കൂത്താളി</b>യിലെ വിദ്യാർത്ഥികളുടെ നിത്യേനയുള്ള അഞ്ചു വഖ്ത് നിസ്കാരങ്ങൾ രേഖപ്പെടുത്തുന്നതിനും കൃത്യനിഷ്ഠയും ആത്മീയ ചിട്ടയും പരിപോഷിപ്പിക്കുന്നതിനും വേണ്ടി തയ്യാറാക്കിയ പോർട്ടലാണിത്.",
+        aboutAuth: "📍 സ്ഥലം: കല്ലൂർ - കൂത്താളി (1283)<br>⚡ പോർട്ടൽ മേൽനോട്ടം: റഷീദലി ഫൈസി & അധ്യാപക സമിതി"
+      }, { merge: true });
     }
   });
 
@@ -1472,15 +1506,32 @@
     document.getElementById('aboutAppModal').style.display = 'flex';
   }
 
+  function openPublicVideoModal() {
+    renderPublicVideos();
+    document.getElementById('publicVideoModal').style.display = 'flex';
+  }
+
   function openFeedbackWhatsApp() {
-    const phone = "919495893339"; // Feedback WhatsApp number
+    const phone = "919495893339";
     const msg = "അസ്സലാമു അലൈക്കും, MUM പ്രയർ ട്രാക്കർ ആപ്പുമായി ബന്ധപ്പെട്ട നിർദ്ദേശം / ഫീഡ്‌ബാക്ക് താഴെ നൽകുന്നു:\n\n";
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
   }
 
-  function scrollToVideoSection() {
-    const sec = document.getElementById('publicVideoSection');
-    if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+  // ABOUT APP ADMIN SAVE
+  async function saveAboutAppAdmin() {
+    const desc = document.getElementById('adminAboutDesc').value.trim();
+    const auth = document.getElementById('adminAboutAuth').value.trim();
+    if (!desc) return alert("ദയവായി വിവരണം നൽകുക!");
+
+    try {
+      await db.collection("settings").doc("config").set({
+        aboutDesc: desc,
+        aboutAuth: auth
+      }, { merge: true });
+      alert("About App വിജയകരമായി അപ്ഡേറ്റ് ചെയ്തു!");
+    } catch (e) {
+      alert("അപ്ഡേറ്റ് പരാജയപ്പെട്ടു: " + e.message);
+    }
   }
 
   // MULTI-CLASS ENTRY ACCESS HANDLER (ADMIN)
@@ -1531,7 +1582,7 @@
     }
   }
 
-  // --- VIDEO UPLOAD & MANAGEMENT ---
+  // VIDEO MANAGEMENT
   async function saveNewVideoAdmin() {
     const title = document.getElementById('adminVideoTitle').value.trim();
     const url = document.getElementById('adminVideoUrl').value.trim();
@@ -1571,8 +1622,9 @@
 
   function renderPublicVideos() {
     const cont = document.getElementById('publicVideoContainer');
+    if (!cont) return;
     if (dbVideos.length === 0) {
-      cont.innerHTML = '<p style="font-size:11.5px; color:var(--text-muted); text-align:center; padding:6px 0;">പുതിയ വീഡിയോകൾ ലഭ്യമല്ല</p>';
+      cont.innerHTML = '<p style="font-size:11.5px; color:var(--text-muted); text-align:center; padding:10px 0;">പുതിയ വീഡിയോകൾ ലഭ്യമല്ല</p>';
       return;
     }
 
@@ -1593,6 +1645,7 @@
 
   function renderAdminVideoList() {
     const cont = document.getElementById('adminVideoManageList');
+    if (!cont) return;
     if (dbVideos.length === 0) {
       cont.innerHTML = '<p style="font-size:11px; color:var(--text-muted);">വീഡിയോകൾ ഒന്നും അപ്‌ലോഡ് ചെയ്തിട്ടില്ല</p>';
       return;
@@ -1881,7 +1934,7 @@
     updateTopNavBtn();
   }
 
-  // LEADERBOARD (Retains ranks of logical date)
+  // LEADERBOARD
   function switchLeaderboard(type, btn) {
     activeLeaderboardTab = type;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -2031,7 +2084,6 @@
     return `<span class="badge-status st-nil">ഇല്ല</span>`;
   }
 
-  // CORRECTED MESSAGE: "കല്ലൂർ - കൂത്താളി"
   function getWhatsAppActionHTML(student, prayerRecord, targetDate) {
     let phone = (student.phone || '').trim().replace(/[^0-9]/g, '');
     if (!phone) return `<span style="font-size:10px; color:var(--text-muted);">No Ph</span>`;
@@ -2688,7 +2740,6 @@
     document.getElementById('pNameSuggestions').style.display = 'none';
   }
 
-  // ENTRY MODAL OPEN WITH UPDATED LOGICAL DATE
   function openPrayerEntryModal() {
     activeLogicalDate = getLogicalPrayerDate();
     document.getElementById('pAdmInput').value = '';
@@ -2710,7 +2761,6 @@
     const student = dbStudents.find(s => s.adm.toLowerCase() === adm.toLowerCase() || s.name.toLowerCase() === name.toLowerCase());
     if (!student) return alert("വിദ്യാർത്ഥിയുടെ അഡ്മിഷൻ നമ്പറോ പേരോ ശരിയല്ല!");
 
-    // IMPROVED LOCK MESSAGE AS REQUESTED
     if (classLockSettings[student.class] === true) {
       alert(`നിങ്ങളുടെ ക്ലാസിലെ (${student.class}) നിസ്കാരം രേഖപ്പെടുത്താനുള്ള സമയം ഇപ്പോൾ അധ്യാപകൻ ഓൺ ചെയ്തിട്ടില്ല (ഇശാഇന് ശേഷം ഓപ്പൺ ആവും). എന്തെങ്കിലും ആവശ്യമുണ്ടെങ്കിൽ ക്ലാസ് അധ്യാപകനെ ബന്ധപ്പെടുക.`);
       openTeachersContactModal(student.class);
@@ -2853,7 +2903,7 @@
     `;
   }
 
-  // REPORT DATA PROCESSING
+  // REPORT PROCESSING
   function toggleReportTypeInputs(source) {
     const repType = source === 'teacher' ? document.getElementById('tRepType').value : document.getElementById('admRepType').value;
     const group = source === 'teacher' ? document.getElementById('tRepMonthGroup') : document.getElementById('admRepMonthGroup');
