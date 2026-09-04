@@ -103,7 +103,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      min-height: 36px;
+      min-height: 38px;
     }
     .notice-badge {
       background: #d97706;
@@ -139,7 +139,6 @@
     .top-bar h3 { font-size: 14px; font-weight: 800; letter-spacing: 0.5px; }
     .top-actions { display: flex; gap: 6px; align-items: center; }
     
-    /* Optimized Compact Teachers Button */
     .btn-contact {
       background: #059669;
       color: #fff;
@@ -249,14 +248,12 @@
       box-shadow: 0 1px 2px rgba(0,0,0,0.08);
     }
     
-    /* Compact scroll container for Leaderboard */
     .leaderboard-scroll-box {
       max-height: 200px;
       overflow-y: auto;
       padding-right: 2px;
     }
     
-    /* Slim Compact Rank Item */
     .rank-item {
       display: flex;
       align-items: center;
@@ -485,12 +482,41 @@
       border-radius: 10px;
       margin-bottom: 6px;
     }
+
+    /* SPECIFIC INSTRUCTIONS BOX STYLE */
+    .instruction-card {
+      background: #fffbeb;
+      border: 1px solid #fef08a;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .instruction-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #b45309;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .instruction-list {
+      list-style: none;
+      font-size: 11px;
+      line-height: 1.6;
+      color: #78350f;
+    }
+    .instruction-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
   </style>
 </head>
 <body>
 
 <div class="app-shell">
-  <!-- Clean Seamless Scrolling Header Bar -->
+  <!-- Scrolling Header Bar -->
   <div class="marquee-container">
     <div class="marquee-text">
       <span class="ticker-badge">MUM</span>
@@ -498,7 +524,7 @@
       <span class="ticker-sep">🕌</span>
       <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span>
       <span class="ticker-sep">✨</span>
-      <span style="color:#6ee7b7; font-weight:700;">مدرسة مظهر العلوم كلور (MUM Kalloor-Koothali)</span>
+      <span style="color:#6ee7b7; font-weight:700;">മدرسة مظهر العلوم كلور (MUM Kalloor-Koothali)</span>
       <span class="ticker-sep">📖</span>
     </div>
   </div>
@@ -506,7 +532,7 @@
   <!-- Dynamic Live Status / Instructions & Fully Updated Notice Bar -->
   <div class="notice-slider-bar">
     <span class="notice-badge">NOTICE</span>
-    <span id="rotatingNoticeText" class="notice-msg-text">ഇശാഇന് ശേഷം നിസ്കാരങ്ങൾ എൻട്രി ചെയ്യുക</span>
+    <span id="rotatingNoticeText" class="notice-msg-text">🕌 ഇശാ നിസ്കാരത്തിന് ശേഷം എൻട്രി ചെയ്യുക.</span>
   </div>
 
   <!-- Top Navigation with Compact Teacher Button -->
@@ -553,7 +579,6 @@
           </div>
         </div>
 
-        <!-- Scrollable Leaderboard Area ensuring View Status is always anchored -->
         <div class="leaderboard-scroll-box" id="leaderboardList">
           <p style="font-size:11px; color:var(--text-muted); text-align:center; padding:10px 0;">No Data Available</p>
         </div>
@@ -717,6 +742,25 @@
         <div class="card-title">
           <span>RASHIDALI FAIZY (Administrator)</span>
           <button class="btn-del" onclick="logout()">Logout</button>
+        </div>
+      </div>
+
+      <!-- Admin Class Entry Control (Lock / Unlock All or Individual) -->
+      <div class="card">
+        <div class="card-title">🔐 ക്ലാസ് എൻട്രി കൺട്രോൾ (Lock / Unlock)</div>
+        <div class="form-group">
+          <label>ക്ലാസ് തിരഞ്ഞെടുക്കുക</label>
+          <select id="admLockClassSelect" onchange="updateAdminClassLockUI()">
+            <option value="ALL">എല്ലാ ക്ലാസുകളും ഒരുമിച്ച് (All Classes)</option>
+            <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">ക്ലാസ് ${i}</option>`);</script>
+          </select>
+        </div>
+        <div class="toggle-bar">
+          <div>
+            <b>Prayer Entry Window Status</b>
+            <div style="font-size:11px; color:var(--text-muted);" id="admClassEntryStatusDesc">Checking...</div>
+          </div>
+          <button class="btn-action" id="toggleAdmClassEntryBtn" onclick="toggleAdminClassEntryStatus()">Toggle Access</button>
         </div>
       </div>
 
@@ -971,12 +1015,26 @@
   </div>
 </div>
 
-<!-- MODAL: DAILY PRAYER ENTRY (Shows Date & Day) -->
+<!-- MODAL: DAILY PRAYER ENTRY -->
 <div id="prayerModal" class="modal-overlay">
-  <div style="background:#fff; width:100%; max-width:440px; border-radius:16px; padding:18px; max-height:88vh; overflow-y:auto;">
+  <div style="background:#fff; width:100%; max-width:450px; border-radius:16px; padding:18px; max-height:88vh; overflow-y:auto;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #e2e8f0; padding-bottom:6px;">
       <h3 style="color:var(--primary); font-size:15px;">ഇന്നത്തെ നിസ്കാരം രേഖപ്പെടുത്തുക</h3>
       <span id="prayerEntryModalDateBadge" style="background:#ecfdf5; color:#047857; font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:10px; border:1px solid #a7f3d0;"></span>
+    </div>
+
+    <!-- INSTRUCTIONS CONTAINER IN PRAYER MODAL -->
+    <div class="instruction-card">
+      <div class="instruction-title">📢 നിസ്കാര എൻട്രി – നിർദ്ദേശങ്ങൾ</div>
+      <ul class="instruction-list">
+        <li><span>🕌</span> ഇശാ നിസ്കാരത്തിന് ശേഷം എൻട്രി ചെയ്യുക.</li>
+        <li><span>📅</span> ദിവസത്തിൽ ഒരിക്കൽ മാത്രം എൻട്രി ചെയ്യാം.</li>
+        <li><span>✅</span> വിവരങ്ങൾ സത്യസന്ധമായി രേഖപ്പെടുത്തുക.</li>
+        <li><span>👨‍👩‍👦</span> രക്ഷിതാക്കളുടെ സാന്നിധ്യത്തിൽ എൻട്രി ചെയ്യുക.</li>
+        <li><span>⏰</span> ഇന്നത്തെ നിസ്കാരം ഇന്ന് തന്നെ രേഖപ്പെടുത്തുക.</li>
+        <li><span>🚫</span> നാളെ എൻട്രി ചെയ്യാൻ അവസരം ഉണ്ടായിരിക്കുന്നതല്ല.</li>
+        <li><span>📞</span> കൂടുതൽ വിവരങ്ങൾക്ക് ക്ലാസ് ടീച്ചറെ ബന്ധപ്പെടുക.</li>
+      </ul>
     </div>
     
     <div class="form-group">
@@ -1088,13 +1146,15 @@
   let currentUser = null;
   let activeStudentForEntry = null;
 
-  // ROTATING NOTICE MESSAGES WITH COMPLETE DYNAMIC UNLOCKED CLASSES INFO
+  // ROTATING NOTICE MESSAGES INCORPORATING ALL REQUESTED GUIDELINES
   const baseNotices = [
-    "ഇശാഇന് ശേഷം നിസ്കാരങ്ങൾ എൻട്രി ചെയ്യുക",
-    "ഒരു ദിവസം ഒരു തവണ മാത്രമേ എൻട്രി ചെയ്യാൻ സാധിക്കുകയുള്ളൂ",
-    "സത്യസന്ധമായി വിവരങ്ങൾ രേഖപ്പെടുത്തുക",
-    "നിസ്കാര വിവരം രേഖപ്പെടുത്തുമ്പോൾ രക്ഷിതാക്കളുടെ സാന്നിധ്യം ഉറപ്പുവരുത്തുക",
-    "ഇന്നത്തെ നിസ്കാരം ഇന്ന് തന്നെ രേഖപ്പെടുത്തുക . കൂടുതൽ വിവരങ്ങൾക്ക് ക്ലാസ് ടീച്ചറെ ബന്ധപ്പെടുക"
+    "🕌 ഇശാ നിസ്കാരത്തിന് ശേഷം എൻട്രി ചെയ്യുക.",
+    "📅 ദിവസത്തിൽ ഒരിക്കൽ മാത്രം എൻട്രി ചെയ്യാം.",
+    "✅ വിവരങ്ങൾ സത്യസന്ധമായി രേഖപ്പെടുത്തുക.",
+    "👨‍👩‍👦 രക്ഷിതാക്കളുടെ സാന്നിധ്യത്തിൽ എൻട്രി ചെയ്യുക.",
+    "⏰ ഇന്നത്തെ നിസ്കാരം ഇന്ന് തന്നെ രേഖപ്പെടുത്തുക.",
+    "🚫 നാളെ എൻട്രി ചെയ്യാൻ അവസരം ഉണ്ടായിരിക്കുന്നതല്ല.",
+    "📞 കൂടുതൽ വിവരങ്ങൾക്ക് ക്ലാസ് ടീച്ചറെ ബന്ധപ്പെടുക."
   ];
   let currentNoticeIndex = 0;
   setInterval(() => {
@@ -1102,7 +1162,6 @@
     if (!el) return;
     el.style.opacity = '0';
     setTimeout(() => {
-      // Collect all classes explicitly configured and strictly unlocked (false)
       const openClasses = Object.keys(classLockSettings)
         .filter(c => classLockSettings[c] === false)
         .map(Number)
@@ -1118,7 +1177,7 @@
       el.innerText = list[currentNoticeIndex];
       el.style.opacity = '1';
     }, 300);
-  }, 4000);
+  }, 3800);
 
   // Restore Persistent Session
   (function restorePersistentSession() {
@@ -1212,6 +1271,7 @@
     prevLocks = newLocks;
     classLockSettings = newLocks;
     if (currentUser?.role === 'teacher') updateClassLockUI();
+    if (currentUser?.role === 'admin') updateAdminClassLockUI();
   });
 
   function onClassUnlockedTrigger(cls) {
@@ -1252,8 +1312,9 @@
     }
   });
 
+  // TEACHER LOCK UI
   function updateClassLockUI() {
-    const cls = document.getElementById('tLockClassSelect').value;
+    const cls = document.getElementById('tLockClassSelect')?.value;
     const el = document.getElementById('classEntryStatusDesc');
     const btn = document.getElementById('toggleClassEntryBtn');
     if (!el || !btn || !cls) return;
@@ -1278,6 +1339,60 @@
       await db.collection("settings").doc("classLocks").set({ [cls]: !currentState }, { merge: true });
     } catch (e) {
       alert("Error updating class lock: " + e.message);
+    }
+  }
+
+  // ADMIN LOCK UI & HANDLER
+  function updateAdminClassLockUI() {
+    const sel = document.getElementById('admLockClassSelect');
+    if (!sel) return;
+    const cls = sel.value;
+    const el = document.getElementById('admClassEntryStatusDesc');
+    const btn = document.getElementById('toggleAdmClassEntryBtn');
+    if (!el || !btn) return;
+
+    if (cls === 'ALL') {
+      const allLocked = Array.from({length: 10}, (_, i) => String(i + 1)).every(c => classLockSettings[c] === true);
+      if (allLocked) {
+        el.innerHTML = `<span style="color:#dc2626; font-weight:bold;">എല്ലാ ക്ലാസുകളും ലോക്ക് ചെയ്തിരിക്കുന്നു (Closed)</span>`;
+        btn.innerText = `എല്ലാ ക്ലാസുകളും തുറക്കുക (Unlock All)`;
+        btn.style.background = "#047857";
+      } else {
+        el.innerHTML = `<span style="color:#047857; font-weight:bold;">ചിലത് അല്ലെങ്കിൽ എല്ലാം ഓപ്പൺ ആണ്</span>`;
+        btn.innerText = `എല്ലാ ക്ലാസുകളും പൂട്ടുക (Lock All)`;
+        btn.style.background = "#dc2626";
+      }
+    } else {
+      const isLocked = classLockSettings[cls] === true;
+      if (!isLocked) {
+        el.innerHTML = `<span style="color:#047857; font-weight:bold;">തുറന്നിരിക്കുന്നു (ക്ലാസ് ${cls} ഓപ്പൺ ആണ്)</span>`;
+        btn.innerText = `ക്ലാസ് ${cls} പൂട്ടുക (Lock)`;
+        btn.style.background = "#dc2626";
+      } else {
+        el.innerHTML = `<span style="color:#dc2626; font-weight:bold;">പൂട്ടിയിരിക്കുന്നു (ക്ലാസ് ${cls} ക്ലോസ്ഡ് ആണ്)</span>`;
+        btn.innerText = `ക്ലാസ് ${cls} തുറക്കുക (Unlock)`;
+        btn.style.background = "#047857";
+      }
+    }
+  }
+
+  async function toggleAdminClassEntryStatus() {
+    const cls = document.getElementById('admLockClassSelect').value;
+    try {
+      if (cls === 'ALL') {
+        const allLocked = Array.from({length: 10}, (_, i) => String(i + 1)).every(c => classLockSettings[c] === true);
+        const newState = !allLocked;
+        const updateObj = {};
+        for (let i = 1; i <= 10; i++) {
+          updateObj[String(i)] = newState;
+        }
+        await db.collection("settings").doc("classLocks").set(updateObj, { merge: true });
+      } else {
+        const currentState = classLockSettings[cls] === true;
+        await db.collection("settings").doc("classLocks").set({ [cls]: !currentState }, { merge: true });
+      }
+    } catch (e) {
+      alert("Error updating lock: " + e.message);
     }
   }
 
@@ -1399,7 +1514,7 @@
     document.getElementById('teachersContactModal').style.display = 'flex';
   }
 
-  // BIOMETRIC (TEACHER & ADMIN)
+  // BIOMETRIC AUTH
   async function handleBiometricLogin() {
     if (!window.PublicKeyCredential) {
       return alert("Fingerprint/Biometric is not supported on this browser!");
@@ -1504,6 +1619,7 @@
     renderAdminTeachers();
     renderAdminStudentList();
     renderDailyAdminView();
+    updateAdminClassLockUI();
     closeModal('loginModal');
   }
 
@@ -1545,7 +1661,7 @@
     updateTopNavBtn();
   }
 
-  // --- SEPARATE BOYS & GIRLS LEADERBOARD (ENGLISH & COMPACT) ---
+  // LEADERBOARD
   function switchLeaderboard(type, btn) {
     activeLeaderboardTab = type;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1694,7 +1810,6 @@
     return `<span class="badge-status st-nil">ഇല്ല</span>`;
   }
 
-  // --- WHATSAPP MESSAGE WITH UPDATED INSTITUTION NAME & PORTAL TAG ---
   function getWhatsAppActionHTML(student, prayerRecord, targetDate) {
     let phone = (student.phone || '').trim().replace(/[^0-9]/g, '');
     if (!phone) return `<span style="font-size:10px; color:var(--text-muted);">No Ph</span>`;
@@ -2004,7 +2119,6 @@
     });
   }
 
-  // --- INDIVIDUAL STUDENT REPORT & PDF ---
   function viewStudentIndividualReport(studentId) {
     const s = dbStudents.find(x => x.id === studentId);
     if (!s) return;
@@ -2271,7 +2385,7 @@
     }
   }
 
-  // --- SMART AUTOCOMPLETE SEARCH ---
+  // SMART AUTOCOMPLETE SEARCH
   function handleSmartSearch(val, containerId, selectCallback) {
     const query = val.trim().toLowerCase();
     const box = document.getElementById(containerId);
@@ -2316,7 +2430,6 @@
     document.getElementById('pNameSuggestions').style.display = 'none';
   }
 
-  // Open prayer modal with today's date & weekday
   function openPrayerEntryModal() {
     document.getElementById('pAdmInput').value = '';
     document.getElementById('pNameInput').value = '';
@@ -2478,7 +2591,7 @@
     `;
   }
 
-  // --- REPORT PROCESSING (MONTHLY & OVERALL CUMULATIVE) ---
+  // --- REPORT PROCESSING ---
   function toggleReportTypeInputs(source) {
     const repType = source === 'teacher' ? document.getElementById('tRepType').value : document.getElementById('admRepType').value;
     const group = source === 'teacher' ? document.getElementById('tRepMonthGroup') : document.getElementById('admRepMonthGroup');
