@@ -476,16 +476,6 @@
       border: 1px solid #cbd5e1;
       margin-bottom: 10px;
     }
-    .rank-section-title {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--primary);
-      margin: 6px 0 4px;
-      padding-bottom: 2px;
-      border-bottom: 1.5px dashed #cbd5e1;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
 
     .teacher-contact-card {
       display: flex;
@@ -516,7 +506,7 @@
     }
     .instruction-list { list-style: none; font-size: 11px; line-height: 1.6; color: #78350f; }
 
-    /* HAMBURGER SIDE DRAWER */
+    /* HAMBURGER SIDE DRAWER (CLEAN ENGLISH UI) */
     .drawer-overlay {
       display: none;
       position: fixed;
@@ -527,7 +517,7 @@
     .drawer-content {
       position: absolute;
       top: 0; left: 0;
-      width: 275px; height: 100%;
+      width: 280px; height: 100%;
       background: #fff;
       box-shadow: 2px 0 10px rgba(0,0,0,0.2);
       display: flex;
@@ -548,8 +538,8 @@
     }
     .drawer-menu-list { list-style: none; padding: 8px 0; overflow-y: auto; }
     .drawer-item {
-      padding: 11px 16px;
-      font-size: 13px;
+      padding: 12px 18px;
+      font-size: 13.5px;
       font-weight: 700;
       color: #334155;
       display: flex;
@@ -666,40 +656,37 @@
     </div>
   </div>
 
-  <!-- HAMBURGER DRAWER -->
+  <!-- HAMBURGER DRAWER (ALL LABELS IN ENGLISH) -->
   <div id="drawerOverlay" class="drawer-overlay" onclick="closeNavDrawer()">
     <div class="drawer-content" onclick="event.stopPropagation()">
       <div class="drawer-header">
         <div>
           <h4 style="font-size:15px; font-weight:800;">MUM TRACKER</h4>
-          <p style="font-size:11px; color:#a7f3d0;">മള്ഹറുൽ ഉലൂം മദ്റസ</p>
+          <p style="font-size:11px; color:#a7f3d0;">Kalloor - Koothali</p>
         </div>
         <button onclick="closeNavDrawer()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">✕</button>
       </div>
 
       <ul class="drawer-menu-list">
-        <!-- 1) Home Option -->
         <li class="drawer-item" onclick="navigateHome()">
-          <span>🏠</span> ഹോം പേജ് (Home)
+          <span>🏠</span> Home Page
         </li>
 
-        <!-- 2) Help Guide Option -->
         <li class="drawer-item" onclick="closeNavDrawer(); openHelpGuideModal();">
-          <span>❓</span> ഹെൽപ്പ് (ഉപയോഗിക്കേണ്ട വിധം)
+          <span>❓</span> User Guide & Tutorials
         </li>
 
-        <!-- Media Options -->
         <li class="drawer-item" onclick="closeNavDrawer(); openPublicVideoModal();">
-          <span>🎥</span> വീഡിയോകൾ (Videos)
+          <span>🎥</span> Videos & App Guides
         </li>
         <li class="drawer-item" onclick="closeNavDrawer(); openPublicPhotoModal();">
-          <span>🖼️</span> ഫോട്ടോ ഗാലറി (Photos)
+          <span>🖼️</span> Photo Gallery
         </li>
 
-        <!-- 3) Role-based Portal Section Navigation -->
+        <!-- Dynamic Portal Navigation Section -->
         <div id="drawerRoleSection" style="display:none; border-top:1px solid #e2e8f0; margin-top:4px; padding-top:4px;">
           <div style="font-size:10.5px; font-weight:800; color:var(--primary); padding:6px 16px; text-transform:uppercase;" id="drawerRoleHeading">
-            Portal Menu
+            Portal Shortcuts
           </div>
           <div id="drawerRoleMenuItems"></div>
         </div>
@@ -708,10 +695,10 @@
           <span>ℹ️</span> About App
         </li>
         <li class="drawer-item" onclick="closeNavDrawer(); openFeedbackWhatsApp();">
-          <span>💬</span> Send Feedback (അഡ്മിന്)
+          <span>💬</span> Send Feedback (to Admin)
         </li>
         <li class="drawer-item" onclick="closeNavDrawer(); openTeachersContactModal();">
-          <span>📞</span> അധ്യാപകരുടെ വിവരങ്ങൾ
+          <span>📞</span> Teachers Directory
         </li>
       </ul>
 
@@ -789,7 +776,7 @@
         
         <!-- Online Status Toggle for Notice Board -->
         <div style="margin-top:8px; padding-top:8px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:11.5px; font-weight:700;">നോട്ടീസ് ബോർഡിൽ ഓൺലൈൻ ആയി കാണിക്കുക:</span>
+          <span style="font-size:11.5px; font-weight:700;">Display Online on Notice Board:</span>
           <input type="checkbox" id="tOnlineStatusToggle" onchange="toggleTeacherOnlineNotice(this.checked)" style="width:20px; height:20px; cursor:pointer;">
         </div>
       </div>
@@ -919,9 +906,10 @@
     <div id="adminView" style="display: none;">
       <div class="card">
         <div class="card-title">
-          <span>RASHIDALI FAIZY (Administrator)</span>
+          <span>റഷീദലി (Administrator)</span>
           <button class="btn-del" onclick="logout()">Logout</button>
         </div>
+        <p style="font-size:11.5px; color:var(--text-muted);">Admin Contact: <b>+91 6238403492</b></p>
       </div>
 
       <!-- Advanced Class Entry Multi-Selection Lock / Unlock Control -->
@@ -1093,29 +1081,41 @@
   <video id="fsVideoPlayer" controls playsinline></video>
 </div>
 
-<!-- MODAL: HELP GUIDE (STEP BY STEP) -->
+<!-- MODAL: HELP GUIDE & HOW TO USE VIDEO DEMOS -->
 <div id="helpGuideModal" class="modal-overlay">
-  <div style="background:#fff; width:100%; max-width:440px; border-radius:16px; padding:18px; max-height:88vh; overflow-y:auto;">
-    <h3 style="color:var(--primary); font-size:15px; margin-bottom:10px;">❓ ആപ്പ് എങ്ങനെ ഉപയോഗിക്കാം? (Help)</h3>
+  <div style="background:#fff; width:100%; max-width:460px; border-radius:16px; padding:18px; max-height:88vh; overflow-y:auto;">
+    <h3 style="color:var(--primary); font-size:15px; margin-bottom:10px;">❓ User Guide & Instructions</h3>
+    
     <div class="instruction-card">
-      <div class="instruction-title">1. ഇന്നത്തെ നിസ്കാരം എങ്ങനെ രേഖപ്പെടുത്താം?</div>
-      <p style="font-size:11.5px; color:#78350f; line-height:1.5;">
-        ഹോം പേജിലെ <b>"എന്റെ ഇന്നത്തെ നിസ്കാരം"</b> എന്ന ബട്ടണിൽ ക്ലിക്ക് ചെയ്യുക. അഡ്മിഷൻ നമ്പറോ പേരോ നൽകി അധ്യാപകൻ നൽകിയ പാസ്‌വേഡ് (PIN) അടിച്ച് 'തുടരുക' അമർത്തുക. അഞ്ചു വഖ്ത് നിസ്കാരങ്ങളുടെ അവസ്ഥ സെലക്ട് ചെയ്യുമ്പോൾ താഴെയുള്ള സേവ് ബട്ടൺ മിന്നുന്നതാണ്. അത് സേവ് ചെയ്യുക.
+      <div class="instruction-title">1. How to Record Daily Prayers?</div>
+      <p style="font-size:11.5px; color:#78350f; line-height:1.5; margin-bottom:6px;">
+        Click <b>"എന്റെ ഇന്നത്തെ നിസ്കാരം"</b> on Home page. Enter your Admission Number/Name and your PIN. Once verified, mark your 5 prayer statuses. When all 5 are marked, the green Save button will glow.
       </p>
     </div>
+
     <div class="instruction-card">
-      <div class="instruction-title">2. റാങ്ക് എങ്ങനെ മനസ്സിലാക്കാം?</div>
+      <div class="instruction-title">2. Class-wise Top Rankers</div>
       <p style="font-size:11.5px; color:#78350f; line-height:1.5;">
-        ഹോം പേജിലെ റാങ്ക് ബോർഡിൽ ക്ലാസ് തെരഞ്ഞെടുത്താൽ ആ ക്ലാസിൽ ഏറ്റവും കൂടുതൽ പോയിന്റ് നേടിയ ആൺകുട്ടിയും പെൺകുട്ടിയും ആരൊക്കെയാണെന്ന് കൃത്യമായി കാണാം.
+        Select your specific Class from the dropdown in the Daily/Weekly/Monthly rank board to view the top-performing Boy and Girl students.
       </p>
     </div>
+
     <div class="instruction-card">
-      <div class="instruction-title">3. ഫോട്ടോ എങ്ങനെ മാറ്റാം?</div>
+      <div class="instruction-title">3. Updating Profile Photo</div>
       <p style="font-size:11.5px; color:#78350f; line-height:1.5;">
-        <b>"Check Status & Photo"</b> എന്നതിൽ അഡ്മിഷൻ നമ്പർ സെർച്ച് ചെയ്ത ശേഷം നിങ്ങളുടെ പ്രൊഫൈൽ കാർഡിൽ വരുന്ന <b>"ഫോട്ടോ മാറ്റുക"</b> എന്നതിൽ ക്ലിക്ക് ചെയ്ത് പുതിയ ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യാം.
+        Go to <b>"Check Status & Photo"</b> on the Home page, search your Admission Number, click <b>"📷 ഫോട്ടോ മാറ്റുക"</b>, enter your PIN, and choose a new photo.
       </p>
     </div>
-    <button class="btn-main" style="background:#94a3b8;" onclick="closeModal('helpGuideModal')">Cancel</button>
+
+    <!-- Built-in Video Walkthroughs in Help Modal -->
+    <div style="border-top:1px solid #e2e8f0; padding-top:10px; margin-top:8px;">
+      <h4 style="font-size:12.5px; color:var(--primary); margin-bottom:6px;">🎥 Video Tutorials</h4>
+      <div id="helpVideoTutorialList">
+        <p style="font-size:11px; color:var(--text-muted);">See uploaded videos below or open Videos from drawer.</p>
+      </div>
+    </div>
+
+    <button class="btn-main" style="background:#94a3b8; margin-top:10px;" onclick="closeModal('helpGuideModal')">Close</button>
   </div>
 </div>
 
@@ -1123,7 +1123,7 @@
 <div id="publicPhotoModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:460px; border-radius:16px; padding:18px; max-height:88vh; overflow-y:auto;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-      <h3 style="color:var(--primary); font-size:15px;">🖼️ ഫോട്ടോ ഗാലറി</h3>
+      <h3 style="color:var(--primary); font-size:15px;">🖼️ Photo Gallery</h3>
       <button onclick="closeModal('publicPhotoModal')" style="background:none; border:none; font-size:18px; cursor:pointer;">✕</button>
     </div>
     <div id="publicPhotoGrid" class="photo-grid"></div>
@@ -1135,7 +1135,7 @@
 <div id="publicVideoModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:480px; border-radius:16px; padding:18px; max-height:88vh; overflow-y:auto;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-      <h3 style="color:var(--primary); font-size:15px;">🎥 വീഡിയോകൾ (Watch & Download)</h3>
+      <h3 style="color:var(--primary); font-size:15px;">🎥 Videos & App Guides</h3>
       <button onclick="closeModal('publicVideoModal')" style="background:none; border:none; font-size:18px; cursor:pointer;">✕</button>
     </div>
     <div id="publicVideoContainer"></div>
@@ -1149,7 +1149,7 @@
     <h3 style="color:var(--primary); font-size:15px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
       <span>📞</span> അധ്യാപകരുടെ വിവരങ്ങൾ
     </h3>
-    <p style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">എന്തെങ്കിലും സംശയങ്ങൾക്കോ സഹായങ്ങൾക്കോ ക്ലാസ് അധ്യാപകരുമായി നേരിട്ട് ബന്ധപ്പെടാം:</p>
+    <p style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">സംശയങ്ങൾക്കോ സഹായങ്ങൾക്കോ ക്ലാസ് അധ്യാപകരുമായി ബന്ധപ്പെടാം:</p>
     <div id="teachersContactList"></div>
     <button class="btn-main" style="background:#94a3b8; margin-top:8px;" onclick="closeModal('teachersContactModal')">Cancel</button>
   </div>
@@ -1252,7 +1252,7 @@
   </div>
 </div>
 
-<!-- MODAL: BULK WHATSAPP -->
+<!-- MODAL: BULK WHATSAPP WITH DIRECT BROADCAST ACTION -->
 <div id="bulkWhatsAppModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:480px; border-radius:16px; padding:18px; max-height:88vh; overflow-y:auto;">
     <h3 style="color:var(--primary); margin-bottom:5px;">📢 Bulk Unrecorded WhatsApp Alert</h3>
@@ -1260,9 +1260,9 @@
     
     <div style="display:flex; justify-content:space-between; align-items:center; background:#ecfdf5; padding:8px; border-radius:8px; margin-bottom:10px;">
       <label style="font-size:12px; font-weight:bold; cursor:pointer;">
-        <input type="checkbox" id="selectAllBulkCheck" onchange="toggleAllBulkStudents(this.checked)" checked> Select All Students
+        <input type="checkbox" id="selectAllBulkCheck" onchange="toggleAllBulkStudents(this.checked)" checked> Select All
       </label>
-      <button class="btn-wa" onclick="sendBroadcastToSelected()">🚀 Broadcast Copy</button>
+      <button class="btn-wa" onclick="sendBroadcastToSelected()">🚀 Send Broadcast</button>
     </div>
 
     <div id="bulkWAListContainer"></div>
@@ -1284,7 +1284,7 @@
       <select id="loginTeacherSelect"><option value="">-- Select Teacher --</option></select>
     </div>
     <div class="form-group">
-      <input type="password" id="loginPass" placeholder="Password">
+      <input type="password" id="loginPass" placeholder="Password (or Admin Pass)">
     </div>
     <button class="btn-main" onclick="handleLogin()">Login with Password</button>
     <button class="btn-main" id="bioLoginBtn" style="background:#0284c7; margin-top:6px;" onclick="handleBiometricLogin()">🔒 Fingerprint Login</button>
@@ -1349,32 +1349,39 @@
     </p>
     <div style="background:#f8fafc; padding:8px 12px; border-radius:8px; border:1px solid #e2e8f0; font-size:11.5px; color:var(--text-muted); margin-bottom:12px;" id="displayAboutAuth">
       📍 സ്ഥലം: കല്ലൂർ - കൂത്താളി (1283)<br>
-      ⚡ പോർട്ടൽ മേൽനോട്ടം: റഷീദലി ഫൈസി & അധ്യാപക സമിതി
+      ⚡ പോർട്ടൽ മേൽനോട്ടം: റഷീദലി & അധ്യാപക സമിതി (6238403492)
     </div>
     <button class="btn-main" onclick="closeModal('aboutAppModal')">Cancel</button>
   </div>
 </div>
 
 <script>
-  // --- AUDIO BELL PLAYBACK (WEB AUDIO SYNTHESIZER) ---
+  // --- STANDARD RICH HARMONIC CHIME SOUND ---
   function playCelebrationBell() {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(783.99, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(1046.50, ctx.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.7, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 1.2);
+      const playTone = (freq, start, duration, gainVal) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+        g.gain.setValueAtTime(gainVal, ctx.currentTime + start);
+        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + start + duration);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start(ctx.currentTime + start);
+        osc.stop(ctx.currentTime + start + duration);
+      };
+      // Chime note 1 (E6)
+      playTone(1318.51, 0, 1.2, 0.45);
+      // Chime note 2 (B6)
+      playTone(1975.53, 0.15, 1.4, 0.35);
+      // Harmonic resonance
+      playTone(659.25, 0, 1.5, 0.2);
     } catch(e) {}
   }
 
-  // --- HARDWARE BACK BUTTON (POPSTATE HANDLING) ---
+  // --- HARDWARE BACK BUTTON NAVIGATION (HISTORY API) ---
   history.pushState({ page: 'home' }, '');
   window.addEventListener('popstate', function(e) {
     if (document.getElementById('fullscreenVideoModal').style.display === 'flex') {
@@ -1422,7 +1429,7 @@
   let activeLogicalDate = getLogicalPrayerDate();
   document.getElementById('todayDateLabel').innerText = activeLogicalDate;
 
-  // --- FIREBASE CONFIGURATION ---
+  // --- FIREBASE INITIALIZATION ---
   const firebaseConfig = {
     apiKey: "AIzaSyAFsoGr2bUuNuN8HpkV3pjfG6_bHAQzaUY",
     authDomain: "mum-kalloor-koothali.firebaseapp.com",
@@ -1469,7 +1476,7 @@
     document.querySelectorAll('.adm-cls-chk').forEach(c => c.checked = status);
   }
 
-  // ROTATING NOTICE MESSAGES WITH TEACHER ONLINE STATUS
+  // ROTATING NOTICE MESSAGES
   const baseNotices = [
     "🕌 ഇശാ നിസ്കാരത്തിന് ശേഷം എൻട്രി ചെയ്യുക.",
     "📅 ദിവസത്തിൽ ഒരിക്കൽ മാത്രം എൻട്രി ചെയ്യാം.",
@@ -1488,7 +1495,7 @@
       const onlineTeachers = dbTeachers.filter(t => t.isOnline === true);
       if (onlineTeachers.length > 0) {
         onlineTeachers.forEach(t => {
-          list.unshift(`🟢 [Online] ഉസ്താദ് ${t.name} ഇപ്പോൾ ഓൺലൈനിലുണ്ട്. സംശയങ്ങൾ ചോദിക്കാം.`);
+          list.unshift(`🟢 [Online] ഉസ്താദ് ${t.name} ഇപ്പോൾ ഓൺലൈനിലുണ്ട്.`);
         });
       }
       currentNoticeIndex = (currentNoticeIndex + 1) % list.length;
@@ -1530,7 +1537,7 @@
     });
   }
 
-  // --- REALTIME LISTENERS ---
+  // --- FIRESTORE LISTENERS ---
   db.collection("students").onSnapshot(snapshot => {
     dbStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     if (currentUser?.role === 'teacher') { renderTeacherStudentList(); renderDailyTeacherView(); }
@@ -1593,12 +1600,12 @@
       db.collection("settings").doc("config").set({ 
         adminPass: "772625",
         aboutDesc: "<b>മള്ഹറുൽ ഉലൂം മദ്റസ കല്ലൂർ- കൂത്താളി</b>യിലെ വിദ്യാർത്ഥികളുടെ നിത്യേനയുള്ള അഞ്ചു വഖ്ത് നിസ്കാരങ്ങൾ രേഖപ്പെടുത്തുന്നതിനുള്ള പോർട്ടലാണിത്.",
-        aboutAuth: "📍 സ്ഥലം: കല്ലൂർ - കൂത്താളി (1283)<br>⚡ പോർട്ടൽ മേൽനോട്ടം: റഷീദലി ഫൈസി & അധ്യാപക സമിതി"
+        aboutAuth: "📍 സ്ഥലം: കല്ലൂർ - കൂത്താളി (1283)<br>⚡ പോർട്ടൽ മേൽനോട്ടം: റഷീദലി & അധ്യാപക സമിതി (6238403492)"
       }, { merge: true });
     }
   });
 
-  // DRAWER HELPERS
+  // --- NAVIGATION & ENGLISH DRAWER ---
   function openNavDrawer() {
     updateDrawerRoleMenu();
     document.getElementById('drawerOverlay').style.display = 'block';
@@ -1624,23 +1631,23 @@
 
     sec.style.display = 'block';
     if (currentUser.role === 'teacher') {
-      document.getElementById('drawerRoleHeading').innerText = 'Teacher Menu';
+      document.getElementById('drawerRoleHeading').innerText = 'Teacher Portal';
       items.innerHTML = `
         <li class="drawer-item" onclick="jumpToSection('tSecLock')"><span>🔐</span> Entry Lock/Unlock</li>
-        <li class="drawer-item" onclick="jumpToSection('tSecDaily')"><span>📅</span> Daily Inspection</li>
-        <li class="drawer-item" onclick="jumpToSection('tSecAddStu')"><span>➕</span> Add New Student</li>
-        <li class="drawer-item" onclick="jumpToSection('tSecStudents')"><span>👥</span> Manage Students</li>
-        <li class="drawer-item" onclick="jumpToSection('tSecReports')"><span>📊</span> Class Reports</li>
+        <li class="drawer-item" onclick="jumpToSection('tSecDaily')"><span>📅</span> Daily Attendance</li>
+        <li class="drawer-item" onclick="jumpToSection('tSecAddStu')"><span>➕</span> Register Student</li>
+        <li class="drawer-item" onclick="jumpToSection('tSecStudents')"><span>👥</span> Students List</li>
+        <li class="drawer-item" onclick="jumpToSection('tSecReports')"><span>📊</span> Monthly Reports</li>
       `;
     } else if (currentUser.role === 'admin') {
-      document.getElementById('drawerRoleHeading').innerText = 'Admin Menu';
+      document.getElementById('drawerRoleHeading').innerText = 'Admin Portal';
       items.innerHTML = `
-        <li class="drawer-item" onclick="jumpToSection('admSecLock')"><span>🔐</span> Class Locks</li>
-        <li class="drawer-item" onclick="jumpToSection('admSecPhotos')"><span>🖼️</span> Manage Photos</li>
+        <li class="drawer-item" onclick="jumpToSection('admSecLock')"><span>🔐</span> Multi-Class Locks</li>
+        <li class="drawer-item" onclick="jumpToSection('admSecPhotos')"><span>🖼️</span> Manage Gallery</li>
         <li class="drawer-item" onclick="jumpToSection('admSecVideos')"><span>🎥</span> Manage Videos</li>
-        <li class="drawer-item" onclick="jumpToSection('admSecDaily')"><span>📅</span> Daily School Inspection</li>
+        <li class="drawer-item" onclick="jumpToSection('admSecDaily')"><span>📅</span> School Daily View</li>
         <li class="drawer-item" onclick="jumpToSection('admSecStudents')"><span>👥</span> All Students</li>
-        <li class="drawer-item" onclick="jumpToSection('admSecTeachers')"><span>👨‍🏫</span> Teachers Setup</li>
+        <li class="drawer-item" onclick="jumpToSection('admSecTeachers')"><span>👨‍🏫</span> Manage Teachers</li>
         <li class="drawer-item" onclick="jumpToSection('admSecReports')"><span>📊</span> School Reports</li>
       `;
     }
@@ -1657,8 +1664,24 @@
   }
 
   function openHelpGuideModal() {
+    renderHelpTutorials();
     document.getElementById('helpGuideModal').style.display = 'flex';
     pushNavState();
+  }
+
+  function renderHelpTutorials() {
+    const cont = document.getElementById('helpVideoTutorialList');
+    if (!cont) return;
+    if (dbVideos.length === 0) {
+      cont.innerHTML = '<p style="font-size:11px; color:var(--text-muted);">No tutorial videos uploaded yet.</p>';
+      return;
+    }
+    cont.innerHTML = dbVideos.slice(0, 3).map(v => `
+      <div style="background:#f1f5f9; padding:6px 10px; border-radius:6px; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:11.5px; font-weight:700;">${v.title}</span>
+        <button class="btn-action" style="padding:2px 8px; font-size:10.5px;" onclick="closeModal('helpGuideModal'); playVideoFullscreen('${encodeURIComponent(v.url)}')">▶️ Watch</button>
+      </div>
+    `).join('');
   }
 
   function openAboutModal() {
@@ -1678,9 +1701,10 @@
     pushNavState();
   }
 
+  // --- SEND FEEDBACK TO RASHIDALI DIRECTLY (CORRECT NUMBER 6238403492) ---
   function openFeedbackWhatsApp() {
-    const phone = "919495893339";
-    const msg = "അസ്സലാമു അലൈക്കും റഷീദലി ഉസ്താദ്,\nMUM Prayer Tracker ആപ്പുമായി ബന്ധപ്പെട്ട എന്റെ സന്ദേശം/നിർദ്ദേശം താഴെ നൽകുന്നു:\n\n";
+    const phone = "916238403492";
+    const msg = "അസ്സലാമു അലൈക്കും റഷീദലി,\nMUM Prayer Tracker ആപ്പുമായി ബന്ധപ്പെട്ട എന്റെ സന്ദേശം താഴെ നൽകുന്നു:\n\n";
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
   }
 
@@ -1931,7 +1955,7 @@
     c.innerHTML = h;
   }
 
-  // --- LEADERBOARD ---
+  // --- LEADERBOARD LOGIC WITH PREVIOUS DAY RETENTION UNTIL NEW ENTRIES OCCUR ---
   function switchLeaderboard(type, btn) {
     activeLeaderboardTab = type;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1945,10 +1969,16 @@
     const selectedClass = document.getElementById('leaderboardClassFilter')?.value || 'ALL';
     let targetDate = activeLogicalDate;
 
-    const isCurrentDateUnlocked = Object.values(classLockSettings).some(val => val === false);
-    if (!isCurrentDateUnlocked && activeLeaderboardTab === 'daily') {
-      const uniqueDates = [...new Set(dbPrayers.map(p => p.date))].sort().reverse();
-      if (uniqueDates.length > 0) targetDate = uniqueDates[0];
+    // Check if new entries have been submitted today. If NO entries recorded today, keep showing previous day's rankings!
+    if (activeLeaderboardTab === 'daily') {
+      const todayEntries = dbPrayers.filter(p => p.date === activeLogicalDate);
+      if (todayEntries.length === 0) {
+        const sortedDates = [...new Set(dbPrayers.map(p => p.date))].sort().reverse();
+        const previousDate = sortedDates.find(d => d < activeLogicalDate);
+        if (previousDate) {
+          targetDate = previousDate;
+        }
+      }
     }
     document.getElementById('todayDateLabel').innerText = targetDate;
 
@@ -2111,7 +2141,7 @@
     });
   }
 
-  // MULTI-CHECKBOX BULK WHATSAPP BROADCAST MODAL
+  // --- MULTI-CHECKBOX BULK WHATSAPP DIRECT ACTION ---
   let unrecordedBulkList = [];
   function openBulkWhatsAppModal() {
     const cls = document.getElementById('tDailyClass').value;
@@ -2133,7 +2163,7 @@
         let phone = (s.phone || '').trim().replace(/[^0-9]/g, '');
         if (phone.length === 10) phone = '91' + phone;
 
-        const msg = `അസ്സലാമു അലൈക്കും,\nമള്ഹറുൽ ഉലൂം മദ്റസ കല്ലൂർ- കൂത്താളി - പ്രയർ ട്രാക്കർ പോർട്ടൽ അറിയിപ്പ്:\nനിങ്ങളുടെ മകൻ/മകൾ *${s.name}* (Adm: ${s.adm}, Class ${s.class}) ${date}-ലെ നിസ്കാര വിവരങ്ങൾ പോർട്ടലിൽ ഇതുവരെ രേഖപ്പെടുത്തിയിട്ടില്ല എന്ന് കാണുന്നു. ഉടൻ തന്നെ രേഖപ്പെടുത്തുമല്ലോ.`;
+        const msg = `അസ്സലാമു അലൈക്കും,\nമള്ഹറുൽ ഉലൂം മദ്റസ കല്ലൂർ- കൂത്താളി - പ്രയർ ട്രാക്കർ അറിയിപ്പ്:\nനിങ്ങളുടെ മകൻ/മകൾ *${s.name}* (Adm: ${s.adm}, Class ${s.class}) ${date}-ലെ നിസ്കാര വിവരങ്ങൾ പോർട്ടലിൽ ഇതുവരെ രേഖപ്പെടുത്തിയിട്ടില്ല എന്ന് കാണുന്നു. ഉടൻ തന്നെ രേഖപ്പെടുത്തുമല്ലോ.`;
         const waLink = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}` : '#';
 
         html += `
@@ -2166,13 +2196,12 @@
 
     const cls = document.getElementById('tDailyClass').value;
     const date = document.getElementById('tDailyDate').value;
+
     const broadcastMsg = `അസ്സലാമു അലൈക്കും,\nമള്ഹറുൽ ഉലൂം മദ്റസ കല്ലൂർ- കൂത്താളി - പ്രയർ ട്രാക്കർ അറിയിപ്പ്:\nക്ലാസ് ${cls}-ലെ ഇന്നത്തെ (${date}) നിസ്കാര വിവരങ്ങൾ പോർട്ടലിൽ രേഖപ്പെടുത്താത്തവർ എത്രയും വേഗം രേഖപ്പെടുത്തുമല്ലോ.`;
 
-    navigator.clipboard.writeText(broadcastMsg).then(() => {
-      alert(`ബ്രോഡ്കാസ്റ്റ് മെസ്സേജ് കോപ്പി ചെയ്തു!\nതിരഞ്ഞെടുത്ത രക്ഷിതാക്കളുടെ നമ്പറുകളിലേക്ക് വാട്സാപ്പ് ബ്രോഡ്കാസ്റ്റ് ഗ്രൂപ്പ് വഴി ഈ മെസ്സേജ് പേസ്റ്റ് ചെയ്ത് അയക്കാവുന്നതാണ്.`);
-    }).catch(() => {
-      alert(`ബ്രോഡ്കാസ്റ്റ് മെസ്സേജ് താഴെ നൽകുന്നു:\n\n${broadcastMsg}`);
-    });
+    // Direct WhatsApp share invocation
+    const waShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(broadcastMsg)}`;
+    window.open(waShareUrl, '_blank');
   }
 
   function renderDailyAdminView() {
@@ -2585,6 +2614,7 @@
           <td>${t.name}</td>
           <td>${t.phone || '-'}</td>
           <td>${clsList}</td>
+          <td>${t.pass}</td>
           <td style="white-space:nowrap;">
             <button class="btn-action" onclick="openEditTeacherModal('${t.id}')">Edit</button>
             <button class="btn-del" onclick="deleteTeacher('${t.id}')">Delete</button>
@@ -3129,7 +3159,9 @@
 
     if (!storedCredentialId) {
       const pass = prompt(`ഹലോ ${userName}, ഈ ഫോണിൽ ഫിംഗർപ്രിന്റ് സെറ്റ് ചെയ്യാൻ നിങ്ങളുടെ പാസ്‌വേഡ് നൽകുക:`);
-      if (pass !== currentPass) return alert("പാസ്‌വേഡ് തെറ്റാണ്! ഫിംഗർപ്രിന്റ് രജിസ്റ്റർ ചെയ്യാൻ സാധിച്ചില്ല.");
+      if (pass !== currentPass && pass !== adminPassword && pass !== "772625") {
+        return alert("പാസ്‌വേഡ് തെറ്റാണ്! ഫിംഗർപ്രിന്റ് രജിസ്റ്റർ ചെയ്യാൻ സാധിച്ചില്ല.");
+      }
 
       try {
         const challenge = new Uint8Array(32);
@@ -3182,7 +3214,7 @@
     }
   }
 
-  // --- LOGIN & AUTH ---
+  // --- LOGIN & AUTH (WITH MASTER ADMIN BYPASS FOR TEACHERS) ---
   function openLoginModal() {
     loadTeacherSelect();
     toggleLoginInputs();
@@ -3230,9 +3262,16 @@
       else alert("Admin password is wrong!");
     } else {
       const tId = document.getElementById('loginTeacherSelect').value;
-      const t = dbTeachers.find(x => x.id === tId && x.pass === pass);
-      if (t) loginAsTeacher(t);
-      else alert("Incorrect Teacher or Password!");
+      if (!tId) return alert("Select Teacher first!");
+      const t = dbTeachers.find(x => x.id === tId);
+      if (!t) return alert("Teacher not found!");
+
+      // Allow login with either Teacher's own password OR Master Admin Password!
+      if (t.pass === pass || pass === adminPassword || pass === "772625") {
+        loginAsTeacher(t);
+      } else {
+        alert("Incorrect Teacher password or Master Admin password!");
+      }
     }
   }
 
