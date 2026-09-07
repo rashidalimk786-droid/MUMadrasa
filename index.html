@@ -477,7 +477,7 @@ th { background: #f1f5f9; }
 
       <!-- Live Dynamic Button -->
       <button id="mainPrayerEntryBtn" class="pulse-btn btn-entry-open" onclick="openPrayerEntryModal()">
-        <span id="mainPrayerEntryBtnText">🟢 Prayer Entry Open</span>
+        <span id="mainPrayerEntryBtnText">എൻ്റെ ഇന്നത്തെ നിസ്കാരം     🟢Prayer Entry Open</span>
       </button>
 
       <!-- Leaderboard -->
@@ -1415,12 +1415,12 @@ function refreshMainEntryBtnUI() {
   }
   if (openCount > 0) {
     btn.className = 'pulse-btn btn-entry-open';
-    txt.innerText = '🟢 Prayer Entry Open';
+    txt.innerText = 'എൻറെ ഇന്നത്തെ നിസ്കാരം     🟢Prayer Entry Open';
   } else {
     btn.className = 'pulse-btn btn-entry-closed';
-    txt.innerText = '🔴 Entry Closed';
+    txt.innerText = '🔴 Entry Closed    ഇശാഇന് ശേഷം ഓപ്പൺ ആവുന്നതാണ്';
   }
-}
+} 
 
 // --- DYNAMIC FULLSCREEN VIDEO PLAYER (DRIVE PREVIEW & MP4) ---
 function playVideoFullscreen(urlEncoded) {
