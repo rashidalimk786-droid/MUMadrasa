@@ -1415,10 +1415,10 @@ function refreshMainEntryBtnUI() {
   }
   if (openCount > 0) {
     btn.className = 'pulse-btn btn-entry-open';
-    txt.innerText = 'എൻ്റെ ഇന്നത്തെ നിസ്കാരം      🟢 Prayer Entry Open';
+    txt.innerText = '🟢 Prayer Entry Open';
   } else {
     btn.className = 'pulse-btn btn-entry-closed';
-    txt.innerText = '🔴 Entry Closed  (ഇശാഇന് ശേഷം ഓപ്പൺ ആവും)';
+    txt.innerText = '🔴 Entry Closed';
   }
 }
 
@@ -1530,7 +1530,6 @@ async function saveStudentQuickEditor() {
     const maghrib = document.getElementById('qeMaghrib').value;
     const isha = document.getElementById('qeIsha').value;
 
-    const existing = dbPrayers.find(p => p.studentId === stuId && p.date === activeLogicalDate);
     if (subh || dhuhr || asr || maghrib || isha) {
       const payload = {
         date: activeLogicalDate,
@@ -1541,10 +1540,11 @@ async function saveStudentQuickEditor() {
         maghrib: maghrib || 'നിസ്കരിച്ചില്ല',
         isha: isha || 'നിസ്കരിച്ചില്ല',
         parentVerified: true,
-        lastModifiedBy: currentUser?.role || 'editor'
+        lastModifiedBy: currentUser?.role || 'editor',
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
       };
-      if (existing) await db.collection("prayers").doc(existing.id).update(payload);
-      else await db.collection("prayers").add(payload);
+      const customDocId = `${stuId}_${activeLogicalDate}`;
+      await db.collection("prayers").doc(customDocId).set(payload, { merge: true });
     }
     alert("വിദ്യാർത്ഥിയുടെ വിവരങ്ങളും നിസ്കാര എൻട്രിയും അപ്ഡേറ്റ് ചെയ്തു!");
     closeModal('quickEditModal');
@@ -1553,7 +1553,6 @@ async function saveStudentQuickEditor() {
   }
 }
 
-// --- CAP VALIDATION UTILITY ---
 function toggleTeacherRegCapBox() {
   const g = document.getElementById('tRegGender').value;
   document.getElementById('tRegCapBox').style.display = g === 'Male' ? 'flex' : 'none';
@@ -2580,12 +2579,8 @@ async function saveTeacherOverriddenPrayer() {
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   };
   try {
-    const existing = dbPrayers.find(p => p.studentId === studentId && p.date === date);
-    if (existing) {
-      await db.collection("prayers").doc(existing.id).update(payload);
-    } else {
-      await db.collection("prayers").add(payload);
-    }
+    const customDocId = `${studentId}_${date}`;
+    await db.collection("prayers").doc(customDocId).set(payload, { merge: true });
     alert("Attendance record updated successfully!");
     closeModal('teacherPrayerEditModal');
   } catch (e) {
@@ -2598,11 +2593,13 @@ async function clearStudentDailyPrayer() {
   const date = document.getElementById('tEditTargetDate').value;
   if (confirm(`ഈ കുട്ടിയുടെ ${date}-ലെ നിസ്കാര രേഖ പൂർണ്ണമായി ഒഴിവാക്കണോ (Clear)?`)) {
     try {
-      const existing = dbPrayers.find(p => p.studentId === studentId && p.date === date);
-      if (existing) {
-        await db.collection("prayers").doc(existing.id).delete();
-        alert("നിസ്കാര രേഖ വിജയകരമായി ഒഴിവാക്കി!");
+      const existing = dbPrayers.filter(p => p.studentId === studentId && p.date === date);
+      for (let rec of existing) {
+        await db.collection("prayers").doc(rec.id).delete();
       }
+      const customDocId = `${studentId}_${date}`;
+      await db.collection("prayers").doc(customDocId).delete().catch(()=>{});
+      alert("നിസ്കാര രേഖ വിജയകരമായി ഒഴിവാക്കി!");
       closeModal('teacherPrayerEditModal');
     } catch (e) {
       alert("ഡിലീറ്റ് ചെയ്യാൻ സാധിച്ചില്ല: " + e.message);
@@ -3102,19 +3099,37 @@ function checkAllPrayersFilled() {
   }
 }
 
+// --- FIXED: DUPLICATE ENTRY RESTRICTION & UNIQUE FIRESTORE DOC ID ---
 async function saveDailyPrayer() {
   if (!activeStudentForEntry) return;
+
+  const btn = document.getElementById('btnDailySave');
+  if (btn.disabled) return;
+
   const pKeys = ['subh', 'dhuhr', 'asr', 'maghrib', 'isha'];
   for (let key of pKeys) {
     if (!document.querySelector(`input[name="${key}"]:checked`)) {
       return alert("ദയവായി എല്ലാ നിസ്കാരങ്ങളുടെയും അവസ്ഥ തിരഞ്ഞെടുക്കുക!");
     }
   }
+
   const parentChecked = document.getElementById('parentVerificationCheck').checked;
   if (!parentChecked) {
     return alert("രക്ഷിതാവ് സാക്ഷ്യപ്പെടുത്തിയ ബോക്സ് ടിക്ക് ചെയ്ത ശേഷം മാത്രമേ സേവ് ചെയ്യാൻ സാധിക്കൂ!");
   }
+
   activeLogicalDate = getLogicalPrayerDate();
+
+  const duplicateCheck = dbPrayers.find(e => e.studentId === activeStudentForEntry.id && e.date === activeLogicalDate);
+  if (duplicateCheck) {
+    alert("ഈ വിദ്യാർത്ഥി ഇന്ന് ഇതിനകം നിസ്കാരം രേഖപ്പെടുത്തിയിട്ടുണ്ട്!");
+    closeModal('prayerModal');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerText = "സേവ് ചെയ്യുന്നു...";
+
   const entry = {
     date: activeLogicalDate,
     studentId: activeStudentForEntry.id,
@@ -3126,13 +3141,18 @@ async function saveDailyPrayer() {
     parentVerified: true,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   };
+
   try {
-    await db.collection("prayers").add(entry);
+    const customDocId = `${activeStudentForEntry.id}_${activeLogicalDate}`;
+    await db.collection("prayers").doc(customDocId).set(entry, { merge: true });
     playCelebrationBell();
     alert("വിജയകരമായി രേഖപ്പെടുത്തി! അല്ലാഹു സ്വീകരിക്കട്ടെ.");
     closeModal('prayerModal');
   } catch (e) {
     alert("ഡാറ്റ സേവ് ചെയ്യാൻ കഴിഞ്ഞില്ല: " + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerText = "സേവ് ചെയ്യുക";
   }
 }
 
@@ -3191,7 +3211,6 @@ function searchStudentHistory() {
     </div>
   `;
 
-  // Draw chart
   const recentDays = entries.slice(-7);
   const labels = recentDays.map(e => e.date.substring(5));
   const scores = recentDays.map(e => {
@@ -3768,7 +3787,11 @@ function openTeachersContactModal() {
           <b style="font-size:13.5px; color:#92400e;">SHAFI DARIMI</b>
           <span style="background:#d97706; color:#fff; font-size:9.5px; font-weight:800; padding:2px 6px; border-radius:4px;">സദർ മുഅല്ലിം</span>
         </div>
-        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">മദ്റസ സദർ മുഅല്ലിം</div>
+        <div style="font-size:11.5px; font-weight:700; color:#0f172a; margin-top:2px;">9605169230</div>
+        <div style="display:flex; gap:6px; margin-top:4px;">
+          <a href="tel:9605169230" class="btn-action" style="text-decoration:none; padding:2px 6px; font-size:10px;">📞 Call</a>
+          <a href="https://wa.me/919605169230" target="_blank" class="btn-wa" style="padding:2px 6px; font-size:10px;">💬 WhatsApp</a>
+        </div>
       </div>
     </div>
 
