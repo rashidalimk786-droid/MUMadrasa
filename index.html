@@ -2,20 +2,27 @@
 <html lang="ml">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>MUM - Prayer Tracker</title>
 <meta name="theme-color" content="#064e3b">
+
+<!-- iOS PWA & Home Screen Icon Fix -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MUM Tracker">
 <meta name="application-name" content="MUM Tracker">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23047857' stroke='%2310b981' stroke-width='14'/%3E%3Ctext x='50%25' y='45%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='800' font-size='38' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23047857' stroke='%2310b981' stroke-width='14'/%3E%3Ctext x='50%25' y='45%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='800' font-size='38' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
+
 <!-- jsPDF & AutoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<!-- Chart.js for Visual Progress Graph -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Firebase App & Firestore -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
 <style>
 :root {
   --primary: #047857;
@@ -28,6 +35,7 @@
   --card-bg: #ffffff;
   --text: #0f172a;
   --text-muted: #64748b;
+  --danger: #ef4444;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 body {
@@ -130,6 +138,7 @@ body {
 .hero .arabic-greeting { font-size: 22px; color: var(--primary); font-family: serif; font-weight: bold; margin-bottom: 2px; }
 .hero h1 { font-size: 14.5px; color: var(--primary-dark); font-weight: 800; line-height: 1.3; }
 .hero p { font-size: 11px; color: var(--text-muted); margin-top: 3px; font-weight: 600; text-transform: uppercase; }
+
 @keyframes pulse-glow {
   0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
   70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
@@ -137,7 +146,6 @@ body {
 }
 .pulse-btn {
   width: 100%;
-  background: linear-gradient(135deg, #059669, #10b981);
   color: white;
   border: none;
   padding: 13px;
@@ -149,10 +157,20 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  animation: pulse-glow 2s infinite;
   margin-bottom: 12px;
-  border: 2px solid #a7f3d0;
+  transition: all 0.3s ease;
 }
+.btn-entry-open {
+  background: linear-gradient(135deg, #059669, #10b981);
+  border: 2px solid #a7f3d0;
+  animation: pulse-glow 2s infinite;
+}
+.btn-entry-closed {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  border: 2px solid #fca5a5;
+  animation: none;
+}
+
 .card {
   background: #fff;
   border-radius: 14px;
@@ -295,7 +313,7 @@ th { background: #f1f5f9; }
 .class-checkbox-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 8px 0; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; }
 .class-checkbox-label { font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 4px; cursor: pointer; }
 .fullscreen-video-modal { position: fixed; inset: 0; background: #000; z-index: 100000; display: none; flex-direction: column; justify-content: center; align-items: center; }
-.fullscreen-video-modal video { width: 100%; max-height: 90vh; }
+.fullscreen-video-modal iframe, .fullscreen-video-modal video { width: 100%; height: 85vh; border: none; }
 .close-fs-btn { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.25); color: #fff; border: none; border-radius: 50%; width: 38px; height: 38px; font-size: 20px; cursor: pointer; z-index: 100001; }
 .photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
 .photo-grid-item { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; }
@@ -354,6 +372,17 @@ th { background: #f1f5f9; }
   gap: 4px;
   cursor: pointer;
 }
+.alert-box-cap {
+  background: #fef2f2;
+  border: 1px solid #f87171;
+  color: #991b1b;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  margin-top: 6px;
+  display: none;
+}
 </style>
 </head>
 <body>
@@ -403,6 +432,9 @@ th { background: #f1f5f9; }
         <li class="drawer-item" onclick="navigateHome()">
           <span>🏠</span> Home
         </li>
+        <li class="drawer-item" onclick="closeNavDrawer(); openAlarmModal();">
+          <span>⏰</span> നിസ്കാര അലാറം സെറ്റ് ചെയ്യുക
+        </li>
         <li class="drawer-item" onclick="closeNavDrawer(); openHelpGuideModal();">
           <span>❓</span> ആപ്പ് ഉപയോഗിക്കേണ്ട വിധം
         </li>
@@ -414,7 +446,7 @@ th { background: #f1f5f9; }
         </li>
         <div id="drawerRoleSection" style="display:none; border-top:1px solid #e2e8f0; margin-top:4px; padding-top:4px;">
           <div style="font-size:10.5px; font-weight:800; color:var(--primary); padding:6px 16px; text-transform:uppercase;" id="drawerRoleHeading">
-            Portal Navigation
+            Portal Shortcuts
           </div>
           <div id="drawerRoleMenuItems"></div>
         </div>
@@ -443,8 +475,9 @@ th { background: #f1f5f9; }
         <p style="font-size:11px; color:var(--text-muted); margin-top:3px; font-weight:700;">PRAYER MONITORING PORTAL</p>
       </div>
 
-      <button class="pulse-btn" onclick="openPrayerEntryModal()">
-        <span>🕌</span> എന്റെ ഇന്നത്തെ നിസ്കാരം
+      <!-- Live Dynamic Button -->
+      <button id="mainPrayerEntryBtn" class="pulse-btn btn-entry-open" onclick="openPrayerEntryModal()">
+        <span id="mainPrayerEntryBtnText">🟢 Prayer Entry Open</span>
       </button>
 
       <!-- Leaderboard -->
@@ -471,9 +504,9 @@ th { background: #f1f5f9; }
         </div>
       </div>
 
-      <!-- Search Record & Update Photo with Password Authentication -->
+      <!-- Search Record & Visual Progress Graph -->
       <div class="card" id="secStatusCheck">
-        <div class="card-title">🔍 Check Status & Photo</div>
+        <div class="card-title">🔍 Check Status & Progress Graph</div>
         <div class="form-group">
           <input type="text" id="srchAdm" placeholder="അഡ്മിഷൻ നമ്പർ അല്ലെങ്കിൽ പേര്..." oninput="handleSmartSearch(this.value, 'srchSuggestions', selectStatusStudent)" autocomplete="off">
           <div id="srchSuggestions" class="search-suggestions"></div>
@@ -481,7 +514,7 @@ th { background: #f1f5f9; }
         <div class="form-group">
           <input type="password" id="srchPass" placeholder="വിദ്യാർത്ഥിയുടെ പാസ്‌വേഡ് (PIN)">
         </div>
-        <button class="btn-main" onclick="searchStudentHistory()">പരിശോധിക്കുക</button>
+        <button class="btn-main" onclick="searchStudentHistory()">പരിശോധിക്കുക & ഗ്രാഫ് കാണുക</button>
         <div id="srchResult" style="margin-top:8px;"></div>
       </div>
 
@@ -512,6 +545,15 @@ th { background: #f1f5f9; }
           പരിശോധിക്കുന്നു...
         </div>
         <button class="btn-main" style="background:#dc2626; margin-top:8px; padding:7px;" onclick="remoteForceLogout('teacher')">⚠️ മറ്റെല്ലാ ഡിവൈസുകളിൽ നിന്നും ലോഗ് ഔട്ട് ചെയ്യുക</button>
+      </div>
+
+      <!-- Quick Search & Edit Student/Prayer -->
+      <div class="card" id="tSecQuickEdit">
+        <div class="card-title">✏️ വിദ്യാർത്ഥി വിവരങ്ങളും എൻട്രിയും തിരുത്തുക</div>
+        <div class="form-group">
+          <input type="text" id="tQuickSearchAdm" placeholder="അഡ്മിഷൻ നമ്പർ അടിക്കുക...">
+        </div>
+        <button class="btn-main" onclick="openStudentQuickEditor('tQuickSearchAdm')">വിവരങ്ങൾ ലഭ്യമാക്കി തിരുത്തുക</button>
       </div>
 
       <!-- Class Lock Control -->
@@ -573,7 +615,7 @@ th { background: #f1f5f9; }
           <div class="form-group"><label>Student Password (PIN)</label><input type="text" id="tRegPass" placeholder="e.g. 1234"></div>
         </div>
         <div class="form-group"><label>Gender</label>
-          <select id="tRegGender">
+          <select id="tRegGender" onchange="toggleTeacherRegCapBox()">
             <option value="Male">Boy (Male)</option>
             <option value="Female">Girl (Female)</option>
           </select>
@@ -582,6 +624,11 @@ th { background: #f1f5f9; }
           <label>Student Photo</label>
           <input type="file" id="tRegPhoto" accept="image/*" onchange="previewSelectedImage(this, 'tPhotoPreview')">
           <img id="tPhotoPreview" class="photo-preview">
+          <div id="tRegCapBox" class="parent-verify-box" style="margin-top:6px;">
+            <input type="checkbox" id="tRegCapConfirm">
+            <label for="tRegCapConfirm">തൊപ്പി ധരിച്ച ഫോട്ടോയാണെന്ന് സ്ഥിരീകരിക്കുന്നു</label>
+          </div>
+          <div id="tRegCapAlert" class="alert-box-cap">തൊപ്പിയിട്ട ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക!</div>
         </div>
         <button class="btn-main" onclick="saveStudentByTeacher()">Save Student</button>
       </div>
@@ -641,14 +688,13 @@ th { background: #f1f5f9; }
         <div class="card-title">
           <div style="display:flex; align-items:center;">
             <span style="font-size:18px; margin-right:6px;">👳‍♂️</span>
-            <span>ശാഫി ദാരിമി (സദർ മുഅല്ലിം)</span>
+            <span>SHAFI DARIMI (സദർ മുഅല്ലിം)</span>
           </div>
           <button class="btn-del" onclick="logout()">Logout</button>
         </div>
         <p style="font-size:11.5px; color:var(--text-muted);">മദ്റസ മുഴുവൻ ക്ലാസുകളുടെയും നിരീക്ഷണ പോർട്ടൽ</p>
       </div>
 
-      <!-- Active Device & Remote Logout for Sadr -->
       <div class="card">
         <div class="card-title">📱 ലോഗിൻ ചെയ്ത ഡിവൈസ് മാനേജ്മെന്റ്</div>
         <div id="sadrSessionInfo" style="font-size:11.5px; color:var(--text-muted); line-height:1.6;">
@@ -657,7 +703,6 @@ th { background: #f1f5f9; }
         <button class="btn-main" style="background:#dc2626; margin-top:8px; padding:7px;" onclick="remoteForceLogout('sadr')">⚠️ മറ്റെല്ലാ ഡിവൈസുകളിൽ നിന്നും ലോഗ് ഔട്ട് ചെയ്യുക</button>
       </div>
 
-      <!-- Sadr Daily Monitoring -->
       <div class="card">
         <div class="card-title">
           <span>Daily Prayer Inspection (All Classes)</span>
@@ -686,7 +731,6 @@ th { background: #f1f5f9; }
         </div>
       </div>
 
-      <!-- Sadr All Students & Reports -->
       <div class="card">
         <div class="card-title">Students & Performance Card</div>
         <div class="form-group">
@@ -704,7 +748,6 @@ th { background: #f1f5f9; }
         </div>
       </div>
 
-      <!-- Sadr Comprehensive Reports & PDF Downloads -->
       <div class="card">
         <div class="card-title">School Reports (Monthly & Overall Total)</div>
         <div class="form-group"><label>Class</label>
@@ -747,13 +790,12 @@ th { background: #f1f5f9; }
     <div id="adminView" style="display: none;">
       <div class="card">
         <div class="card-title">
-          <span id="adminPortalTitleDisplay">റാഷിദലി ഫൈസി (Administrator)</span>
+          <span id="adminPortalTitleDisplay">RASHIDALI FAIZY (അഡ്മിൻ)</span>
           <button class="btn-del" onclick="logout()">Logout</button>
         </div>
         <div style="font-size:11px; color:var(--text-muted);">Phone: <b>6238403492</b></div>
       </div>
 
-      <!-- Active Device & Remote Logout for Admin -->
       <div class="card" id="admSecSession">
         <div class="card-title">📱 ലോഗിൻ ചെയ്ത ഡിവൈസ് മാനേജ്മെന്റ്</div>
         <div id="adminSessionInfo" style="font-size:11.5px; color:var(--text-muted); line-height:1.6;">
@@ -762,7 +804,16 @@ th { background: #f1f5f9; }
         <button class="btn-main" style="background:#dc2626; margin-top:8px; padding:7px;" onclick="remoteForceLogout('admin')">⚠️ മറ്റെല്ലാ ഡിവൈസുകളിൽ നിന്നും ലോഗ് ഔട്ട് ചെയ്യുക</button>
       </div>
 
-      <!-- Sadr Password Management (Admin Exclusive) -->
+      <!-- Quick Edit for Admin -->
+      <div class="card" id="admSecQuickEdit">
+        <div class="card-title">✏️ വിദ്യാർത്ഥി വിവരങ്ങളും എൻട്രിയും തിരുത്തുക</div>
+        <div class="form-group">
+          <input type="text" id="admQuickSearchAdm" placeholder="അഡ്മിഷൻ നമ്പർ അടിക്കുക...">
+        </div>
+        <button class="btn-main" onclick="openStudentQuickEditor('admQuickSearchAdm')">വിവരങ്ങൾ ലഭ്യമാക്കി തിരുത്തുക</button>
+      </div>
+
+      <!-- Sadr Password Management -->
       <div class="card" id="admSecSadrPass">
         <div class="card-title">🔑 സദർ മുഅല്ലിം പാസ്‌വേഡ് മാനേജ്മെന്റ്</div>
         <div class="form-group">
@@ -772,12 +823,12 @@ th { background: #f1f5f9; }
         <button class="btn-main" onclick="saveSadrPasswordAdmin()">സദറിന്റെ പാസ്‌വേഡ് മാറ്റുക</button>
       </div>
 
-      <!-- Co-Admin Management (Admin Exclusive) -->
+      <!-- Co-Admin Management -->
       <div class="card" id="admSecCoAdmin">
-        <div class="card-title">👥 കോ-അഡ്മിൻ (Co-Admin) നിയമനം & അധികാരങ്ങൾ</div>
+        <div class="card-title">👥 കോ-അഡ്മിൻ നിയമനം & അധികാരങ്ങൾ</div>
         <div class="form-group"><label>കോ-അഡ്മിൻ പേര്</label><input type="text" id="coAdminName" placeholder="ഉദാ: കോ-അഡ്മിൻ"></div>
         <div class="form-group"><label>ലോഗിൻ പാസ്‌വേഡ്</label><input type="password" id="coAdminPass" placeholder="പാസ്‌വേഡ്"></div>
-        <label>അനുവദിക്കുന്ന അധികാരങ്ങൾ (Permissions):</label>
+        <label>അനുവദിക്കുന്ന അധികാരങ്ങൾ:</label>
         <div class="permission-grid">
           <label class="permission-label"><input type="checkbox" id="perm_locks"> ക്ലാസ് ലോക്ക്</label>
           <label class="permission-label"><input type="checkbox" id="perm_students"> വിദ്യാർത്ഥി ലിസ്റ്റ്</label>
@@ -789,7 +840,7 @@ th { background: #f1f5f9; }
         <button class="btn-main" onclick="saveCoAdminConfig()">കോ-അഡ്മിൻ വിവരങ്ങൾ സേവ് ചെയ്യുക</button>
       </div>
 
-      <!-- Advanced Class Entry Multi-Selection Lock / Unlock Control -->
+      <!-- Class Entry Multi-Selection Lock -->
       <div class="card" id="admSecLock">
         <div class="card-title">🔐 ക്ലാസ് എൻട്രി കൺട്രോൾ (Multi-Select Control)</div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
@@ -809,7 +860,7 @@ th { background: #f1f5f9; }
       <!-- Photo Upload for Gallery -->
       <div class="card" id="admSecPhotos">
         <div class="card-title">🖼️ ഫോട്ടോ ഗാലറി മാനേജ്മെന്റ്</div>
-        <div class="form-group"><label>ഫോട്ടോ അടിക്കുറിപ്പ് (Caption/Title)</label><input type="text" id="adminPhotoTitle" placeholder="ഉദാ: മദ്റസ പരിപാടി..."></div>
+        <div class="form-group"><label>ഫോട്ടോ അടിക്കുറിപ്പ്</label><input type="text" id="adminPhotoTitle" placeholder="ഉദാ: മദ്റസ പരിപാടി..."></div>
         <div class="form-group"><label>ഫോട്ടോ തിരഞ്ഞെടുക്കുക</label><input type="file" id="adminPhotoFileInput" accept="image/*"></div>
         <button class="btn-main" onclick="saveNewPhotoAdmin()">ഫോട്ടോ പബ്ലിഷ് ചെയ്യുക</button>
         <div id="adminPhotoManageList" style="margin-top:10px;"></div>
@@ -818,19 +869,11 @@ th { background: #f1f5f9; }
       <!-- Video Upload & Management -->
       <div class="card" id="admSecVideos">
         <div class="card-title">🎥 വീഡിയോ അപ്‌ലോഡ് / മാനേജ്മെന്റ്</div>
-        <div class="form-group"><label>വീഡിയോ തലക്കെട്ട് (Title)</label><input type="text" id="adminVideoTitle" placeholder="ഉദാ: നിസ്കാരം ചിട്ടപ്പെടുത്താം..."></div>
-        <div class="form-group"><label>ഡയറക്ട് വീഡിയോ ലിങ്ക് (Drive / MP4 Link)</label><input type="url" id="adminVideoUrl" placeholder="https://.../video.mp4"></div>
+        <div class="form-group"><label>വീഡിയോ തലക്കെട്ട്</label><input type="text" id="adminVideoTitle" placeholder="ഉദാ: നിസ്കാരം ചിട്ടപ്പെടുത്താം..."></div>
+        <div class="form-group"><label>ഡയറക്ട് ഡ്രൈവ് / യൂട്യൂബ് / MP4 ലിങ്ക്</label><input type="url" id="adminVideoUrl" placeholder="https://drive.google.com/file/d/.../view"></div>
         <div class="form-group"><label>അല്ലെങ്കിൽ ചെറിയ വീഡിയോ ഫയൽ (Max 2.5MB)</label><input type="file" id="adminVideoFileInput" accept="video/mp4,video/webm"></div>
         <button class="btn-main" onclick="saveNewVideoAdmin()">വീഡിയോ പബ്ലിഷ് ചെയ്യുക</button>
         <div id="adminVideoManageList" style="margin-top:10px;"></div>
-      </div>
-
-      <!-- About App Editor for Admin -->
-      <div class="card" id="admSecAbout">
-        <div class="card-title">ℹ️ 'About App' ടെക്സ്റ്റ് എഡിറ്റ് ചെയ്യുക</div>
-        <div class="form-group"><label>വിവരണം</label><textarea id="adminAboutDesc" rows="3"></textarea></div>
-        <div class="form-group"><label>മേൽനോട്ട വിവരങ്ങൾ</label><input type="text" id="adminAboutAuth"></div>
-        <button class="btn-main" onclick="saveAboutAppAdmin()">സേവ് ചെയ്യുക</button>
       </div>
 
       <!-- Daily View for Admin -->
@@ -888,7 +931,7 @@ th { background: #f1f5f9; }
           <div class="form-group"><label>Teacher Phone (WhatsApp)</label><input type="tel" id="admTPhone" placeholder="10 Digits"></div>
           <div class="form-group"><label>Login Password</label><input type="password" id="admTPass"></div>
         </div>
-        <div class="form-group"><label>Assigned Classes (Comma-separated: e.g. 1,2)</label><input type="text" id="admTClasses" placeholder="1,2,3"></div>
+        <div class="form-group"><label>Assigned Classes (Comma-separated)</label><input type="text" id="admTClasses" placeholder="1,2,3"></div>
         <div class="form-group">
           <label>Teacher Photo</label>
           <input type="file" id="admTPhoto" accept="image/*" onchange="previewSelectedImage(this, 'admPhotoPreview')">
@@ -941,7 +984,7 @@ th { background: #f1f5f9; }
         </div>
       </div>
 
-      <!-- Security (Admin Master Password) -->
+      <!-- Security -->
       <div class="card" id="admSecPass">
         <div class="card-title">🔑 Change Admin Password</div>
         <div class="form-group"><input type="password" id="admOldPass" placeholder="Current Password"></div>
@@ -955,7 +998,58 @@ th { background: #f1f5f9; }
 <!-- FULLSCREEN VIDEO PLAYER OVERLAY -->
 <div id="fullscreenVideoModal" class="fullscreen-video-modal">
   <button class="close-fs-btn" onclick="closeFullscreenVideo()">✕</button>
-  <video id="fsVideoPlayer" controls playsinline></video>
+  <iframe id="fsVideoPlayer" allow="autoplay; fullscreen"></iframe>
+</div>
+
+<!-- MODAL: ALARM SETTING -->
+<div id="alarmModal" class="modal-overlay">
+  <div style="background:#fff; width:100%; max-width:380px; border-radius:16px; padding:18px;">
+    <h3 style="color:var(--primary); font-size:15px; margin-bottom:8px;">⏰ നിസ്കാര എൻട്രി അലാറം</h3>
+    <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">ദിവസവും നിസ്കാരം രേഖപ്പെടുത്താൻ ഓർമ്മപ്പെടുത്തുന്ന സമയം നിശ്ചയിക്കുക.</p>
+    <div class="form-group">
+      <label>സമയം തിരഞ്ഞെടുക്കുക</label>
+      <input type="time" id="studentAlarmTime" value="20:30">
+    </div>
+    <button class="btn-main" onclick="setDailyPrayerAlarm()">അലാറം സജ്ജമാക്കുക</button>
+    <button class="btn-main" style="background:#94a3b8; margin-top:6px;" onclick="closeModal('alarmModal')">Cancel</button>
+  </div>
+</div>
+
+<!-- MODAL: UNIFIED QUICK EDIT STUDENT & PRAYER -->
+<div id="quickEditModal" class="modal-overlay">
+  <div style="background:#fff; width:100%; max-width:440px; border-radius:16px; padding:18px; max-height:88vh; overflow-y:auto;">
+    <h3 style="color:var(--primary); font-size:15px; margin-bottom:10px;">വിദ്യാർത്ഥി വിവരങ്ങളും എൻട്രിയും തിരുത്തുക</h3>
+    <input type="hidden" id="qeDocId">
+    <div class="form-group"><label>അഡ്മിഷൻ നമ്പർ</label><input type="text" id="qeAdm" readonly style="background:#f1f5f9;"></div>
+    <div class="form-group"><label>വിദ്യാർത്ഥിയുടെ പേര്</label><input type="text" id="qeName"></div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+      <div class="form-group"><label>ക്ലാസ്</label><input type="text" id="qeClass"></div>
+      <div class="form-group"><label>റോൾ നമ്പർ</label><input type="number" id="qeRoll"></div>
+    </div>
+    <div class="form-group"><label>രക്ഷിതാവിന്റെ ഫോൺ</label><input type="tel" id="qePhone"></div>
+    <div class="form-group"><label>പാസ്‌വേഡ് (PIN)</label><input type="text" id="qePass"></div>
+
+    <div style="border-top:1px solid #cbd5e1; padding-top:10px; margin-top:10px;">
+      <h4 style="font-size:12.5px; color:var(--primary); margin-bottom:6px;">ഇന്നത്തെ നിസ്കാര എൻട്രി തിരുത്തുക:</h4>
+      <div class="form-group"><label>സുബ്ഹ്</label>
+        <select id="qeSubh"><option value="">രേഖപ്പെടുത്തിയിട്ടില്ല</option><option value="ജമാഅത്ത്">ജമാഅത്ത്</option><option value="അദാഅ്">അദാഅ്</option><option value="ഖളാഅ്">ഖളാഅ്</option><option value="നിസ്കരിച്ചില്ല">നിസ്കരിച്ചില്ല</option><option value="ഇളവ്">ഇളവ്</option></select>
+      </div>
+      <div class="form-group"><label>ളുഹ്ർ</label>
+        <select id="qeDhuhr"><option value="">രേഖപ്പെടുത്തിയിട്ടില്ല</option><option value="ജമാഅത്ത്">ജമാഅത്ത്</option><option value="അദാഅ്">അദാഅ്</option><option value="ഖളാഅ്">ഖളാഅ്</option><option value="നിസ്കരിച്ചില്ല">നിസ്കരിച്ചില്ല</option><option value="ഇളവ്">ഇളവ്</option></select>
+      </div>
+      <div class="form-group"><label>അസ്വർ</label>
+        <select id="qeAsr"><option value="">രേഖപ്പെടുത്തിയിട്ടില്ല</option><option value="ജമാഅത്ത്">ജമാഅത്ത്</option><option value="അദാഅ്">അദാഅ്</option><option value="ഖളാഅ്">ഖളാഅ്</option><option value="നിസ്കരിച്ചില്ല">നിസ്കരിച്ചില്ല</option><option value="ഇളവ്">ഇളവ്</option></select>
+      </div>
+      <div class="form-group"><label>മഗ്‌രിബ്</label>
+        <select id="qeMaghrib"><option value="">രേഖപ്പെടുത്തിയിട്ടില്ല</option><option value="ജമാഅത്ത്">ജമാഅത്ത്</option><option value="അദാഅ്">അദാഅ്</option><option value="ഖളാഅ്">ഖളാഅ്</option><option value="നിസ്കരിച്ചില്ല">നിസ്കരിച്ചില്ല</option><option value="ഇളവ്">ഇളവ്</option></select>
+      </div>
+      <div class="form-group"><label>ഇശാ</label>
+        <select id="qeIsha"><option value="">രേഖപ്പെടുത്തിയിട്ടില്ല</option><option value="ജമാഅത്ത്">ജമാഅത്ത്</option><option value="അദാഅ്">അദാഅ്</option><option value="ഖളാഅ്">ഖളാഅ്</option><option value="നിസ്കരിച്ചില്ല">നിസ്കരിച്ചില്ല</option><option value="ഇളവ്">ഇളവ്</option></select>
+      </div>
+    </div>
+    <button class="btn-main" onclick="saveStudentQuickEditor()">വിവരങ്ങൾ സേവ് ചെയ്യുക</button>
+    <button class="btn-main" style="background:#94a3b8; margin-top:6px;" onclick="closeModal('quickEditModal')">Cancel</button>
+  </div>
 </div>
 
 <!-- MODAL: HELP GUIDE -->
@@ -965,7 +1059,7 @@ th { background: #f1f5f9; }
     <div class="instruction-card">
       <div class="instruction-title">1. ഇന്നത്തെ നിസ്കാരം എങ്ങനെ രേഖപ്പെടുത്താം?</div>
       <p style="font-size:11.5px; color:#78350f; line-height:1.5;">
-        ഹോം പേജിലെ <b>"എന്റെ ഇന്നത്തെ നിസ്കാരം"</b> ബട്ടൺ അമർത്തുക. അഡ്മിഷൻ നമ്പറോ പേരോ നൽകി അധ്യാപകൻ തന്ന പാസ്‌വേഡ് നൽകുക. അഞ്ച് വഖ്ത് നിസ്കാരങ്ങളുടെ അവസ്ഥ സെലക്ട് ചെയ്ത ശേഷം രക്ഷിതാവിന്റെ സാക്ഷ്യപ്പെടുത്തൽ ടിക്ക് ചെയ്ത് സേവ് ചെയ്യുക.
+        ഹോം പേജിലെ <b>"എന്റെ ഇന്നത്തെ നിസ്കാരം"</b> ബട്ടൺ അമർത്തുക. അഡ്മിഷൻ നമ്പറോ പേരോ നൽകി അധ്യാപകൻ തന്ന പാസ്‌വേഡ് നൽകുക. അഞ്ച് വഖ്ത് നിസ്കാരങ്ങളുടെ അവസ്ഥ സെലക്ട് ചെയ്ത ശേഷം രക്ഷിതാവിന്റെ സാക്ഷ്യപ്പെടുത്തൽ ടിക്ക് ചെയ്ത് സേവ് ചെയ്യുക. ആൺകുട്ടികൾ നിർബന്ധമായും തൊപ്പി ധരിച്ച ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക.
       </p>
     </div>
     <div class="instruction-card">
@@ -1008,19 +1102,26 @@ th { background: #f1f5f9; }
     <h3 style="color:var(--primary); font-size:15px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
       <span>📞</span> അധ്യാപകരുടെ വിവരങ്ങൾ
     </h3>
-    <p style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">എന്തെങ്കിലും സംശയങ്ങൾക്കോ സഹായങ്ങൾക്കോ ക്ലാസ് അധ്യാപകരുമായി നേരിട്ട് ബന്ധപ്പെടാം:</p>
     <div id="teachersContactList"></div>
     <button class="btn-main" style="background:#94a3b8; margin-top:8px;" onclick="closeModal('teachersContactModal')">Cancel</button>
   </div>
 </div>
 
-<!-- MODAL: UPDATE STUDENT PHOTO BY STUDENT -->
+<!-- MODAL: UPDATE STUDENT PHOTO BY STUDENT (WITH CAP REQUIREMENT) -->
 <div id="updatePhotoModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:380px; border-radius:16px; padding:18px;">
     <h3 style="color:var(--primary); font-size:15px; margin-bottom:8px;">വിദ്യാർത്ഥി ഫോട്ടോ മാറ്റുക</h3>
     <input type="hidden" id="photoUpdateStuId">
     <div class="form-group"><label>പാസ്‌വേഡ് (PIN)</label><input type="password" id="photoUpdatePass" placeholder="നിങ്ങളുടെ പാസ്‌വേഡ് നൽകുക"></div>
-    <div class="form-group"><label>പുതിയ ഫോട്ടോ തിരഞ്ഞെടുക്കുക</label><input type="file" id="photoUpdateFile" accept="image/*"></div>
+    <div class="form-group">
+      <label>പുതിയ ഫോട്ടോ തിരഞ്ഞെടുക്കുക</label>
+      <input type="file" id="photoUpdateFile" accept="image/*">
+      <div id="capUpdateCheckContainer" class="parent-verify-box" style="margin-top:8px;">
+        <input type="checkbox" id="photoUpdateCapConfirm">
+        <label for="photoUpdateCapConfirm">ആൺകുട്ടി തൊപ്പി ധരിച്ചിട്ടുണ്ട് എന്ന് ഉറപ്പുവരുത്തുന്നു.</label>
+      </div>
+      <div id="updateCapAlert" class="alert-box-cap">തൊപ്പിയിട്ട ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക!</div>
+    </div>
     <button class="btn-main" onclick="submitStudentPhotoUpdate()">ഫോട്ടോ സേവ് ചെയ്യുക</button>
     <button class="btn-main" style="background:#94a3b8; margin-top:6px;" onclick="closeModal('updatePhotoModal')">Cancel</button>
   </div>
@@ -1161,6 +1262,7 @@ th { background: #f1f5f9; }
         <li>🕌 ഇശാ നിസ്കാരത്തിന് ശേഷം എൻട്രി ചെയ്യുക.</li>
         <li>📅 ദിവസത്തിൽ ഒരിക്കൽ മാത്രം എൻട്രി ചെയ്യാം.</li>
         <li>✅ വിവരങ്ങൾ സത്യസന്ധമായി രേഖപ്പെടുത്തുക.</li>
+        <li>🎩 ആൺകുട്ടികൾ നിർബന്ധമായും തൊപ്പിയിട്ട ഫോട്ടോ മാത്രം അപ്‌ലോഡ് ചെയ്യുക.</li>
         <li>👨‍👩‍👦 രക്ഷിതാവ് സാക്ഷ്യപ്പെടുത്തിയ ശേഷം എൻട്രി സേവ് ചെയ്യുക.</li>
         <li>🚫 അടുത്ത ദിവസം രാവിലെ 8 മണിക്ക് ശേഷം അവസരം ഉണ്ടായിരിക്കുന്നതല്ല.</li>
       </ul>
@@ -1214,7 +1316,32 @@ th { background: #f1f5f9; }
 </div>
 
 <script>
-// --- AUDIO EFFECTS (CELEBRATION BELL & SELECTION CLICK) ---
+// --- LOCAL CACHING & FAST LOAD ---
+function getCached(key) {
+  try { return JSON.parse(localStorage.getItem('mum_c_' + key)); } catch(e) { return null; }
+}
+function setCached(key, data) {
+  try { localStorage.setItem('mum_c_' + key, JSON.stringify(data)); } catch(e) {}
+}
+
+let dbStudents = getCached('students') || [];
+let dbTeachers = getCached('teachers') || [];
+let dbPrayers = getCached('prayers') || [];
+let dbVideos = getCached('videos') || [];
+let dbPhotos = getCached('photos') || [];
+let classLockSettings = getCached('classLocks') || {};
+
+let adminPassword = "mumadminpass";
+let sadrPassword = "mum_sadr_pass";
+let coAdminConfig = { name: "Co-Admin", pass: "coadmin123", permissions: { locks: true, daily: true, reports: true } };
+let activeLeaderboardTab = 'daily';
+let selectedStudentForReport = null;
+let currentUser = null;
+let activeStudentForEntry = null;
+let statusProgressChartInstance = null;
+
+const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+
 function playSelectClickSound() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1259,7 +1386,6 @@ function playCelebrationBell() {
   } catch(e) {}
 }
 
-// --- UNIQUE DEVICE IDENTIFIER GENERATION ---
 function getOrCreateDeviceId() {
   let devId = localStorage.getItem('mum_device_id');
   if (!devId) {
@@ -1270,7 +1396,170 @@ function getOrCreateDeviceId() {
 }
 const currentDeviceId = getOrCreateDeviceId();
 
-// --- HARDWARE BACK BUTTON (WITH AUTO-LOGOUT FOR ADMIN & SADR) ---
+function getLogicalPrayerDate() {
+  const now = new Date();
+  const hours = now.getHours();
+  const logical = new Date(now);
+  if (hours < 8) logical.setDate(logical.getDate() - 1);
+  return logical.toISOString().split('T')[0];
+}
+let activeLogicalDate = getLogicalPrayerDate();
+document.getElementById('todayDateLabel').innerText = activeLogicalDate;
+
+function refreshMainEntryBtnUI() {
+  const btn = document.getElementById('mainPrayerEntryBtn');
+  const txt = document.getElementById('mainPrayerEntryBtnText');
+  let openCount = 0;
+  for (let i = 1; i <= 10; i++) {
+    if (classLockSettings[String(i)] !== true) openCount++;
+  }
+  if (openCount > 0) {
+    btn.className = 'pulse-btn btn-entry-open';
+    txt.innerText = '🟢 Prayer Entry Open';
+  } else {
+    btn.className = 'pulse-btn btn-entry-closed';
+    txt.innerText = '🔴 Entry Closed';
+  }
+}
+
+// --- DYNAMIC FULLSCREEN VIDEO PLAYER (DRIVE PREVIEW & MP4) ---
+function playVideoFullscreen(urlEncoded) {
+  let url = decodeURIComponent(urlEncoded);
+  // ഗൂഗിൾ ഡ്രൈവ് ലിങ്ക് ആണെങ്കിൽ പ്രിവ്യൂ മോഡിലേക്ക് മാറ്റുന്നു
+  if (url.includes("drive.google.com")) {
+    const match = url.match(/[-\w]{25,}/);
+    if (match) {
+      url = `https://drive.google.com/file/d/${match[0]}/preview`;
+    }
+  }
+  const modal = document.getElementById('fullscreenVideoModal');
+  const player = document.getElementById('fsVideoPlayer');
+  player.src = url;
+  modal.style.display = 'flex';
+  pushNavState();
+}
+
+function closeFullscreenVideo(triggerPop = true) {
+  const modal = document.getElementById('fullscreenVideoModal');
+  const player = document.getElementById('fsVideoPlayer');
+  player.src = '';
+  modal.style.display = 'none';
+}
+
+// --- ALARM REMINDER ---
+function openAlarmModal() {
+  document.getElementById('alarmModal').style.display = 'flex';
+  pushNavState();
+}
+
+function setDailyPrayerAlarm() {
+  const time = document.getElementById('studentAlarmTime').value;
+  if (!time) return alert("ദയവായി സമയം തിരഞ്ഞെടുക്കുക!");
+  localStorage.setItem('mum_saved_alarm', time);
+  if ("Notification" in window) {
+    Notification.requestPermission().then(perm => {
+      if (perm === 'granted') {
+        alert(`അലാറം ${time}-ലേക്ക് സെറ്റ് ചെയ്തു. ആ സമയത്ത് നോട്ടിഫിക്കേഷൻ ലഭിക്കും.`);
+      } else {
+        alert(`അലാറം സമയം ${time} സേവ് ചെയ്തു.`);
+      }
+    });
+  } else {
+    alert(`അലാറം സമയം ${time} സേവ് ചെയ്തു.`);
+  }
+  closeModal('alarmModal');
+}
+
+setInterval(() => {
+  const saved = localStorage.getItem('mum_saved_alarm');
+  if (!saved) return;
+  const now = new Date();
+  const currentStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  if (currentStr === saved && now.getSeconds() < 2) {
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("MUM Prayer Tracker", {
+        body: "ഇന്നത്തെ നിസ്കാരം രേഖപ്പെടുത്താൻ സമയമായി. ഉടൻ തന്നെ രേഖപ്പെടുത്തുമല്ലോ.",
+        icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23047857'/%3E%3C/svg%3E"
+      });
+    }
+  }
+}, 1000);
+
+// --- QUICK EDIT STUDENT & DAILY ENTRY (TEACHER & ADMIN) ---
+function openStudentQuickEditor(inputId) {
+  const adm = document.getElementById(inputId).value.trim();
+  if (!adm) return alert("അഡ്മിഷൻ നമ്പർ അടിക്കുക!");
+  const student = dbStudents.find(s => s.adm.toLowerCase() === adm.toLowerCase());
+  if (!student) return alert("ഈ അഡ്മിഷൻ നമ്പറിൽ വിദ്യാർത്ഥിയെ കണ്ടെത്തിയില്ല!");
+
+  document.getElementById('qeDocId').value = student.id;
+  document.getElementById('qeAdm').value = student.adm;
+  document.getElementById('qeName').value = student.name || '';
+  document.getElementById('qeClass').value = student.class || '';
+  document.getElementById('qeRoll').value = student.rollNo || '';
+  document.getElementById('qePhone').value = student.phone || '';
+  document.getElementById('qePass').value = student.pass || '';
+
+  const todayEntry = dbPrayers.find(p => p.studentId === student.id && p.date === activeLogicalDate);
+  document.getElementById('qeSubh').value = todayEntry?.subh || '';
+  document.getElementById('qeDhuhr').value = todayEntry?.dhuhr || '';
+  document.getElementById('qeAsr').value = todayEntry?.asr || '';
+  document.getElementById('qeMaghrib').value = todayEntry?.maghrib || '';
+  document.getElementById('qeIsha').value = todayEntry?.isha || '';
+
+  document.getElementById('quickEditModal').style.display = 'flex';
+  pushNavState();
+}
+
+async function saveStudentQuickEditor() {
+  const stuId = document.getElementById('qeDocId').value;
+  const name = document.getElementById('qeName').value.trim();
+  const sClass = document.getElementById('qeClass').value.trim();
+  const roll = document.getElementById('qeRoll').value.trim();
+  const phone = document.getElementById('qePhone').value.trim();
+  const pass = document.getElementById('qePass').value.trim();
+
+  try {
+    await db.collection("students").doc(stuId).update({
+      name, class: sClass, rollNo: roll ? parseInt(roll) : null, phone, pass
+    });
+
+    const subh = document.getElementById('qeSubh').value;
+    const dhuhr = document.getElementById('qeDhuhr').value;
+    const asr = document.getElementById('qeAsr').value;
+    const maghrib = document.getElementById('qeMaghrib').value;
+    const isha = document.getElementById('qeIsha').value;
+
+    const existing = dbPrayers.find(p => p.studentId === stuId && p.date === activeLogicalDate);
+    if (subh || dhuhr || asr || maghrib || isha) {
+      const payload = {
+        date: activeLogicalDate,
+        studentId: stuId,
+        subh: subh || 'നിസ്കരിച്ചില്ല',
+        dhuhr: dhuhr || 'നിസ്കരിച്ചില്ല',
+        asr: asr || 'നിസ്കരിച്ചില്ല',
+        maghrib: maghrib || 'നിസ്കരിച്ചില്ല',
+        isha: isha || 'നിസ്കരിച്ചില്ല',
+        parentVerified: true,
+        lastModifiedBy: currentUser?.role || 'editor'
+      };
+      if (existing) await db.collection("prayers").doc(existing.id).update(payload);
+      else await db.collection("prayers").add(payload);
+    }
+    alert("വിദ്യാർത്ഥിയുടെ വിവരങ്ങളും നിസ്കാര എൻട്രിയും അപ്ഡേറ്റ് ചെയ്തു!");
+    closeModal('quickEditModal');
+  } catch(e) {
+    alert("അപ്ഡേറ്റ് പരാജയപ്പെട്ടു: " + e.message);
+  }
+}
+
+// --- CAP VALIDATION UTILITY ---
+function toggleTeacherRegCapBox() {
+  const g = document.getElementById('tRegGender').value;
+  document.getElementById('tRegCapBox').style.display = g === 'Male' ? 'flex' : 'none';
+}
+
+// --- HARDWARE BACK BUTTON ---
 history.pushState({ page: 'home' }, '');
 window.addEventListener('popstate', function(e) {
   if (document.getElementById('fullscreenVideoModal').style.display === 'flex') {
@@ -1285,7 +1574,7 @@ window.addEventListener('popstate', function(e) {
     'prayerModal', 'helpGuideModal', 'publicPhotoModal', 'publicVideoModal',
     'teachersContactModal', 'updatePhotoModal', 'studentDetailReportModal',
     'editStudentModal', 'editTeacherModal', 'teacherPrayerEditModal',
-    'bulkWhatsAppModal', 'loginModal', 'aboutAppModal'
+    'bulkWhatsAppModal', 'loginModal', 'aboutAppModal', 'alarmModal', 'quickEditModal'
   ];
   for (let id of modals) {
     const el = document.getElementById(id);
@@ -1294,10 +1583,9 @@ window.addEventListener('popstate', function(e) {
       return;
     }
   }
-  // If user is Admin or Sadr and navigates away from Portal, force re-login
   if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'sadr')) {
     logout();
-    alert("സുരക്ഷ മുൻനിർത്തി അഡ്മിൻ/സദർ പോർട്ടൽ ലോഗ് ഔട്ട് ചെയ്തിരിക്കുന്നു. വീണ്ടും പ്രവേശിക്കാൻ ലോഗിൻ ചെയ്യുക.");
+    alert("സുരക്ഷ മുൻനിർത്തി അഡ്മിൻ/സദർ പോർട്ടൽ ലോഗ് ഔട്ട് ചെയ്തിരിക്കുന്നു.");
     return;
   }
   if (document.getElementById('publicView').style.display === 'none') {
@@ -1310,20 +1598,6 @@ window.addEventListener('popstate', function(e) {
 function pushNavState() {
   history.pushState({ page: 'sub' }, '');
 }
-
-// --- LOGICAL PRAYER DATE: CUTOFF EXTENDED TO 8:00 AM ---
-function getLogicalPrayerDate() {
-  const now = new Date();
-  const hours = now.getHours();
-  const logical = new Date(now);
-  // Before 8:00 AM, calculate as previous calendar day
-  if (hours < 8) {
-    logical.setDate(logical.getDate() - 1);
-  }
-  return logical.toISOString().split('T')[0];
-}
-let activeLogicalDate = getLogicalPrayerDate();
-document.getElementById('todayDateLabel').innerText = activeLogicalDate;
 
 // --- FIREBASE CONFIGURATION ---
 const firebaseConfig = {
@@ -1338,21 +1612,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-let dbStudents = [];
-let dbTeachers = [];
-let dbPrayers = [];
-let dbVideos = [];
-let dbPhotos = [];
-let adminPassword = "mumadminpass";
-let sadrPassword = "mum_sadr_pass";
-let coAdminConfig = { name: "Co-Admin", pass: "coadmin123", permissions: { locks: true, daily: true, reports: true } };
-let activeLeaderboardTab = 'daily';
-let classLockSettings = {};
-let selectedStudentForReport = null;
-let currentUser = null;
-let activeStudentForEntry = null;
-
-const defaultAvatar = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
 const currMonth = activeLogicalDate.substring(0, 7);
 document.getElementById('tRepMonth').value = currMonth;
 document.getElementById('admRepMonth').value = currMonth;
@@ -1374,7 +1633,7 @@ function toggleAllAdminClassChecks(status) {
   document.querySelectorAll('.adm-cls-chk').forEach(c => c.checked = status);
 }
 
-// --- ROTATING NOTICE MESSAGES (INCLUDING CLASS LOCK/UNLOCK STATUS) ---
+// --- ROTATING NOTICES ---
 const baseNotices = [
   "🕌 ഇശാ നിസ്കാരത്തിന് ശേഷം എൻട്രി ചെയ്യുക.",
   "📅 ദിവസത്തിൽ ഒരിക്കൽ മാത്രം എൻട്രി ചെയ്യാം.",
@@ -1390,8 +1649,6 @@ setInterval(() => {
   el.style.opacity = '0';
   setTimeout(() => {
     let list = [...baseNotices];
-    
-    // Check which classes are OPEN (false/undefined) or CLOSED (true)
     const openClasses = [];
     for (let i = 1; i <= 10; i++) {
       if (classLockSettings[String(i)] !== true) openClasses.push(i);
@@ -1399,7 +1656,6 @@ setInterval(() => {
     if (openClasses.length > 0) {
       list.unshift(`📢 ക്ലാസ് [${openClasses.join(', ')}] നിസ്കാര എൻട്രി ഇപ്പോൾ ഓപ്പൺ ആണ്.`);
     }
-
     const onlineTeachers = dbTeachers.filter(t => t.isOnline === true);
     if (onlineTeachers.length > 0) {
       onlineTeachers.forEach(t => {
@@ -1412,13 +1668,11 @@ setInterval(() => {
   }, 250);
 }, 3800);
 
-// --- SESSION RECOVERY & CONCURRENT DEVICE VERIFICATION ---
 (function restorePersistentSession() {
   try {
     const savedUser = localStorage.getItem('mum_logged_session');
     if (savedUser) {
       currentUser = JSON.parse(savedUser);
-      // Admin and Sadr are not auto-restored for enhanced security
       if (currentUser.role === 'admin' || currentUser.role === 'sadr') {
         currentUser = null;
         localStorage.removeItem('mum_logged_session');
@@ -1451,9 +1705,10 @@ function sortStudentsBoyFirst(arr) {
   });
 }
 
-// --- REALTIME FIRESTORE LISTENERS ---
+// --- REALTIME LISTENERS & OFFLINE CACHING ---
 db.collection("students").onSnapshot(snapshot => {
   dbStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  setCached('students', dbStudents);
   if (currentUser?.role === 'teacher') {
     renderTeacherStudentList();
     renderDailyTeacherView();
@@ -1470,14 +1725,14 @@ db.collection("students").onSnapshot(snapshot => {
 
 db.collection("teachers").onSnapshot(snapshot => {
   dbTeachers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  setCached('teachers', dbTeachers);
   if (currentUser?.role === 'teacher') {
     const updatedTeacher = dbTeachers.find(t => t.id === currentUser.data.id);
     if (updatedTeacher) {
       currentUser.data = updatedTeacher;
       document.getElementById('tOnlineStatusToggle').checked = !!updatedTeacher.isOnline;
-      // Concurrent Login Validation: check if current device matches activeSessionDeviceId
       if (updatedTeacher.activeSessionDeviceId && updatedTeacher.activeSessionDeviceId !== currentDeviceId) {
-        alert("മറ്റൊരു ഡിവൈസിൽ ഈ ടീച്ചർ അക്കൗണ്ട് ലോഗിൻ ചെയ്തിരിക്കുന്നു! സുരക്ഷ മുൻനിർത്തി ഈ ഡിവൈസ് ലോഗ് ഔട്ട് ആകുന്നു.");
+        alert("മറ്റൊരു ഡിവൈസിൽ ഈ ടീച്ചർ അക്കൗണ്ട് ലോഗിൻ ചെയ്തിരിക്കുന്നു!");
         logout();
         return;
       }
@@ -1489,6 +1744,7 @@ db.collection("teachers").onSnapshot(snapshot => {
 
 db.collection("prayers").onSnapshot(snapshot => {
   dbPrayers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  setCached('prayers', dbPrayers);
   renderLeaderboard();
   if (currentUser?.role === 'teacher') renderDailyTeacherView();
   if (currentUser?.role === 'admin') renderDailyAdminView();
@@ -1497,20 +1753,24 @@ db.collection("prayers").onSnapshot(snapshot => {
 
 db.collection("videos").orderBy("createdAt", "desc").onSnapshot(snapshot => {
   dbVideos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  setCached('videos', dbVideos);
   renderPublicVideos();
   if (currentUser?.role === 'admin') renderAdminVideoList();
 });
 
 db.collection("photos").orderBy("createdAt", "desc").onSnapshot(snapshot => {
   dbPhotos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  setCached('photos', dbPhotos);
   renderPublicPhotos();
   if (currentUser?.role === 'admin') renderAdminPhotoList();
 });
 
 db.collection("settings").doc("classLocks").onSnapshot(doc => {
   classLockSettings = doc.exists ? (doc.data() || {}) : {};
+  setCached('classLocks', classLockSettings);
   if (currentUser?.role === 'teacher') updateClassLockUI();
   renderLeaderboard();
+  refreshMainEntryBtnUI();
 });
 
 db.collection("settings").doc("config").onSnapshot(doc => {
@@ -1536,7 +1796,6 @@ db.collection("settings").doc("config").onSnapshot(doc => {
       const inputAuth = document.getElementById('adminAboutAuth');
       if (inputAuth) inputAuth.value = data.aboutAuth;
     }
-    // Remote session monitoring for Admin & Sadr
     if (currentUser?.role === 'admin') {
       if (data.adminActiveDeviceId && data.adminActiveDeviceId !== currentDeviceId) {
         alert("മറ്റൊരു ഡിവൈസിൽ അഡ്മിൻ ലോഗിൻ ചെയ്തതിനാൽ ഈ സെഷൻ ലോഗ് ഔട്ട് ആകുന്നു.");
@@ -1553,17 +1812,12 @@ db.collection("settings").doc("config").onSnapshot(doc => {
       }
       renderSessionManagementUI('sadr', { activeSessionDeviceId: data.sadrActiveDeviceId, lastLogin: data.sadrLastLogin });
     }
-  } else {
-    db.collection("settings").doc("config").set({
-      adminPass: "mumadminpass",
-      sadrPass: "mum_sadr_pass",
-      aboutDesc: "<b>മള്ഹറുൽ ഉലൂം മദ്റസ കല്ലൂർ- കൂത്താളി</b>യിലെ വിദ്യാർത്ഥികളുടെ നിത്യേനയുള്ള അഞ്ചു വഖ്ത് നിസ്കാരങ്ങൾ രേഖപ്പെടുത്തുന്നതിനുള്ള പോർട്ടലാണിത്.",
-      aboutAuth: "📍 സ്ഥലം: കല്ലൂർ - കൂത്താളി (1283)<br>⚡ പോർട്ടൽ മേൽനോട്ടം: ശാഫി ദാരിമി (സദർ) & മദ്റസ അധ്യാപകർ"
-    }, { merge: true });
   }
 });
 
-// --- SESSION & REMOTE DEVICE LOGOUT MANAGEMENT ---
+refreshMainEntryBtnUI();
+renderLeaderboard();
+
 function renderSessionManagementUI(role, data) {
   let containerId = '';
   if (role === 'teacher') containerId = 'teacherSessionInfo';
@@ -1608,7 +1862,6 @@ async function remoteForceLogout(role) {
   }
 }
 
-// --- DRAWER NAVIGATION HELPERS ---
 function openNavDrawer() {
   updateDrawerRoleMenu();
   document.getElementById('drawerOverlay').style.display = 'block';
@@ -1639,6 +1892,7 @@ function updateDrawerRoleMenu() {
   if (currentUser.role === 'teacher') {
     document.getElementById('drawerRoleHeading').innerText = 'Teacher Shortcuts';
     items.innerHTML = `
+      <li class="drawer-item" onclick="jumpToSection('tSecQuickEdit')"><span>✏️</span> തിരുത്തുക (Student/Entry)</li>
       <li class="drawer-item" onclick="jumpToSection('tSecLock')"><span>🔐</span> Entry Access</li>
       <li class="drawer-item" onclick="jumpToSection('tSecDaily')"><span>📅</span> Daily Monitoring</li>
       <li class="drawer-item" onclick="jumpToSection('tSecAddStu')"><span>➕</span> Add Student</li>
@@ -1653,6 +1907,7 @@ function updateDrawerRoleMenu() {
   } else if (currentUser.role === 'admin' || currentUser.role === 'coadmin') {
     document.getElementById('drawerRoleHeading').innerText = 'Admin Shortcuts';
     items.innerHTML = `
+      <li class="drawer-item" onclick="jumpToSection('admSecQuickEdit')"><span>✏️</span> തിരുത്തുക (Student/Entry)</li>
       <li class="drawer-item" onclick="jumpToSection('admSecLock')"><span>🔐</span> Class Locks</li>
       <li class="drawer-item" onclick="jumpToSection('admSecPhotos')"><span>🖼️</span> Manage Gallery</li>
       <li class="drawer-item" onclick="jumpToSection('admSecVideos')"><span>🎥</span> Manage Videos</li>
@@ -1900,24 +2155,6 @@ function renderPublicVideos() {
     });
   }
   cont.innerHTML = html;
-}
-
-function playVideoFullscreen(urlEncoded) {
-  const url = decodeURIComponent(urlEncoded);
-  const modal = document.getElementById('fullscreenVideoModal');
-  const player = document.getElementById('fsVideoPlayer');
-  player.src = url;
-  modal.style.display = 'flex';
-  player.play().catch(()=>{});
-  pushNavState();
-}
-
-function closeFullscreenVideo(triggerPop = true) {
-  const modal = document.getElementById('fullscreenVideoModal');
-  const player = document.getElementById('fsVideoPlayer');
-  player.pause();
-  player.src = '';
-  modal.style.display = 'none';
 }
 
 function renderAdminVideoList() {
@@ -2385,6 +2622,15 @@ async function saveStudentByTeacher() {
   if (!adm || !name) return alert("Admission No and Name required!");
   if (!pass) return alert("Please set a password for the student!");
   if (dbStudents.some(s => s.adm.toLowerCase() === adm.toLowerCase())) return alert("Admission number already exists!");
+
+  if (gender === 'Male' && photoFile) {
+    const isCap = document.getElementById('tRegCapConfirm').checked;
+    if (!isCap) {
+      document.getElementById('tRegCapAlert').style.display = 'block';
+      return alert("തൊപ്പിയിട്ട ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക!");
+    }
+  }
+
   try {
     const photoBase64 = await compressImage(photoFile);
     await db.collection("students").add({
@@ -2401,6 +2647,7 @@ async function saveStudentByTeacher() {
     document.getElementById('tRegPass').value = '';
     document.getElementById('tRegPhoto').value = '';
     document.getElementById('tPhotoPreview').style.display = 'none';
+    document.getElementById('tRegCapAlert').style.display = 'none';
   } catch (e) {
     alert("Failed: " + e.message);
   }
@@ -2726,7 +2973,6 @@ async function changeAdminPass() {
   }
 }
 
-// --- AUTOCOMPLETE ---
 function handleSmartSearch(val, containerId, selectCallback) {
   const query = val.trim().toLowerCase();
   const box = document.getElementById(containerId);
@@ -2765,7 +3011,6 @@ function selectEntryStudent(studentId) {
   document.getElementById('pNameSuggestions').style.display = 'none';
 }
 
-// --- STUDENT PRAYER ENTRY FLOW ---
 function openPrayerEntryModal() {
   activeLogicalDate = getLogicalPrayerDate();
   document.getElementById('pAdmInput').value = '';
@@ -2891,7 +3136,7 @@ async function saveDailyPrayer() {
   }
 }
 
-// --- STUDENT STATUS SEARCH (REQUIRES PIN/PASSWORD) ---
+// --- STUDENT SEARCH & PROGRESS GRAPH ---
 function searchStudentHistory() {
   const term = document.getElementById('srchAdm').value.trim().toLowerCase();
   const pass = document.getElementById('srchPass').value.trim();
@@ -2907,7 +3152,7 @@ function searchStudentHistory() {
     div.innerHTML = '<p style="font-size:12px; color:red;">നൽകിയ പാസ്‌വേഡ് തെറ്റാണ്! ശരിയായ PIN നൽകുക.</p>';
     return;
   }
-  const entries = dbPrayers.filter(e => e.studentId === student.id);
+  const entries = dbPrayers.filter(e => e.studentId === student.id).sort((a,b)=>a.date.localeCompare(b.date));
   let totals = { jam: 0, ada: 0, qad: 0, nil: 0, exc: 0 };
   entries.forEach(e => {
     [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
@@ -2929,7 +3174,7 @@ function searchStudentHistory() {
             <div style="color:var(--text-muted);">Roll: ${student.rollNo || '-'} | Adm: ${student.adm} | Class: ${student.class}</div>
           </div>
         </div>
-        <button class="btn-action" style="padding:4px 8px;" onclick="openUpdatePhotoModal('${student.id}')">📷 ഫോട്ടോ മാറ്റുക</button>
+        <button class="btn-action" style="padding:4px 8px;" onclick="openUpdatePhotoModal('${student.id}', '${student.gender || 'Male'}')">📷 ഫോട്ടോ മാറ്റുക</button>
       </div>
       <p style="margin:4px 0 6px;">രേഖപ്പെടുത്തിയ ദിവസങ്ങൾ: <b>${entries.length}</b> | ആകെ സ്കോർ: <b style="color:var(--primary);">${totalScore} pts</b></p>
       <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:5px; text-align:center;">
@@ -2939,14 +3184,56 @@ function searchStudentHistory() {
         <div style="background:#fee2e2; padding:5px; border-radius:6px;">നിസ്കരിക്കാത്തത്: <b>${totals.nil}</b></div>
         ${student.gender === 'Female' ? `<div style="background:#ede9fe; padding:5px; border-radius:6px;">ഇളവ്: <b>${totals.exc}</b></div>` : ''}
       </div>
+      <div style="margin-top:12px; background:#fff; padding:8px; border-radius:8px; border:1px solid #e2e8f0;">
+        <b style="color:var(--primary);">📈 കഴിഞ്ഞ 7 ദിവസത്തെ നിസ്കാര പുരോഗതി ഗ്രാഫ്:</b>
+        <canvas id="studentGraphCanvas" style="max-height:170px; margin-top:6px;"></canvas>
+      </div>
     </div>
   `;
+
+  // Draw chart
+  const recentDays = entries.slice(-7);
+  const labels = recentDays.map(e => e.date.substring(5));
+  const scores = recentDays.map(e => {
+    let dayCount = 0;
+    [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(s => {
+      if (s === 'ജമാഅത്ത്' || s === 'അദാഅ്') dayCount++;
+    });
+    return dayCount;
+  });
+
+  const canvas = document.getElementById('studentGraphCanvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    if (statusProgressChartInstance) statusProgressChartInstance.destroy();
+    statusProgressChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels.length ? labels : ['ഡാറ്റ ലഭ്യമല്ല'],
+        datasets: [{
+          label: 'നിർവ്വഹിച്ചവ (5 ൽ)',
+          data: scores.length ? scores : [0],
+          borderColor: '#047857',
+          backgroundColor: 'rgba(4, 120, 87, 0.15)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: { y: { min: 0, max: 5, ticks: { stepSize: 1 } } }
+      }
+    });
+  }
 }
 
-function openUpdatePhotoModal(stuId) {
+function openUpdatePhotoModal(stuId, gender) {
   document.getElementById('photoUpdateStuId').value = stuId;
   document.getElementById('photoUpdatePass').value = '';
   document.getElementById('photoUpdateFile').value = '';
+  document.getElementById('updateCapAlert').style.display = 'none';
+  const capBox = document.getElementById('capUpdateCheckContainer');
+  capBox.style.display = (gender === 'Male') ? 'flex' : 'none';
   document.getElementById('updatePhotoModal').style.display = 'flex';
   pushNavState();
 }
@@ -2958,6 +3245,15 @@ async function submitStudentPhotoUpdate() {
   const s = dbStudents.find(x => x.id === id);
   if (!s || s.pass !== pass) return alert("പാസ്‌വേഡ് തെറ്റാണ്!");
   if (!file) return alert("ഫോട്ടോ തിരഞ്ഞെടുക്കുക!");
+
+  if ((s.gender || 'Male') === 'Male') {
+    const isCapConfirmed = document.getElementById('photoUpdateCapConfirm').checked;
+    if (!isCapConfirmed) {
+      document.getElementById('updateCapAlert').style.display = 'block';
+      return alert("തൊപ്പിയിട്ട ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക!");
+    }
+  }
+
   try {
     const b64 = await compressImage(file, 260, 260, 0.7);
     await db.collection("students").doc(id).update({ photo: b64 });
@@ -2969,7 +3265,7 @@ async function submitStudentPhotoUpdate() {
   }
 }
 
-// --- REPORTS (SHARED FOR TEACHER, SADR, AND ADMIN) ---
+// --- REPORTS ---
 function toggleReportTypeInputs(source) {
   let repType, group;
   if (source === 'teacher') {
@@ -3278,7 +3574,7 @@ async function handleBiometricLogin() {
   }
 }
 
-// --- LOGIN & AUTHENTICATION FLOW ---
+// --- LOGIN & AUTH ---
 function openLoginModal() {
   loadTeacherSelect();
   toggleLoginInputs();
@@ -3372,9 +3668,8 @@ function loginAsAdmin(persist = true) {
   document.getElementById('teacherView').style.display = 'none';
   document.getElementById('sadrView').style.display = 'none';
   document.getElementById('adminView').style.display = 'block';
-  document.getElementById('adminPortalTitleDisplay').innerText = "റാഷിദലി ഫൈസി (Administrator)";
-  // Unhide all admin sections
-  ['admSecLock', 'admSecPhotos', 'admSecVideos', 'admSecAbout', 'admSecDaily', 'admSecStudents', 'admSecTeachers', 'admSecReports', 'admSecPass', 'admSecSadrPass', 'admSecCoAdmin'].forEach(id => {
+  document.getElementById('adminPortalTitleDisplay').innerText = "RASHIDALI FAIZY (അഡ്മിൻ)";
+  ['admSecLock', 'admSecPhotos', 'admSecVideos', 'admSecDaily', 'admSecStudents', 'admSecTeachers', 'admSecReports', 'admSecPass', 'admSecSadrPass', 'admSecCoAdmin', 'admSecQuickEdit'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'block';
   });
@@ -3394,7 +3689,6 @@ function loginAsCoAdmin(persist = true) {
   document.getElementById('sadrView').style.display = 'none';
   document.getElementById('adminView').style.display = 'block';
   document.getElementById('adminPortalTitleDisplay').innerText = `${coAdminConfig.name || 'Co-Admin'} (Portal Access)`;
-  // Restrict sections based on co-admin permissions
   const p = coAdminConfig.permissions || {};
   document.getElementById('admSecLock').style.display = p.locks ? 'block' : 'none';
   document.getElementById('admSecDaily').style.display = p.daily ? 'block' : 'none';
@@ -3403,7 +3697,6 @@ function loginAsCoAdmin(persist = true) {
   document.getElementById('admSecReports').style.display = p.reports ? 'block' : 'none';
   document.getElementById('admSecPhotos').style.display = p.media ? 'block' : 'none';
   document.getElementById('admSecVideos').style.display = p.media ? 'block' : 'none';
-  // Always hide primary admin configuration from co-admin
   document.getElementById('admSecPass').style.display = 'none';
   document.getElementById('admSecSadrPass').style.display = 'none';
   document.getElementById('admSecCoAdmin').style.display = 'none';
@@ -3464,46 +3757,37 @@ function logout() {
   navigateHome();
 }
 
-// --- TEACHER CONTACT MODAL (WITH ROLES: SADR & ADMIN DESIGNATED) ---
+// --- TEACHER CONTACT MODAL (RASHIDALI FAIZY & SHAFI DARIMI DESIGNATED) ---
 function openTeachersContactModal() {
   const listDiv = document.getElementById('teachersContactList');
-  listDiv.innerHTML = '';
-  
-  // 1. Sadr Muallim (Shafi Darimi)
-  listDiv.innerHTML += `
+  listDiv.innerHTML = `
     <div class="teacher-contact-card" style="border-left: 3.5px solid #d97706; background:#fffbeb;">
-      <div class="avatar-lg" style="display:flex; align-items:center; justify-content:center; font-size:24px; background:#fef3c7;">👳‍♂️</div>
+      <div class="avatar-lg" style="display:flex; align-items:center; justify-content:center; font-size:22px; background:#fef3c7;">👳‍♂️</div>
       <div style="flex:1;">
-        <div style="display:flex; align-items:center; gap:6px;">
-          <b style="font-size:13.5px; color:#92400e;">ശാഫി ദാരിമി</b>
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <b style="font-size:13.5px; color:#92400e;">SHAFI DARIMI</b>
           <span style="background:#d97706; color:#fff; font-size:9.5px; font-weight:800; padding:2px 6px; border-radius:4px;">സദർ മുഅല്ലിം</span>
         </div>
-        <div style="font-size:11px; color:var(--text-muted); margin:2px 0;">മദ്റസ പ്രധാന അധ്യാപകൻ (സദർ)</div>
-        <div style="font-size:11.5px; font-weight:700; color:#0f172a;">ബന്ധപ്പെടുക: ക്ലാസ് അധ്യാപകർ മുഖേന</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">മദ്റസ സദർ മുഅല്ലിം</div>
       </div>
     </div>
-  `;
 
-  // 2. Portal Administrator (Rashidali Faizy)
-  listDiv.innerHTML += `
     <div class="teacher-contact-card" style="border-left: 3.5px solid #047857; background:#ecfdf5;">
-      <div class="avatar-lg" style="display:flex; align-items:center; justify-content:center; font-size:24px; background:#d1fae5;">💻</div>
+      <div class="avatar-lg" style="display:flex; align-items:center; justify-content:center; font-size:22px; background:#d1fae5;">💻</div>
       <div style="flex:1;">
-        <div style="display:flex; align-items:center; gap:6px;">
-          <b style="font-size:13.5px; color:#065f46;">റാഷിദലി ഫൈസി</b>
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <b style="font-size:13.5px; color:#065f46;">RASHIDALI FAIZY</b>
           <span style="background:#047857; color:#fff; font-size:9.5px; font-weight:800; padding:2px 6px; border-radius:4px;">അഡ്മിൻ</span>
         </div>
-        <div style="font-size:11px; color:var(--text-muted); margin:2px 0;">പോർട്ടൽ മേൽനോട്ടം & കൺട്രോൾ</div>
-        <div style="font-size:11.5px; font-weight:700; color:#0f172a;">6238403492</div>
-        <div style="display:flex; gap:6px; margin-top:5px;">
-          <a href="tel:6238403492" class="btn-action" style="text-decoration:none; padding:3px 7px; font-size:10px;">📞 Call</a>
-          <a href="https://wa.me/916238403492" target="_blank" class="btn-wa" style="padding:3px 7px; font-size:10px;">💬 WhatsApp</a>
+        <div style="font-size:11.5px; font-weight:700; color:#0f172a; margin-top:2px;">6238403492</div>
+        <div style="display:flex; gap:6px; margin-top:4px;">
+          <a href="tel:6238403492" class="btn-action" style="text-decoration:none; padding:2px 6px; font-size:10px;">📞 Call</a>
+          <a href="https://wa.me/916238403492" target="_blank" class="btn-wa" style="padding:2px 6px; font-size:10px;">💬 WhatsApp</a>
         </div>
       </div>
     </div>
   `;
 
-  // 3. Registered Class Teachers
   if (dbTeachers.length > 0) {
     dbTeachers.forEach(t => {
       const clsList = Array.isArray(t.classes) ? t.classes.join(', ') : (t.class || '-');
@@ -3513,12 +3797,12 @@ function openTeachersContactModal() {
         <div class="teacher-contact-card">
           <img src="${t.photo || defaultAvatar}" class="avatar-lg">
           <div style="flex:1;">
-            <div style="font-weight:bold; font-size:13.5px; color:var(--primary);">${t.name}</div>
-            <div style="font-size:11px; color:var(--text-muted); margin:2px 0;">ക്ലാസുകൾ: <b>${clsList}</b></div>
-            <div style="font-size:11.5px; font-weight:700; color:#0f172a;">${t.phone || 'No Phone'}</div>
-            <div style="display:flex; gap:6px; margin-top:5px;">
-              ${phone ? `<a href="tel:${phone}" class="btn-action" style="text-decoration:none; padding:3px 7px; font-size:10px;">📞 Call</a>` : ''}
-              ${phone ? `<a href="https://wa.me/${waPhone}" target="_blank" class="btn-wa" style="padding:3px 7px; font-size:10px;">💬 WhatsApp</a>` : ''}
+            <div style="font-weight:bold; font-size:13px; color:var(--primary);">${t.name}</div>
+            <div style="font-size:11px; color:var(--text-muted);">ക്ലാസുകൾ: <b>${clsList}</b></div>
+            <div style="font-size:11.5px; font-weight:700;">${t.phone || 'No Phone'}</div>
+            <div style="display:flex; gap:6px; margin-top:4px;">
+              ${phone ? `<a href="tel:${phone}" class="btn-action" style="text-decoration:none; padding:2px 6px; font-size:10px;">📞 Call</a>` : ''}
+              ${phone ? `<a href="https://wa.me/${waPhone}" target="_blank" class="btn-wa" style="padding:2px 6px; font-size:10px;">💬 WhatsApp</a>` : ''}
             </div>
           </div>
         </div>
