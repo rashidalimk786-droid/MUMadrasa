@@ -11,8 +11,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MUM Tracker">
 <meta name="application-name" content="MUM Tracker">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23047857' stroke='%2310b981' stroke-width='14'/%3E%3Ctext x='50%25' y='45%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='800' font-size='38' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23047857' stroke='%2310b981' stroke-width='14'/%3E%3Ctext x='50%25' y='45%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='800' font-size='38' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23064e3b' stroke='%2310b981' stroke-width='14'/%3E%3Ctext x='50%25' y='45%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='800' font-size='38' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23064e3b' stroke='%2310b981' stroke-width='14'/%3E%3Ctext x='50%25' y='45%25' font-family='sans-serif' font-weight='900' font-size='130' fill='%23ffffff' text-anchor='middle' dominant-baseline='central' letter-spacing='4'%3EMUM%3C/text%3E%3Ctext x='50%25' y='72%25' font-family='sans-serif' font-weight='800' font-size='38' fill='%236ee7b7' text-anchor='middle' dominant-baseline='central' letter-spacing='1'%3EPrayer Tracker%3C/text%3E%3C/svg%3E">
 
 <!-- jsPDF & AutoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -28,16 +28,18 @@
 </head>
 <body>
 <div class="app-shell">
-  <!-- Top Marquee -->
-  <div class="marquee-container">
-    <div class="marquee-text">
-      <span class="ticker-badge">MUM PRAYER TRACKER</span>
-      <span>« الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ »</span>
-      <span class="ticker-sep">🕌</span>
-      <span style="color:#6ee7b7; font-weight:700;">മള്ഹറുൽ ഉലൂം മദ്റസ കല്ലൂർ- കൂത്താളി</span>
-      <span class="ticker-sep">✨</span>
-      <span>"Prayer is the pillar of religion; whoever establishes it, establishes faith."</span>
-      <span class="ticker-sep">📖</span>
+  <!-- Top Navigation Bar (ഹെഡർ ഒറ്റയാക്കി മുകൾ സ്ട്രിപ്പ് ഇതിലേക്ക് ലയിപ്പിച്ചു) -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <button class="hamburger-btn" onclick="openNavDrawer()" title="Menu">☰</button>
+      <div>
+        <h3 id="appHeaderTitle" style="line-height:1.2;">MUM TRACKER</h3>
+        <span style="font-size:9.5px; color:#a7f3d0; font-weight:600; display:block;">മള്ഹറുൽ ഉലൂം മദ്റസ കല്ലൂർ- കൂത്താളി</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn-contact" onclick="openTeachersContactModal()">📞 അധ്യാപകർ</button>
+      <button class="btn-top" id="authBtn" onclick="toggleAuthAction()">Login</button>
     </div>
   </div>
 
@@ -45,18 +47,6 @@
   <div class="notice-slider-bar">
     <span class="notice-badge">NOTICE</span>
     <span id="rotatingNoticeText" class="notice-msg-text">🕌 ഇശാ നിസ്കാരത്തിന് ശേഷം എൻട്രി ചെയ്യുക.</span>
-  </div>
-
-  <!-- Top Navigation Bar -->
-  <div class="top-bar">
-    <div class="top-bar-left">
-      <button class="hamburger-btn" onclick="openNavDrawer()" title="Menu">☰</button>
-      <h3 id="appHeaderTitle">MUM TRACKER</h3>
-    </div>
-    <div class="top-actions">
-      <button class="btn-contact" onclick="openTeachersContactModal()">📞 അധ്യാപകർ</button>
-      <button class="btn-top" id="authBtn" onclick="toggleAuthAction()">Login</button>
-    </div>
   </div>
 
   <!-- HAMBURGER DRAWER -->
@@ -111,14 +101,15 @@
     <!-- PUBLIC VIEW -->
     <div id="publicView">
       <div class="hero">
-        <div class="arabic-greeting">السلام عليكم</div>
+        <div class="arabic-greeting">« الصَّلَاةُ عِمَادُ الدِّينِ »</div>
         <h1>മള്ഹറുൽ ഉലൂം മദ്റസ<br>കല്ലൂർ- കൂത്താളി</h1>
         <p style="font-size:11px; color:var(--text-muted); margin-top:3px; font-weight:700;">PRAYER MONITORING PORTAL</p>
       </div>
 
-      <!-- Live Dynamic Button -->
-      <button id="mainPrayerEntryBtn" class="pulse-btn btn-entry-open" onclick="openPrayerEntryModal()">
-        <span id="mainPrayerEntryBtnText">എൻ്റെ ഇന്നത്തെ നിസ്കാരം     🟢Prayer Entry Open</span>
+      <!-- Live Dynamic Button / Entry Closed Section (തലക്കെട്ട് വലുതും സമയം താഴെ ചെറുതുമായി നൽകിയിരിക്കുന്നു) -->
+      <button id="mainPrayerEntryBtn" class="pulse-btn btn-entry-open" onclick="openPrayerEntryModal()" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; line-height:1.2; padding:8px 12px;">
+        <span id="mainPrayerEntryBtnText" style="font-size:15px; font-weight:800; display:block;">എന്റെ ഇന്നത്തെ നിസ്കാരം (Entry Open)</span>
+        <span id="mainPrayerEntryBtnSub" style="font-size:10.5px; font-weight:600; opacity:0.85; margin-top:2px; display:block;">സമയം: ഇശാഇന് ശേഷം രാവിലെ 8:00 മണി വരെ</span>
       </button>
 
       <!-- Leaderboard -->
@@ -162,7 +153,7 @@
       <div class="footer">MUM KALLOOR-KOOTHALI (1283)</div>
     </div>
 
-    <!-- TEACHER PORTAL -->
+    <!-- TEACHER PORTAL (Tabbed Layout) -->
     <div id="teacherView" style="display: none;">
       <div class="card">
         <div class="card-title">
@@ -179,151 +170,164 @@
         </div>
       </div>
 
-      <!-- Active Device & Remote Logout for Teachers -->
-      <div class="card">
-        <div class="card-title">📱 ലോഗിൻ ചെയ്ത ഡിവൈസ് മാനേജ്മെന്റ്</div>
-        <div id="teacherSessionInfo" style="font-size:11.5px; color:var(--text-muted); line-height:1.6;">
-          പരിശോധിക്കുന്നു...
-        </div>
-        <button class="btn-main" style="background:#dc2626; margin-top:8px; padding:7px;" onclick="remoteForceLogout('teacher')">⚠️ മറ്റെല്ലാ ഡിവൈസുകളിൽ നിന്നും ലോഗ് ഔട്ട് ചെയ്യുക</button>
+      <!-- Teacher Navigation Tabs -->
+      <div class="tab-container" style="margin-bottom:12px;">
+        <button class="tab-btn active" onclick="switchTeacherTab('tab-t-daily', this)">ഡെയിലി എൻട്രി</button>
+        <button class="tab-btn" onclick="switchTeacherTab('tab-t-students', this)">വിദ്യാർത്ഥികൾ</button>
+        <button class="tab-btn" onclick="switchTeacherTab('tab-t-reports', this)">റിപ്പോർട്ടുകൾ</button>
+        <button class="tab-btn" onclick="switchTeacherTab('tab-t-settings', this)">സെറ്റിംഗ്സ്</button>
       </div>
 
-      <!-- Quick Search & Edit Student/Prayer -->
-      <div class="card" id="tSecQuickEdit">
-        <div class="card-title">✏️ വിദ്യാർത്ഥി വിവരങ്ങളും എൻട്രിയും തിരുത്തുക</div>
-        <div class="form-group">
-          <input type="text" id="tQuickSearchAdm" placeholder="അഡ്മിഷൻ നമ്പർ അടിക്കുക...">
-        </div>
-        <button class="btn-main" onclick="openStudentQuickEditor('tQuickSearchAdm')">വിവരങ്ങൾ ലഭ്യമാക്കി തിരുത്തുക</button>
-      </div>
-
-      <!-- Class Lock Control -->
-      <div class="card" id="tSecLock">
-        <div class="card-title">Class-wise Entry Access Lock/Unlock</div>
-        <div class="form-group">
-          <label>Select Your Class</label>
-          <select id="tLockClassSelect" onchange="updateClassLockUI()"></select>
-        </div>
-        <div class="toggle-bar">
-          <div>
-            <b>Prayer Entry Window</b>
-            <div style="font-size:11px; color:var(--text-muted);" id="classEntryStatusDesc">Checking...</div>
+      <!-- Tab: Teacher Daily Entry -->
+      <div id="tab-t-daily" class="teacher-tab-content">
+        <div class="card" id="tSecDaily">
+          <div class="card-title">
+            <span>Daily Prayer Inspection</span>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-action" style="background:#25D366;" onclick="openBulkWhatsAppModal()">📢 Broadcast WA Alert</button>
+              <button class="btn-action" onclick="downloadDailyPDF('teacher')">📄 Daily PDF</button>
+            </div>
           </div>
-          <button class="btn-action" id="toggleClassEntryBtn" onclick="toggleClassEntryStatus()">Toggle Access</button>
-        </div>
-      </div>
-
-      <!-- Daily View & Edit for Teachers -->
-      <div class="card" id="tSecDaily">
-        <div class="card-title">
-          <span>Daily Prayer Inspection</span>
-          <div style="display:flex; gap:6px;">
-            <button class="btn-action" style="background:#25D366;" onclick="openBulkWhatsAppModal()">📢 Broadcast WA Alert</button>
-            <button class="btn-action" onclick="downloadDailyPDF('teacher')">📄 Daily PDF</button>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div class="form-group">
+              <label>Select Class</label>
+              <select id="tDailyClass" onchange="renderDailyTeacherView()"></select>
+            </div>
+            <div class="form-group">
+              <label>Date</label>
+              <input type="date" id="tDailyDate" onchange="renderDailyTeacherView()">
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr><th>No</th><th>Adm</th><th>Name</th><th>Subh</th><th>Dhuhr</th><th>Asr</th><th>Maghrib</th><th>Isha</th><th>Action</th></tr>
+              </thead>
+              <tbody id="tDailyPrayerTable"></tbody>
+            </table>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+
+        <div class="card" id="tSecQuickEdit">
+          <div class="card-title">✏️ വിദ്യാർത്ഥി വിവരങ്ങളും എൻട്രിയും തിരുത്തുക</div>
           <div class="form-group">
-            <label>Select Class</label>
-            <select id="tDailyClass" onchange="renderDailyTeacherView()"></select>
+            <input type="text" id="tQuickSearchAdm" placeholder="അഡ്മിഷൻ നമ്പർ അടിക്കുക...">
           </div>
-          <div class="form-group">
-            <label>Date</label>
-            <input type="date" id="tDailyDate" onchange="renderDailyTeacherView()">
-          </div>
-        </div>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead>
-              <tr><th>No</th><th>Adm</th><th>Name</th><th>Subh</th><th>Dhuhr</th><th>Asr</th><th>Maghrib</th><th>Isha</th><th>Action</th></tr>
-            </thead>
-            <tbody id="tDailyPrayerTable"></tbody>
-          </table>
+          <button class="btn-main" onclick="openStudentQuickEditor('tQuickSearchAdm')">വിവരങ്ങൾ ലഭ്യമാക്കി തിരുത്തുക</button>
         </div>
       </div>
 
-      <!-- Student Registration -->
-      <div class="card" id="tSecAddStu">
-        <div class="card-title">➕ Add New Student</div>
-        <div class="form-group"><label>Class</label><select id="tRegClass"></select></div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <div class="form-group"><label>Roll Number</label><input type="number" id="tRegRoll" placeholder="e.g. 1"></div>
-          <div class="form-group"><label>Admission No</label><input type="text" id="tRegAdm"></div>
-        </div>
-        <div class="form-group"><label>Student Name</label><input type="text" id="tRegName"></div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <div class="form-group"><label>Parent's WhatsApp No</label><input type="tel" id="tRegPhone" placeholder="10 Digits"></div>
-          <div class="form-group"><label>Student Password (PIN)</label><input type="text" id="tRegPass" placeholder="e.g. 1234"></div>
-        </div>
-        <div class="form-group"><label>Gender</label>
-          <select id="tRegGender" onchange="toggleTeacherRegCapBox()">
-            <option value="Male">Boy (Male)</option>
-            <option value="Female">Girl (Female)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Student Photo</label>
-          <input type="file" id="tRegPhoto" accept="image/*" onchange="previewSelectedImage(this, 'tPhotoPreview')">
-          <img id="tPhotoPreview" class="photo-preview">
-          <div id="tRegCapBox" class="parent-verify-box" style="margin-top:6px;">
-            <input type="checkbox" id="tRegCapConfirm">
-            <label for="tRegCapConfirm">തൊപ്പി ധരിച്ച ഫോട്ടോയാണെന്ന് സ്ഥിരീകരിക്കുന്നു</label>
+      <!-- Tab: Teacher Students -->
+      <div id="tab-t-students" class="teacher-tab-content" style="display:none;">
+        <div class="card" id="tSecAddStu">
+          <div class="card-title">➕ Add New Student</div>
+          <div class="form-group"><label>Class</label><select id="tRegClass"></select></div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div class="form-group"><label>Roll Number</label><input type="number" id="tRegRoll" placeholder="e.g. 1"></div>
+            <div class="form-group"><label>Admission No</label><input type="text" id="tRegAdm"></div>
           </div>
-          <div id="tRegCapAlert" class="alert-box-cap">തൊപ്പിയിട്ട ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക!</div>
-        </div>
-        <button class="btn-main" onclick="saveStudentByTeacher()">Save Student</button>
-      </div>
-
-      <!-- Manage Students -->
-      <div class="card" id="tSecStudents">
-        <div class="card-title">Student Management & Individual Reports</div>
-        <div class="form-group">
-          <label>Filter Class</label>
-          <select id="tFilterClass" onchange="renderTeacherStudentList()"></select>
-        </div>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead><tr><th>No</th><th>Photo</th><th>Adm</th><th>Name</th><th>Password</th><th>Action</th></tr></thead>
-            <tbody id="tStudentTable"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Reports -->
-      <div class="card" id="tSecReports">
-        <div class="card-title">Class Reports (Monthly & Overall Total)</div>
-        <div class="form-group"><label>Class</label><select id="tRepClass"></select></div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <div class="form-group">
-            <label>Report Type</label>
-            <select id="tRepType" onchange="toggleReportTypeInputs('teacher')">
-              <option value="monthly">Monthly Report</option>
-              <option value="overall">All-Time Cumulative Total</option>
+          <div class="form-group"><label>Student Name</label><input type="text" id="tRegName"></div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div class="form-group"><label>Parent's WhatsApp No</label><input type="tel" id="tRegPhone" placeholder="10 Digits"></div>
+            <div class="form-group"><label>Student Password (PIN)</label><input type="text" id="tRegPass" placeholder="e.g. 1234"></div>
+          </div>
+          <div class="form-group"><label>Gender</label>
+            <select id="tRegGender" onchange="toggleTeacherRegCapBox()">
+              <option value="Male">Boy (Male)</option>
+              <option value="Female">Girl (Female)</option>
             </select>
           </div>
-          <div class="form-group" id="tRepMonthGroup">
-            <label>Month</label>
-            <input type="month" id="tRepMonth">
+          <div class="form-group">
+            <label>Student Photo</label>
+            <input type="file" id="tRegPhoto" accept="image/*" onchange="previewSelectedImage(this, 'tPhotoPreview')">
+            <img id="tPhotoPreview" class="photo-preview">
+            <div id="tRegCapBox" class="parent-verify-box" style="margin-top:6px;">
+              <input type="checkbox" id="tRegCapConfirm">
+              <label for="tRegCapConfirm">തൊപ്പി ധരിച്ച ഫോട്ടോയാണെന്ന് സ്ഥിരീകരിക്കുന്നു</label>
+            </div>
+            <div id="tRegCapAlert" class="alert-box-cap">തൊപ്പിയിട്ട ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക!</div>
+          </div>
+          <button class="btn-main" onclick="saveStudentByTeacher()">Save Student</button>
+        </div>
+
+        <div class="card" id="tSecStudents">
+          <div class="card-title">Student Management & Individual Reports</div>
+          <div class="form-group">
+            <label>Filter Class</label>
+            <select id="tFilterClass" onchange="renderTeacherStudentList()"></select>
+          </div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>No</th><th>Photo</th><th>Adm</th><th>Name</th><th>Password</th><th>Action</th></tr></thead>
+              <tbody id="tStudentTable"></tbody>
+            </table>
           </div>
         </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
-          <button class="btn-action" style="background:#047857;" onclick="viewReportOnScreen('teacher')">👁️ View Report</button>
-          <button class="btn-action" style="background:#0284c7;" onclick="downloadReportPDF('teacher')">📄 Download PDF</button>
-          <button class="btn-action" style="background:#475569;" onclick="printReportData('teacher')">🖨️ Print</button>
+      </div>
+
+      <!-- Tab: Teacher Reports -->
+      <div id="tab-t-reports" class="teacher-tab-content" style="display:none;">
+        <div class="card" id="tSecReports">
+          <div class="card-title">Class Reports (Monthly & Overall Total)</div>
+          <div class="form-group"><label>Class</label><select id="tRepClass"></select></div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div class="form-group">
+              <label>Report Type</label>
+              <select id="tRepType" onchange="toggleReportTypeInputs('teacher')">
+                <option value="monthly">Monthly Report</option>
+                <option value="overall">All-Time Cumulative Total</option>
+              </select>
+            </div>
+            <div class="form-group" id="tRepMonthGroup">
+              <label>Month</label>
+              <input type="month" id="tRepMonth">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+            <button class="btn-action" style="background:#047857;" onclick="viewReportOnScreen('teacher')">👁️ View Report</button>
+            <button class="btn-action" style="background:#0284c7;" onclick="downloadReportPDF('teacher')">📄 Download PDF</button>
+            <button class="btn-action" style="background:#475569;" onclick="printReportData('teacher')">🖨️ Print</button>
+          </div>
+          <div id="tMonthlyViewBox" style="display:none; overflow-x:auto; margin-top:14px;">
+            <h4 style="font-size:12.5px; color:var(--primary-dark); margin-bottom:6px;" id="tRepSummaryTitle">Performance Summary</h4>
+            <table>
+              <thead>
+                <tr><th>Roll</th><th>Adm</th><th>Name</th><th>Days</th><th>Jam(5)</th><th>Ada(3)</th><th>Qad(1)</th><th>Nil</th><th>Total</th><th>Score</th></tr>
+              </thead>
+              <tbody id="tMonthlyTableBody"></tbody>
+            </table>
+          </div>
         </div>
-        <div id="tMonthlyViewBox" style="display:none; overflow-x:auto; margin-top:14px;">
-          <h4 style="font-size:12.5px; color:var(--primary-dark); margin-bottom:6px;" id="tRepSummaryTitle">Performance Summary</h4>
-          <table>
-            <thead>
-              <tr><th>Roll</th><th>Adm</th><th>Name</th><th>Days</th><th>Jam(5)</th><th>Ada(3)</th><th>Qad(1)</th><th>Nil</th><th>Total</th><th>Score</th></tr>
-            </thead>
-            <tbody id="tMonthlyTableBody"></tbody>
-          </table>
+      </div>
+
+      <!-- Tab: Teacher Settings & Lock -->
+      <div id="tab-t-settings" class="teacher-tab-content" style="display:none;">
+        <div class="card" id="tSecLock">
+          <div class="card-title">Class-wise Entry Access Lock/Unlock</div>
+          <div class="form-group">
+            <label>Select Your Class</label>
+            <select id="tLockClassSelect" onchange="updateClassLockUI()"></select>
+          </div>
+          <div class="toggle-bar">
+            <div>
+              <b>Prayer Entry Window</b>
+              <div style="font-size:11px; color:var(--text-muted);" id="classEntryStatusDesc">Checking...</div>
+            </div>
+            <button class="btn-action" id="toggleClassEntryBtn" onclick="toggleClassEntryStatus()">Toggle Access</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📱 ലോഗിൻ ചെയ്ത ഡിവൈസ് മാനേജ്മെന്റ്</div>
+          <div id="teacherSessionInfo" style="font-size:11.5px; color:var(--text-muted); line-height:1.6;">
+            പരിശോധിക്കുന്നു...
+          </div>
+          <button class="btn-main" style="background:#dc2626; margin-top:8px; padding:7px;" onclick="remoteForceLogout('teacher')">⚠️ മറ്റെല്ലാ ഡിവൈസുകളിൽ നിന്നും ലോഗ് ഔട്ട് ചെയ്യുക</button>
         </div>
       </div>
     </div>
 
-    <!-- SADR MUALLIM PORTAL -->
+    <!-- SADR MUALLIM PORTAL (Tabbed Layout) -->
     <div id="sadrView" style="display: none;">
       <div class="card">
         <div class="card-title">
@@ -336,98 +340,118 @@
         <p style="font-size:11.5px; color:var(--text-muted);">മദ്റസ മുഴുവൻ ക്ലാസുകളുടെയും നിരീക്ഷണ പോർട്ടൽ</p>
       </div>
 
-      <div class="card">
-        <div class="card-title">📱 ലോഗിൻ ചെയ്ത ഡിവൈസ് മാനേജ്മെന്റ്</div>
-        <div id="sadrSessionInfo" style="font-size:11.5px; color:var(--text-muted); line-height:1.6;">
-          പരിശോധിക്കുന്നു...
-        </div>
-        <button class="btn-main" style="background:#dc2626; margin-top:8px; padding:7px;" onclick="remoteForceLogout('sadr')">⚠️ മറ്റെല്ലാ ഡിവൈസുകളിൽ നിന്നും ലോഗ് ഔട്ട് ചെയ്യുക</button>
+      <!-- Sadr Navigation Tabs -->
+      <div class="tab-container" style="margin-bottom:12px;">
+        <button class="tab-btn active" onclick="switchSadrTab('tab-s-daily', this)">ഡെയിലി നിരീക്ഷണം</button>
+        <button class="tab-btn" onclick="switchSadrTab('tab-s-students', this)">വിദ്യാർത്ഥികൾ</button>
+        <button class="tab-btn" onclick="switchSadrTab('tab-s-reports', this)">റിപ്പോർട്ടുകൾ</button>
+        <button class="tab-btn" onclick="switchSadrTab('tab-s-device', this)">ഡിവൈസ്</button>
       </div>
 
-      <div class="card">
-        <div class="card-title">
-          <span>Daily Prayer Inspection (All Classes)</span>
-          <button class="btn-action" onclick="downloadDailyPDF('sadr')">📄 Daily PDF</button>
+      <!-- Tab: Sadr Daily Inspection -->
+      <div id="tab-s-daily" class="sadr-tab-content">
+        <div class="card">
+          <div class="card-title">
+            <span>Daily Prayer Inspection (All Classes)</span>
+            <button class="btn-action" onclick="downloadDailyPDF('sadr')">📄 Daily PDF</button>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div class="form-group">
+              <label>Select Class</label>
+              <select id="sadrDailyClass" onchange="renderDailySadrView()">
+                <option value="ALL">All Classes</option>
+                <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Date</label>
+              <input type="date" id="sadrDailyDate" onchange="renderDailySadrView()">
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr><th>Cls</th><th>No</th><th>Adm</th><th>Name</th><th>Subh</th><th>Dhuhr</th><th>Asr</th><th>Maghrib</th><th>Isha</th><th>Action</th></tr>
+              </thead>
+              <tbody id="sadrDailyPrayerTable"></tbody>
+            </table>
+          </div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+      </div>
+
+      <!-- Tab: Sadr Students -->
+      <div id="tab-s-students" class="sadr-tab-content" style="display:none;">
+        <div class="card">
+          <div class="card-title">Students & Performance Card</div>
           <div class="form-group">
-            <label>Select Class</label>
-            <select id="sadrDailyClass" onchange="renderDailySadrView()">
+            <label>Filter Class</label>
+            <select id="sadrFilterClass" onchange="renderSadrStudentList()">
               <option value="ALL">All Classes</option>
               <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
             </select>
           </div>
-          <div class="form-group">
-            <label>Date</label>
-            <input type="date" id="sadrDailyDate" onchange="renderDailySadrView()">
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>Cls</th><th>No</th><th>Photo</th><th>Adm</th><th>Name</th><th>Action</th></tr></thead>
+              <tbody id="sadrStudentTable"></tbody>
+            </table>
           </div>
         </div>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead>
-              <tr><th>Cls</th><th>No</th><th>Adm</th><th>Name</th><th>Subh</th><th>Dhuhr</th><th>Asr</th><th>Maghrib</th><th>Isha</th><th>Action</th></tr>
-            </thead>
-            <tbody id="sadrDailyPrayerTable"></tbody>
-          </table>
-        </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">Students & Performance Card</div>
-        <div class="form-group">
-          <label>Filter Class</label>
-          <select id="sadrFilterClass" onchange="renderSadrStudentList()">
-            <option value="ALL">All Classes</option>
-            <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
-          </select>
-        </div>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead><tr><th>Cls</th><th>No</th><th>Photo</th><th>Adm</th><th>Name</th><th>Action</th></tr></thead>
-            <tbody id="sadrStudentTable"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">School Reports (Monthly & Overall Total)</div>
-        <div class="form-group"><label>Class</label>
-          <select id="sadrRepClass">
-            <option value="ALL">All Classes</option>
-            <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
-          </select>
-        </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <div class="form-group">
-            <label>Report Type</label>
-            <select id="sadrRepType" onchange="toggleReportTypeInputs('sadr')">
-              <option value="monthly">Monthly Report</option>
-              <option value="overall">All-Time Cumulative Total</option>
+      <!-- Tab: Sadr Reports -->
+      <div id="tab-s-reports" class="sadr-tab-content" style="display:none;">
+        <div class="card">
+          <div class="card-title">School Reports (Monthly & Overall Total)</div>
+          <div class="form-group"><label>Class</label>
+            <select id="sadrRepClass">
+              <option value="ALL">All Classes</option>
+              <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
             </select>
           </div>
-          <div class="form-group" id="sadrRepMonthGroup">
-            <label>Month</label>
-            <input type="month" id="sadrRepMonth">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div class="form-group">
+              <label>Report Type</label>
+              <select id="sadrRepType" onchange="toggleReportTypeInputs('sadr')">
+                <option value="monthly">Monthly Report</option>
+                <option value="overall">All-Time Cumulative Total</option>
+              </select>
+            </div>
+            <div class="form-group" id="sadrRepMonthGroup">
+              <label>Month</label>
+              <input type="month" id="sadrRepMonth">
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+            <button class="btn-action" style="background:#047857;" onclick="viewReportOnScreen('sadr')">👁️ View Report</button>
+            <button class="btn-action" style="background:#0284c7;" onclick="downloadReportPDF('sadr')">📄 Download PDF</button>
+            <button class="btn-action" style="background:#475569;" onclick="printReportData('sadr')">🖨️ Print</button>
+          </div>
+          <div id="sadrMonthlyViewBox" style="display:none; overflow-x:auto; margin-top:14px;">
+            <h4 style="font-size:12.5px; color:var(--primary-dark); margin-bottom:6px;" id="sadrRepSummaryTitle">Performance Summary</h4>
+            <table>
+              <thead>
+                <tr><th>Cls</th><th>Roll</th><th>Adm</th><th>Name</th><th>Days</th><th>Jam(5)</th><th>Ada(3)</th><th>Qad(1)</th><th>Nil</th><th>Total</th><th>Score</th></tr>
+              </thead>
+              <tbody id="sadrMonthlyTableBody"></tbody>
+            </table>
           </div>
         </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
-          <button class="btn-action" style="background:#047857;" onclick="viewReportOnScreen('sadr')">👁️ View Report</button>
-          <button class="btn-action" style="background:#0284c7;" onclick="downloadReportPDF('sadr')">📄 Download PDF</button>
-          <button class="btn-action" style="background:#475569;" onclick="printReportData('sadr')">🖨️ Print</button>
-        </div>
-        <div id="sadrMonthlyViewBox" style="display:none; overflow-x:auto; margin-top:14px;">
-          <h4 style="font-size:12.5px; color:var(--primary-dark); margin-bottom:6px;" id="sadrRepSummaryTitle">Performance Summary</h4>
-          <table>
-            <thead>
-              <tr><th>Cls</th><th>Roll</th><th>Adm</th><th>Name</th><th>Days</th><th>Jam(5)</th><th>Ada(3)</th><th>Qad(1)</th><th>Nil</th><th>Total</th><th>Score</th></tr>
-            </thead>
-            <tbody id="sadrMonthlyTableBody"></tbody>
-          </table>
+      </div>
+
+      <!-- Tab: Sadr Device Management -->
+      <div id="tab-s-device" class="sadr-tab-content" style="display:none;">
+        <div class="card">
+          <div class="card-title">📱 ലോഗിൻ ചെയ്ത ഡിവൈസ് മാനേജ്മെന്റ്</div>
+          <div id="sadrSessionInfo" style="font-size:11.5px; color:var(--text-muted); line-height:1.6;">
+            പരിശോധിക്കുന്നു...
+          </div>
+          <button class="btn-main" style="background:#dc2626; margin-top:8px; padding:7px;" onclick="remoteForceLogout('sadr')">⚠️ മറ്റെല്ലാ ഡിവൈസുകളിൽ നിന്നും ലോഗ് ഔട്ട് ചെയ്യുക</button>
         </div>
       </div>
     </div>
 
-    <!-- ADMIN & CO-ADMIN PORTAL -->
+    <!-- ADMIN & CO-ADMIN PORTAL (Tabbed Layout) -->
     <div id="adminView" style="display: none;">
       <div class="card">
         <div class="card-title">
@@ -437,200 +461,221 @@
         <div style="font-size:11px; color:var(--text-muted);">Phone: <b>6238403492</b></div>
       </div>
 
-      <div class="card" id="admSecSession">
-        <div class="card-title">📱 ലോഗിൻ ചെയ്ത ഡിവൈസ് മാനേജ്മെന്റ്</div>
-        <div id="adminSessionInfo" style="font-size:11.5px; color:var(--text-muted); line-height:1.6;">
-          പരിശോധിക്കുന്നു...
-        </div>
-        <button class="btn-main" style="background:#dc2626; margin-top:8px; padding:7px;" onclick="remoteForceLogout('admin')">⚠️ മറ്റെല്ലാ ഡിവൈസുകളിൽ നിന്നും ലോഗ് ഔട്ട് ചെയ്യുക</button>
+      <!-- Admin Navigation Tabs -->
+      <div class="tab-container" style="margin-bottom:12px;">
+        <button class="tab-btn active" onclick="switchAdminTab('tab-a-monitor', this)">നിരീക്ഷണം</button>
+        <button class="tab-btn" onclick="switchAdminTab('tab-a-management', this)">മാനേജ്മെന്റ്</button>
+        <button class="tab-btn" onclick="switchAdminTab('tab-a-media', this)">മീഡിയ</button>
+        <button class="tab-btn" onclick="switchAdminTab('tab-a-reports', this)">റിപ്പോർട്ടുകൾ</button>
+        <button class="tab-btn" onclick="switchAdminTab('tab-a-settings', this)">സെറ്റിംഗ്സ്</button>
       </div>
 
-      <!-- Quick Edit for Admin -->
-      <div class="card" id="admSecQuickEdit">
-        <div class="card-title">✏️ വിദ്യാർത്ഥി വിവരങ്ങളും എൻട്രിയും തിരുത്തുക</div>
-        <div class="form-group">
-          <input type="text" id="admQuickSearchAdm" placeholder="അഡ്മിഷൻ നമ്പർ അടിക്കുക...">
-        </div>
-        <button class="btn-main" onclick="openStudentQuickEditor('admQuickSearchAdm')">വിവരങ്ങൾ ലഭ്യമാക്കി തിരുത്തുക</button>
-      </div>
-
-      <!-- Sadr Password Management -->
-      <div class="card" id="admSecSadrPass">
-        <div class="card-title">🔑 സദർ മുഅല്ലിം പാസ്‌വേഡ് മാനേജ്മെന്റ്</div>
-        <div class="form-group">
-          <label>സദർ മുഅല്ലിം ലോഗിൻ പാസ്‌വേഡ്</label>
-          <input type="text" id="admSadrPassInput" placeholder="സദറിന്റെ പുതിയ പാസ്‌വേഡ് നൽകുക">
-        </div>
-        <button class="btn-main" onclick="saveSadrPasswordAdmin()">സദറിന്റെ പാസ്‌വേഡ് മാറ്റുക</button>
-      </div>
-
-      <!-- Co-Admin Management -->
-      <div class="card" id="admSecCoAdmin">
-        <div class="card-title">👥 കോ-അഡ്മിൻ നിയമനം & അധികാരങ്ങൾ</div>
-        <div class="form-group"><label>കോ-അഡ്മിൻ പേര്</label><input type="text" id="coAdminName" placeholder="ഉദാ: കോ-അഡ്മിൻ"></div>
-        <div class="form-group"><label>ലോഗിൻ പാസ്‌വേഡ്</label><input type="password" id="coAdminPass" placeholder="പാസ്‌വേഡ്"></div>
-        <label>അനുവദിക്കുന്ന അധികാരങ്ങൾ:</label>
-        <div class="permission-grid">
-          <label class="permission-label"><input type="checkbox" id="perm_locks"> ക്ലാസ് ലോക്ക്</label>
-          <label class="permission-label"><input type="checkbox" id="perm_students"> വിദ്യാർത്ഥി ലിസ്റ്റ്</label>
-          <label class="permission-label"><input type="checkbox" id="perm_teachers"> ടീച്ചേഴ്സ് സെറ്റപ്പ്</label>
-          <label class="permission-label"><input type="checkbox" id="perm_daily"> ഡെയിലി നിരീക്ഷണം</label>
-          <label class="permission-label"><input type="checkbox" id="perm_reports"> റിപ്പോർട്ടുകൾ</label>
-          <label class="permission-label"><input type="checkbox" id="perm_media"> ഫോട്ടോ / മീഡിയ</label>
-        </div>
-        <button class="btn-main" onclick="saveCoAdminConfig()">കോ-അഡ്മിൻ വിവരങ്ങൾ സേവ് ചെയ്യുക</button>
-      </div>
-
-      <!-- Class Entry Multi-Selection Lock -->
-      <div class="card" id="admSecLock">
-        <div class="card-title">🔐 ക്ലാസ് എൻട്രി കൺട്രോൾ (Multi-Select Control)</div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <label style="margin:0;">ഓൺ / ഓഫ് ചെയ്യേണ്ട ക്ലാസുകൾ തിരഞ്ഞെടുക്കുക:</label>
-          <div>
-            <button class="btn-action" style="padding:2px 6px; font-size:10px;" onclick="toggleAllAdminClassChecks(true)">All</button>
-            <button class="btn-action" style="padding:2px 6px; font-size:10px; background:#94a3b8;" onclick="toggleAllAdminClassChecks(false)">None</button>
+      <!-- Tab: Admin Monitoring -->
+      <div id="tab-a-monitor" class="admin-tab-content">
+        <!-- Daily View for Admin -->
+        <div class="card" id="admSecDaily">
+          <div class="card-title">
+            <span>School Daily Monitoring</span>
+            <button class="btn-action" onclick="downloadDailyPDF('admin')">📄 Daily PDF</button>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div class="form-group">
+              <label>Class</label>
+              <select id="admDailyClass" onchange="renderDailyAdminView()">
+                <option value="ALL">All Classes</option>
+                <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Date</label>
+              <input type="date" id="admDailyDate" onchange="renderDailyAdminView()">
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr><th>Cls</th><th>No</th><th>Adm</th><th>Name</th><th>Subh</th><th>Dhuhr</th><th>Asr</th><th>Maghrib</th><th>Isha</th><th>Action</th></tr>
+              </thead>
+              <tbody id="admDailyPrayerTable"></tbody>
+            </table>
           </div>
         </div>
-        <div class="class-checkbox-grid" id="adminClassCheckboxContainer"></div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:6px;">
-          <button class="btn-main" style="background:#047857;" onclick="applyMultiClassStatus(false)">🔓 സെലക്ട് ചെയ്തവ ഓപ്പൺ ചെയ്യുക</button>
-          <button class="btn-main" style="background:#dc2626;" onclick="applyMultiClassStatus(true)">🔒 സെലക്ട് ചെയ്തവ ക്ലോസ് ചെയ്യുക</button>
-        </div>
-      </div>
 
-      <!-- Photo Upload for Gallery -->
-      <div class="card" id="admSecPhotos">
-        <div class="card-title">🖼️ ഫോട്ടോ ഗാലറി മാനേജ്മെന്റ്</div>
-        <div class="form-group"><label>ഫോട്ടോ അടിക്കുറിപ്പ്</label><input type="text" id="adminPhotoTitle" placeholder="ഉദാ: മദ്റസ പരിപാടി..."></div>
-        <div class="form-group"><label>ഫോട്ടോ തിരഞ്ഞെടുക്കുക</label><input type="file" id="adminPhotoFileInput" accept="image/*"></div>
-        <button class="btn-main" onclick="saveNewPhotoAdmin()">ഫോട്ടോ പബ്ലിഷ് ചെയ്യുക</button>
-        <div id="adminPhotoManageList" style="margin-top:10px;"></div>
-      </div>
-
-      <!-- Video Upload & Management -->
-      <div class="card" id="admSecVideos">
-        <div class="card-title">🎥 വീഡിയോ അപ്‌ലോഡ് / മാനേജ്മെന്റ്</div>
-        <div class="form-group"><label>വീഡിയോ തലക്കെട്ട്</label><input type="text" id="adminVideoTitle" placeholder="ഉദാ: നിസ്കാരം ചിട്ടപ്പെടുത്താം..."></div>
-        <div class="form-group"><label>ഡയറക്ട് ഡ്രൈവ് / യൂട്യൂബ് / MP4 ലിങ്ക്</label><input type="url" id="adminVideoUrl" placeholder="https://drive.google.com/file/d/.../view"></div>
-        <div class="form-group"><label>അല്ലെങ്കിൽ ചെറിയ വീഡിയോ ഫയൽ (Max 2.5MB)</label><input type="file" id="adminVideoFileInput" accept="video/mp4,video/webm"></div>
-        <button class="btn-main" onclick="saveNewVideoAdmin()">വീഡിയോ പബ്ലിഷ് ചെയ്യുക</button>
-        <div id="adminVideoManageList" style="margin-top:10px;"></div>
-      </div>
-
-      <!-- Daily View for Admin -->
-      <div class="card" id="admSecDaily">
-        <div class="card-title">
-          <span>School Daily Monitoring</span>
-          <button class="btn-action" onclick="downloadDailyPDF('admin')">📄 Daily PDF</button>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        <!-- Quick Edit for Admin -->
+        <div class="card" id="admSecQuickEdit">
+          <div class="card-title">✏️ വിദ്യാർത്ഥി വിവരങ്ങളും എൻട്രിയും തിരുത്തുക</div>
           <div class="form-group">
-            <label>Class</label>
-            <select id="admDailyClass" onchange="renderDailyAdminView()">
+            <input type="text" id="admQuickSearchAdm" placeholder="അഡ്മിഷൻ നമ്പർ അടിക്കുക...">
+          </div>
+          <button class="btn-main" onclick="openStudentQuickEditor('admQuickSearchAdm')">വിവരങ്ങൾ ലഭ്യമാക്കി തിരുത്തുക</button>
+        </div>
+
+        <!-- Class Entry Multi-Selection Lock -->
+        <div class="card" id="admSecLock">
+          <div class="card-title">🔐 ക്ലാസ് എൻട്രി കൺട്രോൾ (Multi-Select Control)</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label style="margin:0;">ഓൺ / ഓഫ് ചെയ്യേണ്ട ക്ലാസുകൾ തിരഞ്ഞെടുക്കുക:</label>
+            <div>
+              <button class="btn-action" style="padding:2px 6px; font-size:10px;" onclick="toggleAllAdminClassChecks(true)">All</button>
+              <button class="btn-action" style="padding:2px 6px; font-size:10px; background:#94a3b8;" onclick="toggleAllAdminClassChecks(false)">None</button>
+            </div>
+          </div>
+          <div class="class-checkbox-grid" id="adminClassCheckboxContainer"></div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:6px;">
+            <button class="btn-main" style="background:#047857;" onclick="applyMultiClassStatus(false)">🔓 സെലക്ട് ചെയ്തവ ഓപ്പൺ ചെയ്യുക</button>
+            <button class="btn-main" style="background:#dc2626;" onclick="applyMultiClassStatus(true)">🔒 സെലക്ട് ചെയ്തവ ക്ലോസ് ചെയ്യുക</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Admin Management (Students, Teachers, Co-Admins) -->
+      <div id="tab-a-management" class="admin-tab-content" style="display:none;">
+        <!-- Teacher Management & Edit -->
+        <div class="card" id="admSecTeachers">
+          <div class="card-title">👨‍🏫 Teacher Management</div>
+          <div class="form-group"><label>Teacher Name</label><input type="text" id="admTName"></div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div class="form-group"><label>Teacher Phone (WhatsApp)</label><input type="tel" id="admTPhone" placeholder="10 Digits"></div>
+            <div class="form-group"><label>Login Password</label><input type="password" id="admTPass"></div>
+          </div>
+          <div class="form-group"><label>Assigned Classes (Comma-separated)</label><input type="text" id="admTClasses" placeholder="1,2,3"></div>
+          <div class="form-group">
+            <label>Teacher Photo</label>
+            <input type="file" id="admTPhoto" accept="image/*" onchange="previewSelectedImage(this, 'admPhotoPreview')">
+            <img id="admPhotoPreview" class="photo-preview">
+          </div>
+          <button class="btn-main" onclick="saveTeacherByAdmin()">Save / Add Teacher</button>
+          <div style="overflow-x:auto; margin-top:12px;">
+            <table>
+              <thead><tr><th>Photo</th><th>Name</th><th>Phone</th><th>Classes</th><th>Action</th></tr></thead>
+              <tbody id="admTeacherTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Admin Student Management -->
+        <div class="card" id="admSecStudents">
+          <div class="card-title">All Students (Edit & Individual Report)</div>
+          <div class="form-group">
+            <label>Filter Class</label>
+            <select id="admFilterClass" onchange="renderAdminStudentList()">
               <option value="ALL">All Classes</option>
               <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
             </select>
           </div>
-          <div class="form-group">
-            <label>Date</label>
-            <input type="date" id="admDailyDate" onchange="renderDailyAdminView()">
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>Cls</th><th>No</th><th>Photo</th><th>Adm</th><th>Name</th><th>Password</th><th>Action</th></tr></thead>
+              <tbody id="admStudentTable"></tbody>
+            </table>
           </div>
         </div>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead>
-              <tr><th>Cls</th><th>No</th><th>Adm</th><th>Name</th><th>Subh</th><th>Dhuhr</th><th>Asr</th><th>Maghrib</th><th>Isha</th><th>Action</th></tr>
-            </thead>
-            <tbody id="admDailyPrayerTable"></tbody>
-          </table>
+
+        <!-- Co-Admin Management -->
+        <div class="card" id="admSecCoAdmin">
+          <div class="card-title">👥 കോ-അഡ്മിൻ നിയമനം & അധികാരങ്ങൾ</div>
+          <div class="form-group"><label>കോ-അഡ്മിൻ പേര്</label><input type="text" id="coAdminName" placeholder="ഉദാ: കോ-അഡ്മിൻ"></div>
+          <div class="form-group"><label>ലോഗിൻ പാസ്‌വേഡ്</label><input type="password" id="coAdminPass" placeholder="പാസ്‌വേഡ്"></div>
+          <label>അനുവദിക്കുന്ന അധികാരങ്ങൾ:</label>
+          <div class="permission-grid">
+            <label class="permission-label"><input type="checkbox" id="perm_locks"> ക്ലാസ് ലോക്ക്</label>
+            <label class="permission-label"><input type="checkbox" id="perm_students"> വിദ്യാർത്ഥി ലിസ്റ്റ്</label>
+            <label class="permission-label"><input type="checkbox" id="perm_teachers"> ടീച്ചേഴ്സ് സെറ്റപ്പ്</label>
+            <label class="permission-label"><input type="checkbox" id="perm_daily"> ഡെയിലി നിരീക്ഷണം</label>
+            <label class="permission-label"><input type="checkbox" id="perm_reports"> റിപ്പോർട്ടുകൾ</label>
+            <label class="permission-label"><input type="checkbox" id="perm_media"> ഫോട്ടോ / മീഡിയ</label>
+          </div>
+          <button class="btn-main" onclick="saveCoAdminConfig()">കോ-അഡ്മിൻ വിവരങ്ങൾ സേവ് ചെയ്യുക</button>
         </div>
       </div>
 
-      <!-- Admin Student Management -->
-      <div class="card" id="admSecStudents">
-        <div class="card-title">All Students (Edit & Individual Report)</div>
-        <div class="form-group">
-          <label>Filter Class</label>
-          <select id="admFilterClass" onchange="renderAdminStudentList()">
-            <option value="ALL">All Classes</option>
-            <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
-          </select>
+      <!-- Tab: Admin Media (Photos & Videos) -->
+      <div id="tab-a-media" class="admin-tab-content" style="display:none;">
+        <!-- Photo Upload for Gallery -->
+        <div class="card" id="admSecPhotos">
+          <div class="card-title">🖼️ ഫോട്ടോ ഗാലറി മാനേജ്മെന്റ്</div>
+          <div class="form-group"><label>ഫോട്ടോ അടിക്കുറിപ്പ്</label><input type="text" id="adminPhotoTitle" placeholder="ഉദാ: മദ്റസ പരിപാടി..."></div>
+          <div class="form-group"><label>ഫോട്ടോ തിരഞ്ഞെടുക്കുക</label><input type="file" id="adminPhotoFileInput" accept="image/*"></div>
+          <button class="btn-main" onclick="saveNewPhotoAdmin()">ഫോട്ടോ പബ്ലിഷ് ചെയ്യുക</button>
+          <div id="adminPhotoManageList" style="margin-top:10px;"></div>
         </div>
-        <div style="overflow-x:auto;">
-          <table>
-            <thead><tr><th>Cls</th><th>No</th><th>Photo</th><th>Adm</th><th>Name</th><th>Password</th><th>Action</th></tr></thead>
-            <tbody id="admStudentTable"></tbody>
-          </table>
+
+        <!-- Video Upload & Management -->
+        <div class="card" id="admSecVideos">
+          <div class="card-title">🎥 വീഡിയോ അപ്‌ലോഡ് / മാനേജ്മെന്റ്</div>
+          <div class="form-group"><label>വീഡിയോ തലക്കെട്ട്</label><input type="text" id="adminVideoTitle" placeholder="ഉദാ: നിസ്കാരം ചിട്ടപ്പെടുത്താം..."></div>
+          <div class="form-group"><label>ഡയറക്ട് ഡ്രൈവ് / യൂട്യൂബ് / MP4 ലിങ്ക്</label><input type="url" id="adminVideoUrl" placeholder="https://drive.google.com/file/d/.../view"></div>
+          <div class="form-group"><label>അല്ലെങ്കിൽ ചെറിയ വീഡിയോ ഫയൽ (Max 2.5MB)</label><input type="file" id="adminVideoFileInput" accept="video/mp4,video/webm"></div>
+          <button class="btn-main" onclick="saveNewVideoAdmin()">വീഡിയോ പബ്ലിഷ് ചെയ്യുക</button>
+          <div id="adminVideoManageList" style="margin-top:10px;"></div>
         </div>
       </div>
 
-      <!-- Teacher Management & Edit -->
-      <div class="card" id="admSecTeachers">
-        <div class="card-title">👨‍🏫 Teacher Management</div>
-        <div class="form-group"><label>Teacher Name</label><input type="text" id="admTName"></div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <div class="form-group"><label>Teacher Phone (WhatsApp)</label><input type="tel" id="admTPhone" placeholder="10 Digits"></div>
-          <div class="form-group"><label>Login Password</label><input type="password" id="admTPass"></div>
-        </div>
-        <div class="form-group"><label>Assigned Classes (Comma-separated)</label><input type="text" id="admTClasses" placeholder="1,2,3"></div>
-        <div class="form-group">
-          <label>Teacher Photo</label>
-          <input type="file" id="admTPhoto" accept="image/*" onchange="previewSelectedImage(this, 'admPhotoPreview')">
-          <img id="admPhotoPreview" class="photo-preview">
-        </div>
-        <button class="btn-main" onclick="saveTeacherByAdmin()">Save / Add Teacher</button>
-        <div style="overflow-x:auto; margin-top:12px;">
-          <table>
-            <thead><tr><th>Photo</th><th>Name</th><th>Phone</th><th>Classes</th><th>Action</th></tr></thead>
-            <tbody id="admTeacherTable"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Admin Reports -->
-      <div class="card" id="admSecReports">
-        <div class="card-title">School Reports (Monthly & Overall Total)</div>
-        <div class="form-group"><label>Class</label>
-          <select id="admRepClass">
-            <option value="ALL">All Classes</option>
-            <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
-          </select>
-        </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <div class="form-group">
-            <label>Report Type</label>
-            <select id="admRepType" onchange="toggleReportTypeInputs('admin')">
-              <option value="monthly">Monthly Report</option>
-              <option value="overall">All-Time Cumulative Total</option>
+      <!-- Tab: Admin Reports -->
+      <div id="tab-a-reports" class="admin-tab-content" style="display:none;">
+        <div class="card" id="admSecReports">
+          <div class="card-title">School Reports (Monthly & Overall Total)</div>
+          <div class="form-group"><label>Class</label>
+            <select id="admRepClass">
+              <option value="ALL">All Classes</option>
+              <script>for(let i=1;i<=10;i++) document.write(`<option value="${i}">Class ${i}</option>`);</script>
             </select>
           </div>
-          <div class="form-group" id="admRepMonthGroup">
-            <label>Month</label>
-            <input type="month" id="admRepMonth">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div class="form-group">
+              <label>Report Type</label>
+              <select id="admRepType" onchange="toggleReportTypeInputs('admin')">
+                <option value="monthly">Monthly Report</option>
+                <option value="overall">All-Time Cumulative Total</option>
+              </select>
+            </div>
+            <div class="form-group" id="admRepMonthGroup">
+              <label>Month</label>
+              <input type="month" id="admRepMonth">
+            </div>
           </div>
-        </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
-          <button class="btn-action" style="background:#047857;" onclick="viewReportOnScreen('admin')">👁️ View Report</button>
-          <button class="btn-action" style="background:#0284c7;" onclick="downloadReportPDF('admin')">📄 Download PDF</button>
-          <button class="btn-action" style="background:#475569;" onclick="printReportData('admin')">🖨️ Print</button>
-        </div>
-        <div id="admMonthlyViewBox" style="display:none; overflow-x:auto; margin-top:14px;">
-          <h4 style="font-size:12.5px; color:var(--primary-dark); margin-bottom:6px;" id="admRepSummaryTitle">Performance Summary</h4>
-          <table>
-            <thead>
-              <tr><th>Cls</th><th>Roll</th><th>Adm</th><th>Name</th><th>Days</th><th>Jam(5)</th><th>Ada(3)</th><th>Qad(1)</th><th>Nil</th><th>Total</th><th>Score</th></tr>
-            </thead>
-            <tbody id="admMonthlyTableBody"></tbody>
-          </table>
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+            <button class="btn-action" style="background:#047857;" onclick="viewReportOnScreen('admin')">👁️ View Report</button>
+            <button class="btn-action" style="background:#0284c7;" onclick="downloadReportPDF('admin')">📄 Download PDF</button>
+            <button class="btn-action" style="background:#475569;" onclick="printReportData('admin')">🖨️ Print</button>
+          </div>
+          <div id="admMonthlyViewBox" style="display:none; overflow-x:auto; margin-top:14px;">
+            <h4 style="font-size:12.5px; color:var(--primary-dark); margin-bottom:6px;" id="admRepSummaryTitle">Performance Summary</h4>
+            <table>
+              <thead>
+                <tr><th>Cls</th><th>Roll</th><th>Adm</th><th>Name</th><th>Days</th><th>Jam(5)</th><th>Ada(3)</th><th>Qad(1)</th><th>Nil</th><th>Total</th><th>Score</th></tr>
+              </thead>
+              <tbody id="admMonthlyTableBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
-      <!-- Security -->
-      <div class="card" id="admSecPass">
-        <div class="card-title">🔑 Change Admin Password</div>
-        <div class="form-group"><input type="password" id="admOldPass" placeholder="Current Password"></div>
-        <div class="form-group"><input type="password" id="admNewPass" placeholder="New Password"></div>
-        <button class="btn-main" onclick="changeAdminPass()">Update Password</button>
+      <!-- Tab: Admin Settings & Passwords -->
+      <div id="tab-a-settings" class="admin-tab-content" style="display:none;">
+        <div class="card" id="admSecSession">
+          <div class="card-title">📱 ലോഗിൻ ചെയ്ത ഡിവൈസ് മാനേജ്മെന്റ്</div>
+          <div id="adminSessionInfo" style="font-size:11.5px; color:var(--text-muted); line-height:1.6;">
+            പരിശോധിക്കുന്നു...
+          </div>
+          <button class="btn-main" style="background:#dc2626; margin-top:8px; padding:7px;" onclick="remoteForceLogout('admin')">⚠️ മറ്റെല്ലാ ഡിവൈസുകളിൽ നിന്നും ലോഗ് ഔട്ട് ചെയ്യുക</button>
+        </div>
+
+        <div class="card" id="admSecSadrPass">
+          <div class="card-title">🔑 സദർ മുഅല്ലിം പാസ്‌വേഡ് മാനേജ്മെന്റ്</div>
+          <div class="form-group">
+            <label>സദർ മുഅല്ലിം ലോഗിൻ പാസ്‌വേഡ്</label>
+            <input type="text" id="admSadrPassInput" placeholder="സദറിന്റെ പുതിയ പാസ്‌വേഡ് നൽകുക">
+          </div>
+          <button class="btn-main" onclick="saveSadrPasswordAdmin()">സദറിന്റെ പാസ്‌വേഡ് മാറ്റുക</button>
+        </div>
+
+        <div class="card" id="admSecPass">
+          <div class="card-title">🔑 Change Admin Password</div>
+          <div class="form-group"><input type="password" id="admOldPass" placeholder="Current Password"></div>
+          <div class="form-group"><input type="password" id="admNewPass" placeholder="New Password"></div>
+          <button class="btn-main" onclick="changeAdminPass()">Update Password</button>
+        </div>
       </div>
     </div>
   </div>
@@ -748,7 +793,7 @@
   </div>
 </div>
 
-<!-- MODAL: UPDATE STUDENT PHOTO BY STUDENT (WITH CAP REQUIREMENT) -->
+<!-- MODAL: UPDATE STUDENT PHOTO BY STUDENT -->
 <div id="updatePhotoModal" class="modal-overlay">
   <div style="background:#fff; width:100%; max-width:380px; border-radius:16px; padding:18px;">
     <h3 style="color:var(--primary); font-size:15px; margin-bottom:8px;">വിദ്യാർത്ഥി ഫോട്ടോ മാറ്റുക</h3>
@@ -955,6 +1000,33 @@
     <button class="btn-main" onclick="closeModal('aboutAppModal')">Cancel</button>
   </div>
 </div>
+
+<!-- Tab Switching Scripts (JS ഫയലിലേക്ക് മാറ്റുകയോ ഇവിടെ നിലനിർത്തുകയോ ചെയ്യാം) -->
+<script>
+function switchTeacherTab(tabId, btn) {
+  document.querySelectorAll('.teacher-tab-content').forEach(el => el.style.display = 'none');
+  const target = document.getElementById(tabId);
+  if(target) target.style.display = 'block';
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function switchSadrTab(tabId, btn) {
+  document.querySelectorAll('.sadr-tab-content').forEach(el => el.style.display = 'none');
+  const target = document.getElementById(tabId);
+  if(target) target.style.display = 'block';
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function switchAdminTab(tabId, btn) {
+  document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
+  const target = document.getElementById(tabId);
+  if(target) target.style.display = 'block';
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+</script>
 
 <!-- JS ലിങ്ക് -->
 <script src="script.js"></script>
