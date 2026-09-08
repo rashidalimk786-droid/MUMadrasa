@@ -89,11 +89,21 @@ let activeLogicalDate = getLogicalPrayerDate();
 const topDateLabel = document.getElementById('todayDateLabel');
 if (topDateLabel) topDateLabel.innerText = activeLogicalDate;
 
-// --- എൻട്രി ബട്ടൺ ടെക്സ്റ്റ് വൃത്തിയായി ക്രമീകരിച്ചത് ---
+// --- കടും നിറവും കൃത്യമായ ടെക്സ്റ്റ് ലെയറിംഗുമുള്ള പുതിയ എൻട്രി ബട്ടൺ ---
 function refreshMainEntryBtnUI() {
   const btn = document.getElementById('mainPrayerEntryBtn');
   const txt = document.getElementById('mainPrayerEntryBtnText');
   if (!btn || !txt) return;
+
+  // ബട്ടൺ കണ്ടെയ്നർ സ്റ്റൈൽ ക്രമീകരണം
+  btn.style.padding = "12px 14px";
+  btn.style.borderRadius = "14px";
+  btn.style.boxShadow = "0 4px 14px rgba(0,0,0,0.18)";
+  btn.style.textAlign = "center";
+  btn.style.width = "100%";
+  btn.style.boxSizing = "border-box";
+  btn.style.display = "block";
+  btn.style.overflow = "hidden";
 
   let openCount = 0;
   for (let i = 1; i <= 10; i++) {
@@ -102,27 +112,42 @@ function refreshMainEntryBtnUI() {
 
   if (openCount > 0) {
     btn.className = 'pulse-btn btn-entry-open';
+    btn.style.background = "#047857"; // കടും പച്ച
+    btn.style.color = "#ffffff";
+    btn.style.border = "none";
     txt.innerHTML = `
-      <div style="font-weight: 700; font-size: 14.5px; line-height: 1.2;">🟢 എൻറെ ഇന്നത്തെ നിസ്കാരം</div>
-      <div style="font-size: 11px; opacity: 0.9; margin-top: 3px; font-weight: normal;">Prayer Entry Open</div>
+      <div style="font-size: 16.5px; font-weight: 800; letter-spacing: 0.2px; line-height: 1.3; margin-bottom: 2px;">
+        എൻറെ ഇന്നത്തെ നിസ്കാരം
+      </div>
+      <div style="font-size: 12px; font-weight: 600; opacity: 0.95; letter-spacing: 0.5px;">
+        🟢 Prayer Entry Open
+      </div>
     `;
   } else {
     btn.className = 'pulse-btn btn-entry-closed';
+    btn.style.background = "#b91c1c"; // കടും ചുവപ്പ്
+    btn.style.color = "#ffffff";
+    btn.style.border = "none";
     txt.innerHTML = `
-      <div style="font-weight: 700; font-size: 14.5px; line-height: 1.2; letter-spacing: 0.3px;">🔴 Entry Closed</div>
-      <div style="font-size: 11px; opacity: 0.85; margin-top: 3px; font-weight: normal;">ഇശാഇന് ശേഷം ഓപ്പൺ ആവുന്നതാണ്</div>
+      <div style="font-size: 16.5px; font-weight: 800; letter-spacing: 0.2px; line-height: 1.3; margin-bottom: 2px;">
+        എൻറെ ഇന്നത്തെ നിസ്കാരം
+      </div>
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.4px; opacity: 0.95;">
+        🔴 Entry Closed
+      </div>
+      <div style="font-size: 10px; font-weight: 400; opacity: 0.85; margin-top: 3px;">
+        ഇശാഇന് ശേഷം ഓപ്പൺ ആവുന്നതാണ്
+      </div>
     `;
   }
 }
 
-// --- DYNAMIC FULLSCREEN VIDEO PLAYER (DRIVE PREVIEW & MP4) ---
+// --- DYNAMIC FULLSCREEN VIDEO PLAYER ---
 function playVideoFullscreen(urlEncoded) {
   let url = decodeURIComponent(urlEncoded);
   if (url.includes("drive.google.com")) {
     const match = url.match(/[-\w]{25,}/);
-    if (match) {
-      url = `https://drive.google.com/file/d/${match[0]}/preview`;
-    }
+    if (match) url = `https://drive.google.com/file/d/${match[0]}/preview`;
   }
   const modal = document.getElementById('fullscreenVideoModal');
   const player = document.getElementById('fsVideoPlayer');
@@ -143,10 +168,7 @@ function closeFullscreenVideo(triggerPop = true) {
 // --- ALARM REMINDER ---
 function openAlarmModal() {
   const modal = document.getElementById('alarmModal');
-  if (modal) {
-    modal.style.display = 'flex';
-    pushNavState();
-  }
+  if (modal) { modal.style.display = 'flex'; pushNavState(); }
 }
 
 function setDailyPrayerAlarm() {
@@ -155,11 +177,8 @@ function setDailyPrayerAlarm() {
   localStorage.setItem('mum_saved_alarm', time);
   if ("Notification" in window) {
     Notification.requestPermission().then(perm => {
-      if (perm === 'granted') {
-        alert(`അലാറം ${time}-ലേക്ക് സെറ്റ് ചെയ്തു. ആ സമയത്ത് നോട്ടിഫിക്കേഷൻ ലഭിക്കും.`);
-      } else {
-        alert(`അലാറം സമയം ${time} സേവ് ചെയ്തു.`);
-      }
+      if (perm === 'granted') alert(`അലാറം ${time}-ലേക്ക് സെറ്റ് ചെയ്തു. ആ സമയത്ത് നോട്ടിഫിക്കേഷൻ ലഭിക്കും.`);
+      else alert(`അലാറം സമയം ${time} സേവ് ചെയ്തു.`);
     });
   } else {
     alert(`അലാറം സമയം ${time} സേവ് ചെയ്തു.`);
@@ -182,7 +201,7 @@ setInterval(() => {
   }
 }, 1000);
 
-// --- QUICK EDIT STUDENT & DAILY ENTRY (TEACHER & ADMIN) ---
+// --- QUICK EDIT STUDENT & DAILY ENTRY ---
 function openStudentQuickEditor(inputId) {
   const adm = document.getElementById(inputId).value.trim();
   if (!adm) return alert("അഡ്മിഷൻ നമ്പർ അടിക്കുക!");
@@ -350,14 +369,10 @@ setInterval(() => {
     for (let i = 1; i <= 10; i++) {
       if (classLockSettings[String(i)] !== true) openClasses.push(i);
     }
-    if (openClasses.length > 0) {
-      list.unshift(`📢 ക്ലാസ് [${openClasses.join(', ')}] നിസ്കാര എൻട്രി ഇപ്പോൾ ഓപ്പൺ ആണ്.`);
-    }
+    if (openClasses.length > 0) list.unshift(`📢 ക്ലാസ് [${openClasses.join(', ')}] നിസ്കാര എൻട്രി ഇപ്പോൾ ഓപ്പൺ ആണ്.`);
     const onlineTeachers = dbTeachers.filter(t => t.isOnline === true);
     if (onlineTeachers.length > 0) {
-      onlineTeachers.forEach(t => {
-        list.unshift(`🟢 [Online] ഉസ്താദ് ${t.name} ഇപ്പോൾ ഓൺലൈനിലുണ്ട്.`);
-      });
+      onlineTeachers.forEach(t => list.unshift(`🟢 [Online] ഉസ്താദ് ${t.name} ഇപ്പോൾ ഓൺലൈനിലുണ്ട്.`));
     }
     currentNoticeIndex = (currentNoticeIndex + 1) % list.length;
     el.innerText = list[currentNoticeIndex];
@@ -407,18 +422,9 @@ function sortStudentsBoyFirst(arr) {
 db.collection("students").onSnapshot(snapshot => {
   dbStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   setCached('students', dbStudents);
-  if (currentUser?.role === 'teacher') {
-    renderTeacherStudentList();
-    renderDailyTeacherView();
-  }
-  if (currentUser?.role === 'admin') {
-    renderAdminStudentList();
-    renderDailyAdminView();
-  }
-  if (currentUser?.role === 'sadr') {
-    renderSadrStudentList();
-    renderDailySadrView();
-  }
+  if (currentUser?.role === 'teacher') { renderTeacherStudentList(); renderDailyTeacherView(); }
+  if (currentUser?.role === 'admin') { renderAdminStudentList(); renderDailyAdminView(); }
+  if (currentUser?.role === 'sadr') { renderSadrStudentList(); renderDailySadrView(); }
 });
 
 db.collection("teachers").onSnapshot(snapshot => {
@@ -2102,7 +2108,7 @@ function getProcessedReportData(source) {
         else nil++;
       });
     });
-    const totalScore = (jam * 5) + (totals.ada * 3) + (totals.qad * 1);
+    const totalScore = (jam * 5) + (totals.ada * 3) + (qad * 1);
     tableData.push({
       roll: s.rollNo || (idx + 1),
       adm: s.adm,
@@ -2453,24 +2459,25 @@ function loginAsAdmin(persist = true) {
   document.getElementById('adminView').style.display = 'block';
   document.getElementById('adminPortalTitleDisplay').innerText = "RASHIDALI FAIZY (അഡ്മിൻ)";
   
-  // മൊത്തം ഒന്നിച്ചു കാണാതെ ആദ്യ ടാബ് മാത്രം ആക്ടീവ് ആക്കുന്നു
-  const defaultTabBtn = document.querySelector('#adminView .portal-tab-pill');
-  if (defaultTabBtn) {
-    defaultTabBtn.click();
-  } else {
-    ['admSecLock', 'admSecDaily', 'admSecStudents', 'admSecTeachers', 'admSecReports'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = 'block';
-    });
-  }
-
-  updateTopNavBtn();
-  renderAdminTeachers();
-  renderAdminStudentList();
-  renderDailyAdminView();
-  renderAdminVideoList();
-  loadCoAdminSettingsUI();
   closeModal('loginModal');
+  updateTopNavBtn();
+
+  setTimeout(() => {
+    const defaultTabBtn = document.querySelector('#adminView .portal-tab-pill');
+    if (defaultTabBtn) {
+      defaultTabBtn.click();
+    } else {
+      ['admSecLock', 'admSecDaily', 'admSecStudents', 'admSecTeachers', 'admSecReports'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'block';
+      });
+    }
+    renderAdminTeachers();
+    renderAdminStudentList();
+    renderDailyAdminView();
+    renderAdminVideoList();
+    loadCoAdminSettingsUI();
+  }, 50);
 }
 
 function loginAsCoAdmin(persist = true) {
@@ -2505,23 +2512,31 @@ function loginAsSadr(persist = true) {
   document.getElementById('adminView').style.display = 'none';
   document.getElementById('teacherView').style.display = 'none';
   document.getElementById('sadrView').style.display = 'block';
-  updateTopNavBtn();
-  renderDailySadrView();
-  renderSadrStudentList();
   closeModal('loginModal');
+  updateTopNavBtn();
+  setTimeout(() => {
+    renderDailySadrView();
+    renderSadrStudentList();
+  }, 50);
 }
 
+// --- ലാഗ് പൂർണ്ണമായി ഒഴിവാക്കിയ ടീച്ചർ ലോഗിൻ ---
 function loginAsTeacher(t, persist = true) {
   currentUser = { role: 'teacher', data: t };
   if (persist) localStorage.setItem('mum_logged_session', JSON.stringify(currentUser));
   const classesArr = Array.isArray(t.classes) ? t.classes : (t.class ? [t.class] : ['1']);
+  
+  // UI ഉടനടി സ്വിച്ച് ചെയ്യുന്നു
   document.getElementById('publicView').style.display = 'none';
   document.getElementById('adminView').style.display = 'none';
   document.getElementById('sadrView').style.display = 'none';
   document.getElementById('teacherView').style.display = 'block';
+  
   document.getElementById('teacherNameDisplay').innerText = t.name;
   document.getElementById('tClassListDisplay').innerText = `Assigned Classes: ${classesArr.join(', ')}`;
   updateTopNavBtn();
+  closeModal('loginModal');
+
   const profileImg = document.getElementById('tProfileImg');
   if (t.photo) {
     profileImg.src = t.photo;
@@ -2529,22 +2544,28 @@ function loginAsTeacher(t, persist = true) {
   } else {
     profileImg.style.display = 'none';
   }
+  
   const clsOpts = classesArr.map(c => `<option value="${c}">Class ${c}</option>`).join('');
   document.getElementById('tRegClass').innerHTML = clsOpts;
   document.getElementById('tFilterClass').innerHTML = clsOpts;
   document.getElementById('tRepClass').innerHTML = clsOpts;
   document.getElementById('tDailyClass').innerHTML = clsOpts;
   document.getElementById('tLockClassSelect').innerHTML = clsOpts;
-  updateClassLockUI();
-  renderTeacherStudentList();
-  renderDailyTeacherView();
-  renderSessionManagementUI('teacher', t);
 
-  // അധ്യാപകൻ ലോഗിൻ ചെയ്യുമ്പോൾ ആദ്യ സെക്ഷൻ മാത്രം കാണിക്കുക
-  const defaultTabBtn = document.querySelector('#teacherView .portal-tab-pill');
-  if (defaultTabBtn) defaultTabBtn.click();
-
-  closeModal('loginModal');
+  // ലാഗ് ഒഴിവാക്കാൻ റെൻഡറിംഗ് ടാസ്ക്കുകൾ ബാക്ക്ഗ്രൗണ്ടിലേക്ക് വിഭജിക്കുന്നു
+  setTimeout(() => {
+    updateClassLockUI();
+    renderDailyTeacherView();
+    renderSessionManagementUI('teacher', t);
+    
+    // ആദ്യ സെക്ഷൻ മാത്രം കാണിക്കുക
+    const defaultTabBtn = document.querySelector('#teacherView .portal-tab-pill');
+    if (defaultTabBtn) defaultTabBtn.click();
+    
+    setTimeout(() => {
+      renderTeacherStudentList();
+    }, 60);
+  }, 40);
 }
 
 function logout() {
