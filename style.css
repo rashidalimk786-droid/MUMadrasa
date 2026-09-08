@@ -71,7 +71,7 @@ body {
 .notice-badge { background: #d97706; color: #fff; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase; flex-shrink: 0; }
 .notice-msg-text { flex: 1; font-size: 11.5px; font-weight: 700; color: #92400e; line-height: 1.35; white-space: normal; word-break: break-word; transition: opacity 0.25s ease-in-out; }
 
-/* HEADER (യഥാർത്ഥ ഡാർക്ക് ഗ്രീൻ ഡിസൈൻ) */
+/* HEADER (പൂർണ്ണമായും യഥാർത്ഥ ശൈലിയിൽ തന്നെ) */
 .top-bar {
   background: #064E3B;
   color: #fff;
@@ -113,39 +113,66 @@ body {
 }
 .main-body { padding: 12px; overflow-y: auto; max-height: 86vh; }
 
-/* HERO - ഇസ്ലാമിക് പാറ്റേൺ ചേർത്ത മദ്റസ കാർഡ് */
+/* HERO - പ്രീമിയം മിഹ്‌റാബ് & ഇസ്ലാമിക് പ്രെയർ കാർഡ് */
 .hero {
   text-align: center;
-  background-color: #f7fee7;
-  background-image: radial-gradient(#047857 0.75px, transparent 0.75px), radial-gradient(#10b981 0.75px, #f7fee7 0.75px);
-  background-size: 24px 24px;
-  background-position: 0 0, 12px 12px;
-  border-radius: 16px;
-  padding: 16px 12px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 32px 32px 18px 18px; /* മുകൾഭാഗം പള്ളിയുടെ മിഹ്‌റാബ് പോലെ അർദ്ധവൃത്താകൃതിയിൽ */
+  padding: 22px 14px 18px;
   margin-bottom: 12px;
-  border: 1.5px solid #a7f3d0;
-  box-shadow: 0 4px 15px -3px rgba(4, 120, 87, 0.08);
+  background-color: #fcfdfa;
+  /* ഇസ്ലാമിക് എട്ടുകോൺ നക്ഷത്ര പാറ്റേൺ */
+  background-image: 
+    radial-gradient(circle at center, rgba(6, 78, 59, 0.05) 0%, transparent 70%),
+    repeating-linear-gradient(45deg, rgba(6, 78, 59, 0.02) 0px, rgba(6, 78, 59, 0.02) 2px, transparent 2px, transparent 10px),
+    repeating-linear-gradient(-45deg, rgba(6, 78, 59, 0.02) 0px, rgba(6, 78, 59, 0.02) 2px, transparent 2px, transparent 10px);
+  border: 1.5px solid #d1fae5;
+  border-top: 3px solid #059669;
+  box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.08), inset 0 0 0 1px rgba(245, 158, 11, 0.2);
 }
+
+/* പള്ളിയുടെ മകുടം പോലുള്ള സ്വർണ്ണ അലങ്കാര ബോർഡർ */
+.hero::before {
+  content: "✦ ﷽ ✦";
+  display: block;
+  font-size: 12px;
+  color: #d97706;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
 .hero .arabic-greeting { 
-  font-size: 23px; 
+  font-size: 26px; 
   color: #064E3B; 
-  font-family: serif; 
-  font-weight: bold; 
+  font-family: 'Scheherazade New', 'Amiri', serif, system-ui; 
+  font-weight: 800; 
   margin-bottom: 4px;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
+
 .hero h1 { 
-  font-size: 15px; 
-  color: #064E3B; 
+  font-size: 14.5px; 
+  color: #0f172a; 
   font-weight: 800; 
   line-height: 1.4; 
+  margin-top: 2px;
 }
+
 .hero p { 
-  font-size: 11px; 
+  font-size: 10px; 
   color: #059669; 
-  margin-top: 4px; 
-  font-weight: 700; 
-  letter-spacing: 0.5px;
+  margin-top: 5px; 
+  font-weight: 800; 
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  background: rgba(16, 185, 129, 0.1);
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
 @keyframes pulse-glow {
@@ -233,7 +260,7 @@ body {
 .rank-2 { background: #64748b; }
 .rank-3 { background: #d97706; }
 
-/* പുതുക്കിയ ലീഡർബോർഡ് റാങ്ക് കാർഡുകൾ */
+/* പുതുക്കിയ ലീഡർബോർഡ് കാർഡുകൾ */
 .rank-card-gold {
   background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
   border-left: 4px solid #f59e0b !important;
