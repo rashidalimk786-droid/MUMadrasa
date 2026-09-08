@@ -78,7 +78,7 @@ function getOrCreateDeviceId() {
 }
 const currentDeviceId = getOrCreateDeviceId();
 
-// രാവിലെ 8:30 AM വരെ തലേദിവസത്തെ തീയതി തന്നെ നൽകാനുള്ള ഫംഗ്ഷൻ
+// രാവിലെ 8:30 AM വരെ മുൻ ദിവസത്തെ തീയതി നിലനിർത്താൻ
 function getEffectiveDate() {
   const d = new Date();
   if (d.getHours() < 8 || (d.getHours() === 8 && d.getMinutes() < 30)) {
@@ -98,17 +98,16 @@ let activeLogicalDate = getLogicalPrayerDate();
 const topDateLabel = document.getElementById('todayDateLabel');
 if (topDateLabel) topDateLabel.innerText = activeLogicalDate;
 
-// --- കടും നിറവും കൃത്യമായ ടെക്സ്റ്റ് ലെയറിംഗുമുള്ള പുതിയ എൻട്രി ബട്ടൺ ---
+// --- കടും നിറവും കൃത്യമായ ടെക്സ്റ്റ് ലെയറിംഗുമുള്ള പുതിയ എൻട്രി ബട്ടൺ UI ---
 function refreshMainEntryBtnUI() {
-  const btn = document.getElementById('mainPrayerEntryBtn') || document.querySelector('.btn-entry-open, .btn-entry-closed, .pulse-btn');
-  const txt = document.getElementById('mainPrayerEntryTxt') || (btn ? btn.querySelector('div') || btn : null);
-  if (!btn || !txt) return;
+  const btnEl = document.querySelector('.btn-entry-open, .btn-entry-closed, .pulse-btn');
+  if (!btnEl) return;
 
   const now = new Date();
   const effDate = getEffectiveDate();
   const formattedDate = `${String(effDate.getDate()).padStart(2, '0')}/${String(effDate.getMonth() + 1).padStart(2, '0')}/${effDate.getFullYear()}`;
 
-  // 1. ഓപ്പൺ സമയം: വൈകുന്നേരം 7:50 PM
+  // 1. ഇന്നത്തെ ഓപ്പൺ സമയം: 7:50 PM
   let openTime = new Date(now);
   openTime.setHours(19, 50, 0, 0);
 
@@ -122,10 +121,10 @@ function refreshMainEntryBtnUI() {
     openTime.setDate(openTime.getDate() - 1);
   }
 
-  // സമയപ്രകാരം ഓപ്പൺ ആണോ എന്ന് നോക്കുന്നു (രാത്രി 7:50 PM മുതൽ രാവിലെ 8:00 AM വരെ)
+  // സമയപ്രകാരം 7:50 PM നും 8:00 AM നും ഇടയിലാണോ
   const isTimeOpen = (now >= openTime && now < closeTime);
 
-  // അഡ്മിൻ പാനലിലെ ക്ലാസ് ലോക്ക് പരിശോധിക്കുന്നു (ഏതെങ്കിലും ക്ലാസ് ഓപ്പൺ ആണോ എന്ന് നോക്കുന്നു)
+  // അഡ്മിൻ പാനലിലെ ക്ലാസ് ലോക്ക് ഉണ്ടോ എന്ന് പരിശോധിക്കുന്നു
   let hasOpenClass = false;
   for (let i = 1; i <= 10; i++) {
     if (classLockSettings[String(i)] !== true) {
@@ -134,34 +133,37 @@ function refreshMainEntryBtnUI() {
     }
   }
 
-  // സമയവും അഡ്മിൻ ലോക്കും രണ്ടും അനുകൂലമാണെങ്കിൽ മാത്രം ഓപ്പൺ
-  const isOpen = isTimeOpen && hasOpenClass;
+  const isActuallyOpen = isTimeOpen && hasOpenClass;
 
-  if (isOpen) {
+  if (isActuallyOpen) {
     // --- ഓപ്പൺ അവസ്ഥ (രാവിലെ 8:00 AM-ലേക്ക് കൗണ്ട്ഡൗൺ) ---
     const diffClose = Math.max(0, closeTime - now);
     const h = Math.floor(diffClose / (1000 * 60 * 60));
     const m = Math.floor((diffClose / (1000 * 60)) % 60);
     const s = Math.floor((diffClose / 1000) % 60);
 
-    btn.className = 'pulse-btn btn-entry-open';
-    btn.style.background = "#047857";
-    btn.style.color = "#ffffff";
-    btn.style.border = "none";
-    txt.innerHTML = `
+    btnEl.className = 'pulse-btn btn-entry-open';
+    btnEl.style.background = "#047857";
+    btnEl.style.color = "#ffffff";
+    btnEl.style.border = "none";
+    btnEl.style.padding = "10px 14px";
+    btnEl.style.height = "auto";
+    btnEl.style.lineHeight = "1.3";
+    btnEl.onclick = openPrayerEntryModal;
+
+    btnEl.innerHTML = `
       <div style="font-size: 15px; font-weight: 800; letter-spacing: 0.2px; line-height: 1.2;">
         എന്റെ ഇന്നത്തെ നിസ്കാരം
       </div>
-      <div style="font-size: 11px; font-weight: 600; opacity: 0.95; margin-top: 2px;">
+      <div style="font-size: 11.5px; font-weight: 600; opacity: 0.95; margin-top: 3px;">
         🟢 Prayer Entry Open (${formattedDate})
       </div>
       <div style="font-size: 10.5px; font-weight: 500; opacity: 0.9; margin-top: 1px;">
         Closes in: ${h}h ${m}m ${s}s (8:00 AM)
       </div>
     `;
-    btn.onclick = openPrayerEntryModal;
   } else {
-    // --- ക്ലോസ്ഡ് അവസ്ഥ (വൈകിട്ട് 7:50 PM-ലേക്ക് കൗണ്ട്ഡൗൺ) ---
+    // --- ക്ലോസ്ഡ് അവസ്ഥ (7:50 PM-ലേക്ക് കൗണ്ട്ഡൗൺ) ---
     let nextOpen = new Date(now);
     nextOpen.setHours(19, 50, 0, 0);
     if (now >= nextOpen) {
@@ -173,28 +175,32 @@ function refreshMainEntryBtnUI() {
     const m = Math.floor((diffOpen / (1000 * 60)) % 60);
     const s = Math.floor((diffOpen / 1000) % 60);
 
-    btn.className = 'pulse-btn btn-entry-closed';
-    btn.style.background = "#b91c1c";
-    btn.style.color = "#ffffff";
-    btn.style.border = "none";
-    txt.innerHTML = `
+    btnEl.className = 'pulse-btn btn-entry-closed';
+    btnEl.style.background = "#b91c1c";
+    btnEl.style.color = "#ffffff";
+    btnEl.style.border = "none";
+    btnEl.style.padding = "10px 14px";
+    btnEl.style.height = "auto";
+    btnEl.style.lineHeight = "1.3";
+    btnEl.onclick = function() {
+      alert("ഇന്നത്തെ നിസ്കാര എൻട്രി ഇപ്പോൾ ക്ലോസ്ഡ് ആണ്. വൈകുന്നേരം 7:50 PM-ന് ഓപ്പൺ ആകുന്നതാണ്.");
+    };
+
+    btnEl.innerHTML = `
       <div style="font-size: 15px; font-weight: 800; letter-spacing: 0.2px; line-height: 1.2;">
         എന്റെ ഇന്നത്തെ നിസ്കാരം
       </div>
-      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.3px; margin-top: 2px;">
+      <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.3px; margin-top: 3px;">
         🔴 Entry Closed (Open @ 7:50 PM)
       </div>
       <div style="font-size: 10.5px; font-weight: 500; opacity: 0.85; margin-top: 1px;">
         Opens in: ${h}h ${m}m ${s}s | Date: ${formattedDate}
       </div>
     `;
-    btn.onclick = function() {
-      alert("ഇന്നത്തെ നിസ്കാര എൻട്രി ഇപ്പോൾ ക്ലോസ്ഡ് ആണ്. വൈകുന്നേരം 7:50 PM-ന് ഓപ്പൺ ആകുന്നതാണ്.");
-    };
   }
 }
 
-// ടൈമർ സെക്കൻഡുകൾ തോറും തനിയെ അപ്ഡേറ്റ് ആകാൻ
+// ടൈമർ സെക്കൻഡുകൾ തോറും തനിയെ അപ്ഡേറ്റ് ചെയ്യാൻ
 if (typeof mainEntryTimer !== 'undefined') clearInterval(mainEntryTimer);
 var mainEntryTimer = setInterval(refreshMainEntryBtnUI, 1000);
 
