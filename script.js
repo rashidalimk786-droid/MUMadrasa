@@ -90,57 +90,111 @@ const topDateLabel = document.getElementById('todayDateLabel');
 if (topDateLabel) topDateLabel.innerText = activeLogicalDate;
 
 // --- കടും നിറവും കൃത്യമായ ടെക്സ്റ്റ് ലെയറിംഗുമുള്ള പുതിയ എൻട്രി ബട്ടൺ ---
-function refreshMainEntryBtnUI() {
-  const btn = document.getElementById('mainPrayerEntryBtn');
-  const txt = document.getElementById('mainPrayerEntryBtnText');
-  if (!btn || !txt) return;
-
-  // ബട്ടൺ കണ്ടെയ്നർ സ്റ്റൈൽ ക്രമീകരണം
-  btn.style.padding = "12px 14px";
-  btn.style.borderRadius = "14px";
-  btn.style.boxShadow = "0 4px 14px rgba(0,0,0,0.18)";
-  btn.style.textAlign = "center";
-  btn.style.width = "100%";
-  btn.style.boxSizing = "border-box";
-  btn.style.display = "block";
-  btn.style.overflow = "hidden";
-
-  let openCount = 0;
-  for (let i = 1; i <= 10; i++) {
-    if (classLockSettings[String(i)] !== true) openCount++;
-  }
-
-  if (openCount > 0) {
-    btn.className = 'pulse-btn btn-entry-open';
-    btn.style.background = "#047857"; // കടും പച്ച
-    btn.style.color = "#ffffff";
-    btn.style.border = "none";
-    txt.innerHTML = `
-      <div style="font-size: 16.5px; font-weight: 800; letter-spacing: 0.2px; line-height: 1.3; margin-bottom: 2px;">
-        എൻറെ ഇന്നത്തെ നിസ്കാരം
-      </div>
-      <div style="font-size: 12px; font-weight: 600; opacity: 0.95; letter-spacing: 0.5px;">
-        🟢 Prayer Entry Open
-      </div>
-    `;
-  } else {
-    btn.className = 'pulse-btn btn-entry-closed';
-    btn.style.background = "#b91c1c"; // കടും ചുവപ്പ്
-    btn.style.color = "#ffffff";
-    btn.style.border = "none";
-    txt.innerHTML = `
-      <div style="font-size: 16.5px; font-weight: 800; letter-spacing: 0.2px; line-height: 1.3; margin-bottom: 2px;">
-        എൻറെ ഇന്നത്തെ നിസ്കാരം
-      </div>
-      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.4px; opacity: 0.95;">
-        🔴 Entry Closed
-      </div>
-      <div style="font-size: 10px; font-weight: 400; opacity: 0.85; margin-top: 3px;">
-        ഇശാഇന് ശേഷം ഓപ്പൺ ആവുന്നതാണ്
-      </div>
-    `;
-  }
+// രാവിലെ 8:30 AM വരെ തലേദിവസത്തെ തീയതി തന്നെ നൽകാനുള്ള ഫംഗ്ഷൻ
+function getEffectiveDate() {
+    const d = new Date();
+    // രാവിലെ 8:30-ന് മുൻപാണെങ്കിൽ ഒരു ദിവസം പിന്നോട്ട് വെക്കുന്നു
+    if (d.getHours() < 8 || (d.getHours() === 8 && d.getMinutes() < 30)) {
+        d.setDate(d.getDate() - 1);
+    }
+    return d;
 }
+
+function refreshMainEntryBtnUI() {
+    const now = new Date();
+
+    // 1. പ്രാബല്യത്തിലുള്ള തീയതി (രാവിലെ 8:30 വരെ മുൻ ദിവസത്തെ ഡേറ്റ്)
+    const effectiveDate = getEffectiveDate();
+    const day = String(effectiveDate.getDate()).padStart(2, '0');
+    const month = String(effectiveDate.getMonth() + 1).padStart(2, '0');
+    const year = effectiveDate.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`;
+
+    // 2. ഇന്നത്തെ ഓപ്പൺ സമയം (വൈകുന്നേരം 7:50 PM)
+    let openTime = new Date(now);
+    openTime.setHours(19, 50, 0, 0);
+
+    // 3. ക്ലോസ് സമയം (രാവിലെ 8:00 AM)
+    let closeTime = new Date(now);
+    closeTime.setHours(8, 0, 0, 0);
+
+    // രാത്രി 7:50 PM മുതൽ രാവിലെ 8:00 AM വരെയുള്ള വിൻഡോ കൃത്യമാക്കുന്നു
+    if (now.getHours() >= 19 && (now.getHours() > 19 || now.getMinutes() >= 50)) {
+        // രാത്രി 7:50 PM കഴിഞ്ഞാൽ ക്ലോസ് ചെയ്യേണ്ടത് അടുത്ത ദിവസത്തെ 8 AM ആണ്
+        closeTime.setDate(closeTime.getDate() + 1);
+    } else if (now.getHours() < 8) {
+        // അർദ്ധരാത്രി മുതൽ രാവിലെ 8 AM വരെ ആണെങ്കിൽ ഓപ്പൺ ആയത് തലേദിവസം 7:50 PM ആണ്
+        openTime.setDate(openTime.getDate() - 1);
+    }
+
+    // നിലവിൽ എൻട്രി ഓപ്പൺ ആണോ എന്ന് പരിശോധിക്കുന്നു
+    const isOpen = (now >= openTime && now < closeTime);
+
+    if (isOpen) {
+        // --- ഓപ്പൺ ആയിരിക്കുമ്പോൾ (രാവിലെ 8:00 AM-ന് ക്ലോസ് ആവാനുള്ള കൗണ്ട്ഡൗൺ) ---
+        const diffClose = Math.max(0, closeTime - now);
+        const h = Math.floor(diffClose / (1000 * 60 * 60));
+        const m = Math.floor((diffClose / (1000 * 60)) % 60);
+        const s = Math.floor((diffClose / 1000) % 60);
+
+        btn.className = 'pulse-btn btn-entry-open';
+        btn.style.background = "#047857";
+        btn.style.color = "#ffffff";
+        btn.style.border = "none";
+        txt.innerHTML = `
+            <div style="font-size: 16.5px; font-weight: 800; letter-spacing: 0.2px;">
+                എന്റെ ഇന്നത്തെ നിസ്കാരം
+            </div>
+            <div style="font-size: 11.5px; font-weight: 600; opacity: 0.9;">
+                തീയതി: ${formattedDate}
+            </div>
+            <div style="font-size: 12px; font-weight: 600; opacity: 0.95; margin-top: 2px;">
+                🟢 Prayer Entry Open
+            </div>
+            <div style="font-size: 11px; font-weight: 500; opacity: 0.9; margin-top: 2px;">
+                Closes in: ${h}h ${m}m ${s}s (8:00 AM)
+            </div>
+        `;
+    } else {
+        // --- ക്ലോസ് ആയിരിക്കുമ്പോൾ (രാത്രി 7:50 PM-ന് ഓപ്പൺ ആവാനുള്ള കൗണ്ട്ഡൗൺ) ---
+        let nextOpen = new Date(now);
+        nextOpen.setHours(19, 50, 0, 0);
+
+        // രാത്രി 7:50 കഴിഞ്ഞിട്ടാണ് ക്ലോസ് എങ്കിൽ അടുത്ത ദിവസത്തെ 7:50 PM കണക്കാക്കുന്നു
+        if (now >= nextOpen) {
+            nextOpen.setDate(nextOpen.getDate() + 1);
+        }
+
+        const diffOpen = Math.max(0, nextOpen - now);
+        const h = Math.floor(diffOpen / (1000 * 60 * 60));
+        const m = Math.floor((diffOpen / (1000 * 60)) % 60);
+        const s = Math.floor((diffOpen / 1000) % 60);
+
+        btn.className = 'pulse-btn btn-entry-closed';
+        btn.style.background = "#b91c1c";
+        btn.style.color = "#ffffff";
+        btn.style.border = "none";
+        txt.innerHTML = `
+            <div style="font-size: 16.5px; font-weight: 800; letter-spacing: 0.2px;">
+                എന്റെ ഇന്നത്തെ നിസ്കാരം
+            </div>
+            <div style="font-size: 11.5px; font-weight: 600; opacity: 0.9;">
+                തീയതി: ${formattedDate}
+            </div>
+            <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.4px; margin-top: 2px;">
+                🔴 Entry Closed (Open @ 7:50 PM)
+            </div>
+            <div style="font-size: 11px; font-weight: 500; opacity: 0.85; margin-top: 2px;">
+                Opens in: ${h}h ${m}m ${s}s
+            </div>
+        `;
+    }
+}
+
+// ടൈമറും ഡേറ്റും തനിയെ അപ്ഡേറ്റ് ആകാൻ താഴെയുള്ള വരി നൽകുക:
+setInterval(refreshMainEntryBtnUI, 1000);
+
+
 
 // --- DYNAMIC FULLSCREEN VIDEO PLAYER ---
 function playVideoFullscreen(urlEncoded) {
