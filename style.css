@@ -71,10 +71,10 @@ body {
 .notice-badge { background: #d97706; color: #fff; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase; flex-shrink: 0; }
 .notice-msg-text { flex: 1; font-size: 11.5px; font-weight: 700; color: #92400e; line-height: 1.35; white-space: normal; word-break: break-word; transition: opacity 0.25s ease-in-out; }
 
-/* HEADER (പൂർണ്ണമായും യഥാർത്ഥ ശൈലിയിൽ തന്നെ) */
+/* HEADER (പഴയ ഒറിജിനൽ പച്ച നിറം) */
 .top-bar {
-  background: #064E3B;
-  color: #fff;
+  background: #064E3B !important;
+  color: #ffffff !important;
   padding: 8px 12px;
   display: flex;
   justify-content: space-between;
@@ -82,12 +82,12 @@ body {
   border-bottom: 2px solid #047857;
 }
 .top-bar-left { display: flex; align-items: center; gap: 8px; }
-.hamburger-btn { background: transparent; border: none; color: #fff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 3px; }
-.top-bar h3 { font-size: 13.5px; font-weight: 800; letter-spacing: 0.5px; }
+.hamburger-btn { background: transparent; border: none; color: #ffffff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 3px; }
+.top-bar h3 { font-size: 13.5px; font-weight: 800; letter-spacing: 0.5px; color: #ffffff !important; }
 .top-actions { display: flex; gap: 5px; align-items: center; }
 .btn-contact {
   background: #064E3B;
-  color: #fff;
+  color: #ffffff;
   border: 1px solid rgba(255,255,255,0.3);
   padding: 4px 8px;
   border-radius: 14px;
@@ -101,7 +101,7 @@ body {
 }
 .btn-top {
   background: rgba(255,255,255,0.2);
-  color: #fff;
+  color: #ffffff;
   border: 1px solid rgba(255,255,255,0.4);
   padding: 4px 10px;
   border-radius: 14px;
@@ -113,60 +113,51 @@ body {
 }
 .main-body { padding: 12px; overflow-y: auto; max-height: 86vh; }
 
-/* HERO - പ്രീമിയം മിഹ്‌റാബ് & ഇസ്ലാമിക് പ്രെയർ കാർഡ് */
+/* HERO - ഇസ്ലാമിക് മിഹ്‌റാബ് പശ്ചാത്തലം */
 .hero {
   text-align: center;
   position: relative;
   overflow: hidden;
-  border-radius: 32px 32px 18px 18px; /* മുകൾഭാഗം പള്ളിയുടെ മിഹ്‌റാബ് പോലെ അർദ്ധവൃത്താകൃതിയിൽ */
-  padding: 22px 14px 18px;
+  border-radius: 28px 28px 16px 16px;
+  padding: 20px 14px 16px;
   margin-bottom: 12px;
   background-color: #fcfdfa;
-  /* ഇസ്ലാമിക് എട്ടുകോൺ നക്ഷത്ര പാറ്റേൺ */
   background-image: 
     radial-gradient(circle at center, rgba(6, 78, 59, 0.05) 0%, transparent 70%),
     repeating-linear-gradient(45deg, rgba(6, 78, 59, 0.02) 0px, rgba(6, 78, 59, 0.02) 2px, transparent 2px, transparent 10px),
     repeating-linear-gradient(-45deg, rgba(6, 78, 59, 0.02) 0px, rgba(6, 78, 59, 0.02) 2px, transparent 2px, transparent 10px);
   border: 1.5px solid #d1fae5;
-  border-top: 3px solid #059669;
-  box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.08), inset 0 0 0 1px rgba(245, 158, 11, 0.2);
+  border-top: 3.5px solid #064E3B;
+  box-shadow: 0 8px 20px -4px rgba(6, 78, 59, 0.08);
 }
-
-/* പള്ളിയുടെ മകുടം പോലുള്ള സ്വർണ്ണ അലങ്കാര ബോർഡർ */
 .hero::before {
   content: "✦ ﷽ ✦";
   display: block;
-  font-size: 12px;
+  font-size: 11.5px;
   color: #d97706;
   letter-spacing: 2px;
   margin-bottom: 6px;
   font-weight: bold;
 }
-
 .hero .arabic-greeting { 
-  font-size: 26px; 
+  font-size: 25px; 
   color: #064E3B; 
-  font-family: 'Scheherazade New', 'Amiri', serif, system-ui; 
+  font-family: serif; 
   font-weight: 800; 
   margin-bottom: 4px;
-  letter-spacing: 0.5px;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
-
 .hero h1 { 
   font-size: 14.5px; 
   color: #0f172a; 
   font-weight: 800; 
   line-height: 1.4; 
-  margin-top: 2px;
 }
-
 .hero p { 
   font-size: 10px; 
   color: #059669; 
   margin-top: 5px; 
   font-weight: 800; 
-  letter-spacing: 1.2px;
+  letter-spacing: 1px;
   text-transform: uppercase;
   background: rgba(16, 185, 129, 0.1);
   display: inline-block;
@@ -203,7 +194,6 @@ body {
   animation: pulse-glow 2s infinite;
 }
 
-/* എൻട്രി ക്ലോസ്ഡ് ബാഡ്ജ് */
 .btn-entry-closed {
   background: #FEE2E2;
   color: #DC2626;
@@ -260,7 +250,6 @@ body {
 .rank-2 { background: #64748b; }
 .rank-3 { background: #d97706; }
 
-/* പുതുക്കിയ ലീഡർബോർഡ് കാർഡുകൾ */
 .rank-card-gold {
   background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
   border-left: 4px solid #f59e0b !important;
