@@ -2232,18 +2232,41 @@ function switchLeaderboard(type, btn) {
 
 function renderLeaderboard() {
   const selectedClass = document.getElementById('leaderboardClassFilter')?.value || 'ALL';
-  let targetDate = activeLogicalDate;
-  const todayPrayersCount = dbPrayers.filter(p => p.date === activeLogicalDate).length;
-  if (todayPrayersCount === 0 && activeLeaderboardTab === 'daily') {
-    const recordedDates = [...new Set(dbPrayers.map(p => p.date))].filter(d => d < activeLogicalDate).sort().reverse();
-    if (recordedDates.length > 0) targetDate = recordedDates[0];
+  
+  // ഇന്ത്യൻ സമയം (IST) കൃത്യമായി എടുക്കുന്നു
+  const now = new Date();
+  const istOffset = 5.5 * 60 * 60 * 1000;
+  const istDate = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000) + istOffset);
+  const hours = istDate.getHours();
+  const minutes = istDate.getMinutes();
+
+  // രാത്രി 8:30 (ഇശാഇന് ശേഷം) മാത്രമേ പുതിയ ദിവസത്തെ റാങ്ക് കാണിക്കൂ; അതുവരെ തലേ ദിവസത്തെ റാങ്ക് തുടരും
+  let lbDateObj = new Date(istDate);
+  if (hours < 20 || (hours === 20 && minutes < 30)) {
+    lbDateObj.setDate(lbDateObj.getDate() - 1);
   }
-  document.getElementById('todayDateLabel').innerText = targetDate;
+
+  const ly = lbDateObj.getFullYear();
+  const lm = String(lbDateObj.getMonth() + 1).padStart(2, '0');
+  const ld = String(lbDateObj.getDate()).padStart(2, '0');
+  let targetDate = `${ly}-${lm}-${ld}`;
+
+  const dateDisplay = document.getElementById('todayDateLabel');
+  if (dateDisplay) dateDisplay.innerText = targetDate;
+
   let filteredPrayers = [];
   if (activeLeaderboardTab === 'daily') {
     filteredPrayers = dbPrayers.filter(e => e.date === targetDate);
+    if (filteredPrayers.length === 0) {
+      const recordedDates = [...new Set(dbPrayers.map(p => p.date))].filter(d => d <= targetDate).sort().reverse();
+      if (recordedDates.length > 0) {
+        targetDate = recordedDates[0];
+        if (dateDisplay) dateDisplay.innerText = targetDate;
+        filteredPrayers = dbPrayers.filter(e => e.date === targetDate);
+      }
+    }
   } else if (activeLeaderboardTab === 'weekly') {
-    const sAgo = new Date();
+    const sAgo = new Date(lbDateObj);
     sAgo.setDate(sAgo.getDate() - 7);
     const sAgoStr = sAgo.toISOString().split('T')[0];
     filteredPrayers = dbPrayers.filter(e => e.date >= sAgoStr && e.date <= targetDate);
@@ -2251,6 +2274,7 @@ function renderLeaderboard() {
     const mStr = targetDate.substring(0, 7);
     filteredPrayers = dbPrayers.filter(e => e.date && e.date.startsWith(mStr));
   }
+
   const map = {};
   filteredPrayers.forEach(e => {
     if (!map[e.studentId]) map[e.studentId] = { jam: 0, ada: 0, qad: 0, totalScore: 0 };
@@ -2260,6 +2284,7 @@ function renderLeaderboard() {
       else if (st === 'ഖളാഅ്') { map[e.studentId].qad++; map[e.studentId].totalScore += 1; }
     });
   });
+
   let allScores = Object.keys(map).map(stuId => {
     const s = dbStudents.find(x => x.id === stuId);
     if (!s) return null;
@@ -2270,13 +2295,17 @@ function renderLeaderboard() {
   const boys = allScores.filter(s => s.gender === 'Male').sort((a,b) => b.totalScore - a.totalScore);
   const girls = allScores.filter(s => s.gender === 'Female').sort((a,b) => b.totalScore - a.totalScore);
   const container = document.getElementById('leaderboardList');
+  if (!container) return;
+
   if (boys.length === 0 && girls.length === 0) {
     container.innerHTML = `<p style="font-size:11px; color:var(--text-muted); text-align:center; padding:10px 0;">${selectedClass !== 'ALL' ? `ക്ലാസ് ${selectedClass}-ൽ ` : ''}വിവരങ്ങൾ ലഭ്യമല്ല</p>`;
     return;
   }
+
   let html = '';
   const topBoy = boys[0];
   const topGirl = girls[0];
+
   if (topBoy) {
     html += `
       <div class="rank-item" style="border-left: 3.5px solid #0284c7;">
@@ -2299,6 +2328,7 @@ function renderLeaderboard() {
       </div>
     `;
   }
+
   if (activeLeaderboardTab !== 'daily') {
     const renderSubList = (list) => {
       return list.slice(1, 3).map((item, i) => `
@@ -2312,6 +2342,12 @@ function renderLeaderboard() {
         </div>
       `).join('');
     };
+    if (boys.length > 1) html += renderSubList(boys);
+    if (girls.length > 1) html += renderSubList(girls);
+  }
+  container.innerHTML = html;
+}
+
     if (boys.length > 1) html += renderSubList(boys);
     if (girls.length > 1) html += renderSubList(girls);
   }
