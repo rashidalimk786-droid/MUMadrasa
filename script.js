@@ -78,7 +78,6 @@ function getOrCreateDeviceId() {
 }
 const currentDeviceId = getOrCreateDeviceId();
 
-// രാവിലെ 8:30 AM വരെ മുൻ ദിവസത്തെ തീയതി നിലനിർത്താൻ
 function getEffectiveDate() {
   const d = new Date();
   if (d.getHours() < 8 || (d.getHours() === 8 && d.getMinutes() < 30)) {
@@ -98,7 +97,19 @@ let activeLogicalDate = getLogicalPrayerDate();
 const topDateLabel = document.getElementById('todayDateLabel');
 if (topDateLabel) topDateLabel.innerText = activeLogicalDate;
 
-// --- കടും നിറവും കൃത്യമായ ടെക്സ്റ്റ് ലെയറിംഗുമുള്ള പുതിയ എൻട്രി ബട്ടൺ UI ---
+// --- ഹെഡർ ഇസ്ലാമിക് ഡിസൈൻ അപ്ലൈ ചെയ്യൽ ---
+(function applyIslamicHeaderStyle() {
+  const header = document.querySelector('header, .top-bar, .app-header');
+  if (header) {
+    header.classList.add('top-header-islamic');
+    header.style.backgroundColor = "#f6fbf7";
+    header.style.backgroundImage = "radial-gradient(#047857 0.65px, transparent 0.65px), radial-gradient(#10b981 0.65px, #f6fbf7 0.65px)";
+    header.style.backgroundSize = "24px 24px";
+    header.style.borderBottom = "2px solid #bbf7d0";
+  }
+})();
+
+// --- എൻട്രി ബട്ടൺ UI ---
 function refreshMainEntryBtnUI() {
   const btnEl = document.querySelector('.btn-entry-open, .btn-entry-closed, .pulse-btn');
   if (!btnEl) return;
@@ -107,11 +118,9 @@ function refreshMainEntryBtnUI() {
   const effDate = getEffectiveDate();
   const formattedDate = `${String(effDate.getDate()).padStart(2, '0')}/${String(effDate.getMonth() + 1).padStart(2, '0')}/${effDate.getFullYear()}`;
 
-  // 1. ഇന്നത്തെ ഓപ്പൺ സമയം: 7:50 PM
   let openTime = new Date(now);
   openTime.setHours(19, 50, 0, 0);
 
-  // 2. ക്ലോസ് സമയം: അടുത്ത ദിവസം രാവിലെ 8:00 AM
   let closeTime = new Date(now);
   closeTime.setHours(8, 0, 0, 0);
 
@@ -121,10 +130,8 @@ function refreshMainEntryBtnUI() {
     openTime.setDate(openTime.getDate() - 1);
   }
 
-  // സമയപ്രകാരം 7:50 PM നും 8:00 AM നും ഇടയിലാണോ
   const isTimeOpen = (now >= openTime && now < closeTime);
 
-  // അഡ്മിൻ പാനലിലെ ക്ലാസ് ലോക്ക് ഉണ്ടോ എന്ന് പരിശോധിക്കുന്നു
   let hasOpenClass = false;
   for (let i = 1; i <= 10; i++) {
     if (classLockSettings[String(i)] !== true) {
@@ -136,7 +143,6 @@ function refreshMainEntryBtnUI() {
   const isActuallyOpen = isTimeOpen && hasOpenClass;
 
   if (isActuallyOpen) {
-    // --- ഓപ്പൺ അവസ്ഥ (രാവിലെ 8:00 AM-ലേക്ക് കൗണ്ട്ഡൗൺ) ---
     const diffClose = Math.max(0, closeTime - now);
     const h = Math.floor(diffClose / (1000 * 60 * 60));
     const m = Math.floor((diffClose / (1000 * 60)) % 60);
@@ -163,7 +169,6 @@ function refreshMainEntryBtnUI() {
       </div>
     `;
   } else {
-    // --- ക്ലോസ്ഡ് അവസ്ഥ (7:50 PM-ലേക്ക് കൗണ്ട്ഡൗൺ) ---
     let nextOpen = new Date(now);
     nextOpen.setHours(19, 50, 0, 0);
     if (now >= nextOpen) {
@@ -200,7 +205,6 @@ function refreshMainEntryBtnUI() {
   }
 }
 
-// ടൈമർ സെക്കൻഡുകൾ തോറും തനിയെ അപ്ഡേറ്റ് ചെയ്യാൻ
 if (typeof mainEntryTimer !== 'undefined') clearInterval(mainEntryTimer);
 var mainEntryTimer = setInterval(refreshMainEntryBtnUI, 1000);
 
@@ -452,6 +456,10 @@ setInterval(() => {
       if (currentUser.role === 'admin' || currentUser.role === 'sadr') {
         currentUser = null;
         localStorage.removeItem('mum_logged_session');
+      } else if (currentUser.role === 'coadmin') {
+        loginAsCoAdmin(false);
+      } else if (currentUser.role === 'teacher') {
+        loginAsTeacher(currentUser.data, false);
       } else {
         updateTopNavBtn();
       }
@@ -697,6 +705,7 @@ function navigateRolePortal(role) {
   closeNavDrawer(false);
   if (role === 'admin') loginAsAdmin(false);
   else if (role === 'sadr') loginAsSadr(false);
+  else if (role === 'coadmin') loginAsCoAdmin(false);
   else if (role === 'teacher') loginAsTeacher(currentUser.data, false);
 }
 
@@ -719,7 +728,8 @@ function switchPortalTab(portalPrefix, sectionId, btnElement) {
 
 function jumpToSection(secId) {
   closeNavDrawer(false);
-  if (currentUser.role === 'admin' || currentUser.role === 'coadmin') loginAsAdmin(false);
+  if (currentUser.role === 'admin') loginAsAdmin(false);
+  else if (currentUser.role === 'coadmin') loginAsCoAdmin(false);
   else if (currentUser.role === 'teacher') loginAsTeacher(currentUser.data, false);
   else if (currentUser.role === 'sadr') loginAsSadr(false);
   setTimeout(() => {
@@ -777,15 +787,17 @@ async function saveSadrPasswordAdmin() {
 
 function loadCoAdminSettingsUI() {
   if (!coAdminConfig) return;
-  document.getElementById('coAdminName').value = coAdminConfig.name || '';
-  document.getElementById('coAdminPass').value = coAdminConfig.pass || '';
+  const nameEl = document.getElementById('coAdminName');
+  const passEl = document.getElementById('coAdminPass');
+  if (nameEl) nameEl.value = coAdminConfig.name || '';
+  if (passEl) passEl.value = coAdminConfig.pass || '';
   const p = coAdminConfig.permissions || {};
-  document.getElementById('perm_locks').checked = !!p.locks;
-  document.getElementById('perm_students').checked = !!p.students;
-  document.getElementById('perm_teachers').checked = !!p.teachers;
-  document.getElementById('perm_daily').checked = !!p.daily;
-  document.getElementById('perm_reports').checked = !!p.reports;
-  document.getElementById('perm_media').checked = !!p.media;
+  if (document.getElementById('perm_locks')) document.getElementById('perm_locks').checked = !!p.locks;
+  if (document.getElementById('perm_students')) document.getElementById('perm_students').checked = !!p.students;
+  if (document.getElementById('perm_teachers')) document.getElementById('perm_teachers').checked = !!p.teachers;
+  if (document.getElementById('perm_daily')) document.getElementById('perm_daily').checked = !!p.daily;
+  if (document.getElementById('perm_reports')) document.getElementById('perm_reports').checked = !!p.reports;
+  if (document.getElementById('perm_media')) document.getElementById('perm_media').checked = !!p.media;
 }
 
 async function saveCoAdminConfig() {
@@ -1016,7 +1028,7 @@ function renderAdminPhotoList() {
   c.innerHTML = h;
 }
 
-// --- LEADERBOARD ---
+// --- LEADERBOARD (കൂടുതൽ ആകർഷകമായ കാർഡുകളോടെ) ---
 function switchLeaderboard(type, btn) {
   activeLeaderboardTab = type;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1102,42 +1114,59 @@ function renderLeaderboard() {
 
   if (topBoy) {
     html += `
-      <div class="rank-item" style="border-left: 3.5px solid #0284c7;">
-        <div style="display:flex; align-items:center;">
-          <div class="rank-badge rank-1">1st (Boy)</div>
-          <img src="${topBoy.photo || defaultAvatar}" class="avatar-sm">
-          <div><b>${topBoy.name}</b> (Class ${topBoy.class})</div>
+      <div class="rank-item rank-card-gold" style="padding: 10px; border-radius: 12px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #fde68a;">
+        <div style="display:flex; align-items:center; gap: 8px;">
+          <div style="background:#f59e0b; color:#fff; font-size:10px; font-weight:800; padding:3px 8px; border-radius:20px; box-shadow:0 2px 4px rgba(0,0,0,0.1);">👑 1st (Boy)</div>
+          <img src="${topBoy.photo || defaultAvatar}" class="avatar-sm" style="border: 2px solid #f59e0b; width: 34px; height: 34px; border-radius: 50%;">
+          <div>
+            <b style="font-size:13px; color:#1e293b;">${topBoy.name}</b>
+            <div style="font-size:10px; color:#64748b;">Class ${topBoy.class}</div>
+          </div>
         </div>
-        <span style="font-weight:bold; color:var(--primary); font-size:11.5px;">${topBoy.totalScore} pts</span>
+        <div style="text-align: right;">
+          <span style="font-weight:900; color:#b45309; font-size:14px;">${topBoy.totalScore}</span>
+          <span style="font-size:9.5px; color:#78350f; display:block;">പോയിന്റ്</span>
+        </div>
       </div>
     `;
   }
   if (topGirl) {
     html += `
-      <div class="rank-item" style="border-left: 3.5px solid #ec4899;">
-        <div class="rank-badge rank-1" style="background:#ec4899;">1st (Girl)</div>
-        <img src="${topGirl.photo || defaultAvatar}" class="avatar-sm">
-        <div><b>${topGirl.name}</b> (Class ${topGirl.class})</div>
-        <span style="font-weight:bold; color:var(--primary); font-size:11.5px;">${topGirl.totalScore} pts</span>
+      <div class="rank-item rank-card-pink" style="padding: 10px; border-radius: 12px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #fbcfe8;">
+        <div style="display:flex; align-items:center; gap: 8px;">
+          <div style="background:#ec4899; color:#fff; font-size:10px; font-weight:800; padding:3px 8px; border-radius:20px; box-shadow:0 2px 4px rgba(0,0,0,0.1);">👑 1st (Girl)</div>
+          <img src="${topGirl.photo || defaultAvatar}" class="avatar-sm" style="border: 2px solid #ec4899; width: 34px; height: 34px; border-radius: 50%;">
+          <div>
+            <b style="font-size:13px; color:#1e293b;">${topGirl.name}</b>
+            <div style="font-size:10px; color:#64748b;">Class ${topGirl.class}</div>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-weight:900; color:#be185d; font-size:14px;">${topGirl.totalScore}</span>
+          <span style="font-size:9.5px; color:#831843; display:block;">പോയിന്റ്</span>
+        </div>
       </div>
     `;
   }
 
   if (activeLeaderboardTab !== 'daily') {
-    const renderSubList = (list) => {
+    const renderSubList = (list, genderLabel) => {
       return list.slice(1, 3).map((item, i) => `
-        <div class="rank-item">
-          <div style="display:flex; align-items:center;">
-            <div class="rank-badge rank-${i+2}">${i+2}nd</div>
-            <img src="${item.photo || defaultAvatar}" class="avatar-sm">
-            <div>${item.name} (Class ${item.class})</div>
+        <div class="rank-item" style="padding: 8px 10px; border-radius: 8px; margin-bottom: 5px; background: #fff; border: 1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between;">
+          <div style="display:flex; align-items:center; gap: 8px;">
+            <div style="background:#e2e8f0; color:#475569; font-size:9.5px; font-weight:700; padding:2px 6px; border-radius:12px;">#${i+2} ${genderLabel}</div>
+            <img src="${item.photo || defaultAvatar}" class="avatar-sm" style="width: 28px; height: 28px; border-radius: 50%;">
+            <div>
+              <div style="font-size:12px; font-weight:700;">${item.name}</div>
+              <div style="font-size:9.5px; color:#64748b;">Class ${item.class}</div>
+            </div>
           </div>
-          <span style="font-weight:bold; color:var(--primary); font-size:11px;">${item.totalScore} pts</span>
+          <span style="font-weight:bold; color:var(--primary); font-size:12px;">${item.totalScore} pts</span>
         </div>
       `).join('');
     };
-    if (boys.length > 1) html += renderSubList(boys);
-    if (girls.length > 1) html += renderSubList(girls);
+    if (boys.length > 1) html += renderSubList(boys, 'Boy');
+    if (girls.length > 1) html += renderSubList(girls, 'Girl');
   }
   container.innerHTML = html;
 }
@@ -1822,12 +1851,19 @@ function handleSmartSearch(val, containerId, selectCallback) {
   box.style.display = 'block';
 }
 
+// കുട്ടിയുടെ പേര് നിലനിർത്താൻ തിരുത്തിയ ഫംഗ്ഷൻ
 function selectStatusStudent(studentId) {
   const s = dbStudents.find(x => x.id === studentId);
   if (!s) return;
-  document.getElementById('srchAdm').value = s.adm;
-  document.getElementById('srchSuggestions').style.display = 'none';
-  document.getElementById('srchPass').focus();
+  const srchInput = document.getElementById('srchAdm');
+  if (srchInput) {
+    srchInput.value = s.name; // പേര് ഫീൽഡിൽ തന്നെ നിലനിർത്തുന്നു
+    srchInput.setAttribute('data-selected-id', s.id);
+  }
+  const sugg = document.getElementById('srchSuggestions');
+  if (sugg) sugg.style.display = 'none';
+  const passEl = document.getElementById('srchPass');
+  if (passEl) passEl.focus();
 }
 
 function selectEntryStudent(studentId) {
@@ -1930,7 +1966,7 @@ function checkAllPrayersFilled() {
   }
 }
 
-// --- DUPLICATE ENTRY RESTRICTION & UNIQUE FIRESTORE DOC ID ---
+// --- DUPLICATE ENTRY RESTRICTION ---
 async function saveDailyPrayer() {
   if (!activeStudentForEntry) return;
 
@@ -1987,20 +2023,30 @@ async function saveDailyPrayer() {
   }
 }
 
-// --- STUDENT SEARCH & PROGRESS GRAPH ---
+// --- STUDENT SEARCH & PROGRESS GRAPH (കൂടുതൽ ആകർഷകമായ UI) ---
 function searchStudentHistory() {
-  const term = document.getElementById('srchAdm').value.trim().toLowerCase();
+  const inputEl = document.getElementById('srchAdm');
+  const term = inputEl.value.trim().toLowerCase();
+  const selectedId = inputEl.getAttribute('data-selected-id');
   const pass = document.getElementById('srchPass').value.trim();
   const div = document.getElementById('srchResult');
   if (!term) return alert("അഡ്മിഷൻ നമ്പറോ പേരോ നൽകുക!");
   if (!pass) return alert("പരിശോധിക്കാൻ വിദ്യാർത്ഥിയുടെ പാസ്‌വേഡ് (PIN) നൽകുക!");
-  const student = dbStudents.find(s => s.adm.toLowerCase() === term || s.name.toLowerCase() === term);
+
+  let student = null;
+  if (selectedId) {
+    student = dbStudents.find(s => s.id === selectedId);
+  }
   if (!student) {
-    div.innerHTML = '<p style="font-size:12px; color:red;">വിദ്യാർത്ഥിയെ കണ്ടെത്തിയില്ല.</p>';
+    student = dbStudents.find(s => s.adm.toLowerCase() === term || s.name.toLowerCase() === term);
+  }
+
+  if (!student) {
+    div.innerHTML = '<p style="font-size:12px; color:red; padding:10px; text-align:center;">വിദ്യാർത്ഥിയെ കണ്ടെത്തിയില്ല.</p>';
     return;
   }
   if (!student.pass || student.pass !== pass) {
-    div.innerHTML = '<p style="font-size:12px; color:red;">നൽകിയ പാസ്‌വേഡ് തെറ്റാണ്! ശരിയായ PIN നൽകുക.</p>';
+    div.innerHTML = '<p style="font-size:12px; color:red; padding:10px; text-align:center;">നൽകിയ പാസ്‌വേഡ് തെറ്റാണ്! ശരിയായ PIN നൽകുക.</p>';
     return;
   }
   const entries = dbPrayers.filter(e => e.studentId === student.id).sort((a,b)=>a.date.localeCompare(b.date));
@@ -2016,28 +2062,31 @@ function searchStudentHistory() {
   });
   const totalScore = (totals.jam * 5) + (totals.ada * 3) + (totals.qad * 1);
   div.innerHTML = `
-    <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:10px; font-size:11.5px;">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-        <div style="display:flex; align-items:center;">
-          <img src="${student.photo || defaultAvatar}" class="avatar-lg">
+    <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:14px; padding:14px; box-shadow:0 4px 12px rgba(0,0,0,0.05); font-size:11.5px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; border-bottom:1px dashed #e2e8f0; padding-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <img src="${student.photo || defaultAvatar}" class="avatar-lg" style="width:48px; height:48px; border-radius:50%; border:2px solid #047857;">
           <div>
-            <div style="font-weight:bold; font-size:13.5px; color:var(--primary);">${student.name}</div>
-            <div style="color:var(--text-muted);">Roll: ${student.rollNo || '-'} | Adm: ${student.adm} | Class: ${student.class}</div>
+            <div style="font-weight:800; font-size:14.5px; color:#047857;">${student.name}</div>
+            <div style="color:#64748b; font-size:11px;">Roll: <b>${student.rollNo || '-'}</b> | Adm: <b>${student.adm}</b> | Class: <b>${student.class}</b></div>
           </div>
         </div>
-        <button class="btn-action" style="padding:4px 8px;" onclick="openUpdatePhotoModal('${student.id}', '${student.gender || 'Male'}')">📷 ഫോട്ടോ മാറ്റുക</button>
+        <button class="btn-action" style="padding:4px 10px; font-size:11px; border-radius:6px;" onclick="openUpdatePhotoModal('${student.id}', '${student.gender || 'Male'}')">📷 ഫോട്ടോ മാറ്റുക</button>
       </div>
-      <p style="margin:4px 0 6px;">രേഖപ്പെടുത്തിയ ദിവസങ്ങൾ: <b>${entries.length}</b> | ആകെ സ്കോർ: <b style="color:var(--primary);">${totalScore} pts</b></p>
-      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:5px; text-align:center;">
-        <div style="background:#d1fae5; padding:5px; border-radius:6px;">ജമാഅത്ത് (5): <b>${totals.jam}</b></div>
-        <div style="background:#dcfce7; padding:5px; border-radius:6px;">അദാഅ് (3): <b>${totals.ada}</b></div>
-        <div style="background:#fef3c7; padding:5px; border-radius:6px;">ഖളാഅ് (1): <b>${totals.qad}</b></div>
-        <div style="background:#fee2e2; padding:5px; border-radius:6px;">നിസ്കരിക്കാത്തത്: <b>${totals.nil}</b></div>
-        ${student.gender === 'Female' ? `<div style="background:#ede9fe; padding:5px; border-radius:6px;">ഇളവ്: <b>${totals.exc}</b></div>` : ''}
+      <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:8px 12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+        <span>രേഖപ്പെടുത്തിയ ദിവസങ്ങൾ: <b>${entries.length}</b></span>
+        <span style="font-size:13px; font-weight:800; color:#047857;">ആകെ സ്കോർ: ${totalScore} pts</span>
       </div>
-      <div style="margin-top:12px; background:#fff; padding:8px; border-radius:8px; border:1px solid #e2e8f0;">
-        <b style="color:var(--primary);">📈 കഴിഞ്ഞ 7 ദിവസത്തെ നിസ്കാര പുരോഗതി ഗ്രാഫ്:</b>
-        <canvas id="studentGraphCanvas" style="max-height:170px; margin-top:6px;"></canvas>
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; text-align:center;">
+        <div style="background:#d1fae5; padding:6px; border-radius:8px; color:#065f46;">ജമാഅത്ത് (5)<br><b style="font-size:14px;">${totals.jam}</b></div>
+        <div style="background:#dcfce7; padding:6px; border-radius:8px; color:#166534;">അദാഅ് (3)<br><b style="font-size:14px;">${totals.ada}</b></div>
+        <div style="background:#fef3c7; padding:6px; border-radius:8px; color:#854d0e;">ഖളാഅ് (1)<br><b style="font-size:14px;">${totals.qad}</b></div>
+        <div style="background:#fee2e2; padding:6px; border-radius:8px; color:#991b1b;">നിസ്കരിക്കാത്തത്<br><b style="font-size:14px;">${totals.nil}</b></div>
+        ${student.gender === 'Female' ? `<div style="background:#ede9fe; padding:6px; border-radius:8px; color:#5b21b6;">ഇളവ്<br><b style="font-size:14px;">${totals.exc}</b></div>` : ''}
+      </div>
+      <div style="margin-top:14px; background:#f8fafc; padding:10px; border-radius:10px; border:1px solid #e2e8f0;">
+        <div style="font-weight:700; color:#0f172a; margin-bottom:6px;">📈 കഴിഞ്ഞ 7 ദിവസത്തെ നിസ്കാര പുരോഗതി:</div>
+        <canvas id="studentGraphCanvas" style="max-height:160px;"></canvas>
       </div>
     </div>
   `;
@@ -2115,7 +2164,7 @@ async function submitStudentPhotoUpdate() {
   }
 }
 
-// --- REPORTS ---
+// --- REPORTS (PDF ഡൗൺലോഡ് തകരാറുകൾ പരിഹരിച്ചത്) ---
 function toggleReportTypeInputs(source) {
   let repType, group;
   if (source === 'teacher') {
@@ -2171,7 +2220,8 @@ function getProcessedReportData(source) {
         else nil++;
       });
     });
-    const totalScore = (jam * 5) + (totals.ada * 3) + (qad * 1);
+    // PDF ഡൗൺലോഡ് എറർ പരിഹരിച്ചു (totals.ada മാറ്റി ada ആക്കി)
+    const totalScore = (jam * 5) + (ada * 3) + (qad * 1);
     tableData.push({
       roll: s.rollNo || (idx + 1),
       adm: s.adm,
@@ -2235,27 +2285,31 @@ function translateStatusToText(st) {
 function downloadReportPDF(source) {
   const data = getProcessedReportData(source);
   if (!data) return;
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.setFontSize(13);
-  doc.text("MALHARUL ULOOM MADRASA KALLOOR-KOOTHALI", 14, 15);
-  const subTitle = data.repType === 'overall' ? `Prayer Performance Report - Class: ${data.cls} | All-Time Cumulative Total` : `Prayer Performance Report - Class: ${data.cls} | Month: ${data.month}`;
-  doc.setFontSize(10);
-  doc.text(subTitle, 14, 22);
-  const rows = data.tableData.map(r => [
-    r.roll, r.adm, r.name, `Cls ${r.cls}`, r.days, r.jam, r.ada, r.qad, r.nil, r.exc, r.totalPrayed, r.totalScore
-  ]);
-  doc.autoTable({
-    startY: 26,
-    head: [['Roll', 'Adm', 'Name', 'Class', 'Days', 'Jamaath(5)', 'Adaa(3)', 'Qadaa(1)', 'Nill', 'Ilav', 'Total', 'Score']],
-    body: rows,
-    theme: 'grid',
-    headStyles: { fillColor: [4, 120, 87] },
-    styles: { fontSize: 8, cellPadding: 2, halign: 'center' },
-    columnStyles: { 2: { halign: 'left' } }
-  });
-  const fileName = data.repType === 'overall' ? `MUM_Report_AllTime_Class_${data.cls}.pdf` : `MUM_Report_${data.cls}_${data.month}.pdf`;
-  doc.save(fileName);
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(13);
+    doc.text("MALHARUL ULOOM MADRASA KALLOOR-KOOTHALI", 14, 15);
+    const subTitle = data.repType === 'overall' ? `Prayer Performance Report - Class: ${data.cls} | All-Time Cumulative Total` : `Prayer Performance Report - Class: ${data.cls} | Month: ${data.month}`;
+    doc.setFontSize(10);
+    doc.text(subTitle, 14, 22);
+    const rows = data.tableData.map(r => [
+      r.roll, r.adm, r.name, `Cls ${r.cls}`, r.days, r.jam, r.ada, r.qad, r.nil, r.exc, r.totalPrayed, r.totalScore
+    ]);
+    doc.autoTable({
+      startY: 26,
+      head: [['Roll', 'Adm', 'Name', 'Class', 'Days', 'Jamaath(5)', 'Adaa(3)', 'Qadaa(1)', 'Nill', 'Ilav', 'Total', 'Score']],
+      body: rows,
+      theme: 'grid',
+      headStyles: { fillColor: [4, 120, 87] },
+      styles: { fontSize: 8, cellPadding: 2, halign: 'center' },
+      columnStyles: { 2: { halign: 'left' } }
+    });
+    const fileName = data.repType === 'overall' ? `MUM_Report_AllTime_Class_${data.cls}.pdf` : `MUM_Report_${data.cls}_${data.month}.pdf`;
+    doc.save(fileName);
+  } catch(e) {
+    alert("PDF തയ്യാറാക്കുന്നതിൽ പിഴവുണ്ടായി: " + e.message);
+  }
 }
 
 function downloadDailyPDF(source) {
@@ -2275,36 +2329,40 @@ function downloadDailyPDF(source) {
   if (cls !== 'ALL') students = students.filter(s => s.class === cls);
   students = sortStudentsBoyFirst(students);
   const dayPrayers = dbPrayers.filter(p => p.date === date);
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.setFontSize(13);
-  doc.text("MALHARUL ULOOM MADRASA KALLOOR-KOOTHALI", 14, 15);
-  doc.setFontSize(10);
-  doc.text(`Daily Prayer Attendance - Class: ${cls} | Date: ${date}`, 14, 22);
-  const rows = students.map((s, idx) => {
-    const rec = dayPrayers.find(p => p.studentId === s.id);
-    return [
-      s.rollNo || (idx + 1),
-      s.adm,
-      `${s.name} (${s.gender === 'Female' ? 'F' : 'M'})`,
-      `Class ${s.class}`,
-      translateStatusToText(rec?.subh),
-      translateStatusToText(rec?.dhuhr),
-      translateStatusToText(rec?.asr),
-      translateStatusToText(rec?.maghrib),
-      translateStatusToText(rec?.isha)
-    ];
-  });
-  doc.autoTable({
-    startY: 26,
-    head: [['Roll', 'Adm', 'Name', 'Class', 'Subh', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']],
-    body: rows,
-    theme: 'grid',
-    headStyles: { fillColor: [4, 120, 87] },
-    styles: { fontSize: 8, cellPadding: 2, halign: 'center' },
-    columnStyles: { 2: { halign: 'left' } }
-  });
-  doc.save(`MUM_Daily_Report_${cls}_${date}.pdf`);
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(13);
+    doc.text("MALHARUL ULOOM MADRASA KALLOOR-KOOTHALI", 14, 15);
+    doc.setFontSize(10);
+    doc.text(`Daily Prayer Attendance - Class: ${cls} | Date: ${date}`, 14, 22);
+    const rows = students.map((s, idx) => {
+      const rec = dayPrayers.find(p => p.studentId === s.id);
+      return [
+        s.rollNo || (idx + 1),
+        s.adm,
+        `${s.name} (${s.gender === 'Female' ? 'F' : 'M'})`,
+        `Class ${s.class}`,
+        translateStatusToText(rec?.subh),
+        translateStatusToText(rec?.dhuhr),
+        translateStatusToText(rec?.asr),
+        translateStatusToText(rec?.maghrib),
+        translateStatusToText(rec?.isha)
+      ];
+    });
+    doc.autoTable({
+      startY: 26,
+      head: [['Roll', 'Adm', 'Name', 'Class', 'Subh', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']],
+      body: rows,
+      theme: 'grid',
+      headStyles: { fillColor: [4, 120, 87] },
+      styles: { fontSize: 8, cellPadding: 2, halign: 'center' },
+      columnStyles: { 2: { halign: 'left' } }
+    });
+    doc.save(`MUM_Daily_Report_${cls}_${date}.pdf`);
+  } catch(e) {
+    alert("Daily PDF തയ്യാറാക്കുന്നതിൽ പിഴവുണ്ടായി: " + e.message);
+  }
 }
 
 function printReportData(source) {
@@ -2545,22 +2603,23 @@ function loginAsAdmin(persist = true) {
 
 function loginAsCoAdmin(persist = true) {
   currentUser = { role: 'coadmin' };
+  if (persist) localStorage.setItem('mum_logged_session', JSON.stringify(currentUser));
   document.getElementById('publicView').style.display = 'none';
   document.getElementById('teacherView').style.display = 'none';
   document.getElementById('sadrView').style.display = 'none';
   document.getElementById('adminView').style.display = 'block';
   document.getElementById('adminPortalTitleDisplay').innerText = `${coAdminConfig.name || 'Co-Admin'} (Portal Access)`;
   const p = coAdminConfig.permissions || {};
-  document.getElementById('admSecLock').style.display = p.locks ? 'block' : 'none';
-  document.getElementById('admSecDaily').style.display = p.daily ? 'block' : 'none';
-  document.getElementById('admSecStudents').style.display = p.students ? 'block' : 'none';
-  document.getElementById('admSecTeachers').style.display = p.teachers ? 'block' : 'none';
-  document.getElementById('admSecReports').style.display = p.reports ? 'block' : 'none';
-  document.getElementById('admSecPhotos').style.display = p.media ? 'block' : 'none';
-  document.getElementById('admSecVideos').style.display = p.media ? 'block' : 'none';
-  document.getElementById('admSecPass').style.display = 'none';
-  document.getElementById('admSecSadrPass').style.display = 'none';
-  document.getElementById('admSecCoAdmin').style.display = 'none';
+  if (document.getElementById('admSecLock')) document.getElementById('admSecLock').style.display = p.locks ? 'block' : 'none';
+  if (document.getElementById('admSecDaily')) document.getElementById('admSecDaily').style.display = p.daily ? 'block' : 'none';
+  if (document.getElementById('admSecStudents')) document.getElementById('admSecStudents').style.display = p.students ? 'block' : 'none';
+  if (document.getElementById('admSecTeachers')) document.getElementById('admSecTeachers').style.display = p.teachers ? 'block' : 'none';
+  if (document.getElementById('admSecReports')) document.getElementById('admSecReports').style.display = p.reports ? 'block' : 'none';
+  if (document.getElementById('admSecPhotos')) document.getElementById('admSecPhotos').style.display = p.media ? 'block' : 'none';
+  if (document.getElementById('admSecVideos')) document.getElementById('admSecVideos').style.display = p.media ? 'block' : 'none';
+  if (document.getElementById('admSecPass')) document.getElementById('admSecPass').style.display = 'none';
+  if (document.getElementById('admSecSadrPass')) document.getElementById('admSecSadrPass').style.display = 'none';
+  if (document.getElementById('admSecCoAdmin')) document.getElementById('admSecCoAdmin').style.display = 'none';
   updateTopNavBtn();
   renderAdminTeachers();
   renderAdminStudentList();
@@ -2633,63 +2692,86 @@ function logout() {
   navigateHome();
 }
 
-// --- TEACHER CONTACT MODAL ---
+// --- അപ്ഡേറ്റ് ചെയ്ത അധ്യാപക കോൺടാക്റ്റ് ലിസ്റ്റ് (പ്രത്യേക കാർഡുകൾ ഒഴിവാക്കി ഒരൊറ്റ ലിസ്റ്റാക്കി) ---
 function openTeachersContactModal() {
   const listDiv = document.getElementById('teachersContactList');
   if (!listDiv) return;
-  listDiv.innerHTML = `
-    <div class="teacher-contact-card" style="border-left: 3.5px solid #d97706; background:#fffbeb;">
-      <div class="avatar-lg" style="display:flex; align-items:center; justify-content:center; font-size:22px; background:#fef3c7;">👳‍♂️</div>
+
+  // നിലവിലുള്ള ഡാറ്റാബേസിൽ നിന്ന് SHAFI DARIMI, RASHIDALI FAIZY എന്നിവരെ കണ്ടെത്തുകയോ ഡിഫോൾട്ട് ആക്കുകയോ ചെയ്യുക
+  let shafi = dbTeachers.find(t => t.name.toLowerCase().includes('shafi') || t.name.includes('ശാഫി'));
+  let rashid = dbTeachers.find(t => t.name.toLowerCase().includes('rashid') || t.name.includes('റാഷിദ്'));
+
+  // ഇവരെ ഒഴിച്ചു നിർത്തിയുള്ള മറ്റ് അധ്യാപകരുടെ ലിസ്റ്റ്
+  let otherTeachers = dbTeachers.filter(t => t.id !== shafi?.id && t.id !== rashid?.id);
+
+  let html = '';
+
+  // 1. സദർ മുഅല്ലിം (SHAFI DARIMI)
+  const shafiPhone = shafi?.phone || '9605169230';
+  const shafiPhoto = shafi?.photo || defaultAvatar;
+  const shafiCls = Array.isArray(shafi?.classes) ? shafi.classes.join(', ') : (shafi?.class || '-');
+  html += `
+    <div class="teacher-contact-card" style="border-left: 4px solid #d97706; background:#fffbeb; padding:10px; border-radius:10px; margin-bottom:8px; display:flex; align-items:center; gap:10px;">
+      <img src="${shafiPhoto}" class="avatar-lg" style="width:46px; height:46px; border-radius:50%; border:2px solid #d97706;">
       <div style="flex:1;">
         <div style="display:flex; align-items:center; justify-content:space-between;">
           <b style="font-size:13.5px; color:#92400e;">SHAFI DARIMI</b>
           <span style="background:#d97706; color:#fff; font-size:9.5px; font-weight:800; padding:2px 6px; border-radius:4px;">സദർ മുഅല്ലിം</span>
         </div>
-        <div style="font-size:11.5px; font-weight:700; color:#0f172a; margin-top:2px;">9605169230</div>
+        <div style="font-size:11px; color:#78350f;">ക്ലാസുകൾ: <b>${shafiCls}</b></div>
+        <div style="font-size:11.5px; font-weight:700; color:#0f172a; margin-top:2px;">${shafiPhone}</div>
         <div style="display:flex; gap:6px; margin-top:4px;">
-          <a href="tel:9605169230" class="btn-action" style="text-decoration:none; padding:2px 6px; font-size:10px;">📞 Call</a>
-          <a href="https://wa.me/919605169230" target="_blank" class="btn-wa" style="padding:2px 6px; font-size:10px;">💬 WhatsApp</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="teacher-contact-card" style="border-left: 3.5px solid #047857; background:#ecfdf5;">
-      <div class="avatar-lg" style="display:flex; align-items:center; justify-content:center; font-size:22px; background:#d1fae5;">💻</div>
-      <div style="flex:1;">
-        <div style="display:flex; align-items:center; justify-content:space-between;">
-          <b style="font-size:13.5px; color:#065f46;">RASHIDALI FAIZY</b>
-          <span style="background:#047857; color:#fff; font-size:9.5px; font-weight:800; padding:2px 6px; border-radius:4px;">അഡ്മിൻ</span>
-        </div>
-        <div style="font-size:11.5px; font-weight:700; color:#0f172a; margin-top:2px;">6238403492</div>
-        <div style="display:flex; gap:6px; margin-top:4px;">
-          <a href="tel:6238403492" class="btn-action" style="text-decoration:none; padding:2px 6px; font-size:10px;">📞 Call</a>
-          <a href="https://wa.me/916238403492" target="_blank" class="btn-wa" style="padding:2px 6px; font-size:10px;">💬 WhatsApp</a>
+          <a href="tel:${shafiPhone}" class="btn-action" style="text-decoration:none; padding:2px 8px; font-size:10.5px;">📞 Call</a>
+          <a href="https://wa.me/91${shafiPhone.replace(/[^0-9]/g, '').slice(-10)}" target="_blank" class="btn-wa" style="padding:2px 8px; font-size:10.5px;">💬 WhatsApp</a>
         </div>
       </div>
     </div>
   `;
 
-  if (dbTeachers.length > 0) {
-    dbTeachers.forEach(t => {
-      const clsList = Array.isArray(t.classes) ? t.classes.join(', ') : (t.class || '-');
-      let phone = (t.phone || '').trim().replace(/[^0-9]/g, '');
-      let waPhone = phone.length === 10 ? '91' + phone : phone;
-      listDiv.innerHTML += `
-        <div class="teacher-contact-card">
-          <img src="${t.photo || defaultAvatar}" class="avatar-lg">
-          <div style="flex:1;">
-            <div style="font-weight:bold; font-size:13px; color:var(--primary);">${t.name}</div>
-            <div style="font-size:11px; color:var(--text-muted);">ക്ലാസുകൾ: <b>${clsList}</b></div>
-            <div style="font-size:11.5px; font-weight:700;">${t.phone || 'No Phone'}</div>
-            <div style="display:flex; gap:6px; margin-top:4px;">
-              ${phone ? `<a href="tel:${phone}" class="btn-action" style="text-decoration:none; padding:2px 6px; font-size:10px;">📞 Call</a>` : ''}
-              ${phone ? `<a href="https://wa.me/${waPhone}" target="_blank" class="btn-wa" style="padding:2px 6px; font-size:10px;">💬 WhatsApp</a>` : ''}
-            </div>
+  // 2. അഡ്മിൻ (RASHIDALI FAIZY)
+  const rashidPhone = rashid?.phone || '6238403492';
+  const rashidPhoto = rashid?.photo || defaultAvatar;
+  const rashidCls = Array.isArray(rashid?.classes) ? rashid.classes.join(', ') : (rashid?.class || '-');
+  html += `
+    <div class="teacher-contact-card" style="border-left: 4px solid #047857; background:#ecfdf5; padding:10px; border-radius:10px; margin-bottom:8px; display:flex; align-items:center; gap:10px;">
+      <img src="${rashidPhoto}" class="avatar-lg" style="width:46px; height:46px; border-radius:50%; border:2px solid #047857;">
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <b style="font-size:13.5px; color:#065f46;">RASHIDALI FAIZY</b>
+          <span style="background:#047857; color:#fff; font-size:9.5px; font-weight:800; padding:2px 6px; border-radius:4px;">അഡ്മിൻ</span>
+        </div>
+        <div style="font-size:11px; color:#064e3b;">ക്ലാസുകൾ: <b>${rashidCls}</b></div>
+        <div style="font-size:11.5px; font-weight:700; color:#0f172a; margin-top:2px;">${rashidPhone}</div>
+        <div style="display:flex; gap:6px; margin-top:4px;">
+          <a href="tel:${rashidPhone}" class="btn-action" style="text-decoration:none; padding:2px 8px; font-size:10.5px;">📞 Call</a>
+          <a href="https://wa.me/91${rashidPhone.replace(/[^0-9]/g, '').slice(-10)}" target="_blank" class="btn-wa" style="padding:2px 8px; font-size:10.5px;">💬 WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // 3. ബാക്കിയുള്ള അധ്യാപകർ താഴെ
+  otherTeachers.forEach(t => {
+    const clsList = Array.isArray(t.classes) ? t.classes.join(', ') : (t.class || '-');
+    let phone = (t.phone || '').trim().replace(/[^0-9]/g, '');
+    let waPhone = phone.length === 10 ? '91' + phone : phone;
+    html += `
+      <div class="teacher-contact-card" style="padding:10px; border-radius:10px; margin-bottom:6px; display:flex; align-items:center; gap:10px; background:#fff; border:1px solid #e2e8f0;">
+        <img src="${t.photo || defaultAvatar}" class="avatar-lg" style="width:42px; height:42px; border-radius:50%;">
+        <div style="flex:1;">
+          <div style="font-weight:bold; font-size:13px; color:var(--primary);">${t.name}</div>
+          <div style="font-size:11px; color:var(--text-muted);">ക്ലാസുകൾ: <b>${clsList}</b></div>
+          <div style="font-size:11.5px; font-weight:700;">${t.phone || 'No Phone'}</div>
+          <div style="display:flex; gap:6px; margin-top:4px;">
+            ${phone ? `<a href="tel:${phone}" class="btn-action" style="text-decoration:none; padding:2px 6px; font-size:10px;">📞 Call</a>` : ''}
+            ${phone ? `<a href="https://wa.me/${waPhone}" target="_blank" class="btn-wa" style="padding:2px 6px; font-size:10px;">💬 WhatsApp</a>` : ''}
           </div>
         </div>
-      `;
-    });
-  }
+      </div>
+    `;
+  });
+
+  listDiv.innerHTML = html;
   document.getElementById('teachersContactModal').style.display = 'flex';
   pushNavState();
 }
