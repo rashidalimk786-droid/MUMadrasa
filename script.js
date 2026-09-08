@@ -86,23 +86,34 @@ function getLogicalPrayerDate() {
   return logical.toISOString().split('T')[0];
 }
 let activeLogicalDate = getLogicalPrayerDate();
-document.getElementById('todayDateLabel').innerText = activeLogicalDate;
+const topDateLabel = document.getElementById('todayDateLabel');
+if (topDateLabel) topDateLabel.innerText = activeLogicalDate;
 
+// --- എൻട്രി ബട്ടൺ ടെക്സ്റ്റ് വൃത്തിയായി ക്രമീകരിച്ചത് ---
 function refreshMainEntryBtnUI() {
   const btn = document.getElementById('mainPrayerEntryBtn');
   const txt = document.getElementById('mainPrayerEntryBtnText');
+  if (!btn || !txt) return;
+
   let openCount = 0;
   for (let i = 1; i <= 10; i++) {
     if (classLockSettings[String(i)] !== true) openCount++;
   }
+
   if (openCount > 0) {
     btn.className = 'pulse-btn btn-entry-open';
-    txt.innerText = 'എൻറെ ഇന്നത്തെ നിസ്കാരം     🟢Prayer Entry Open';
+    txt.innerHTML = `
+      <div style="font-weight: 700; font-size: 14.5px; line-height: 1.2;">🟢 എൻറെ ഇന്നത്തെ നിസ്കാരം</div>
+      <div style="font-size: 11px; opacity: 0.9; margin-top: 3px; font-weight: normal;">Prayer Entry Open</div>
+    `;
   } else {
     btn.className = 'pulse-btn btn-entry-closed';
-    txt.innerText = '🔴 Entry Closed    ഇശാഇന് ശേഷം ഓപ്പൺ ആവുന്നതാണ്';
+    txt.innerHTML = `
+      <div style="font-weight: 700; font-size: 14.5px; line-height: 1.2; letter-spacing: 0.3px;">🔴 Entry Closed</div>
+      <div style="font-size: 11px; opacity: 0.85; margin-top: 3px; font-weight: normal;">ഇശാഇന് ശേഷം ഓപ്പൺ ആവുന്നതാണ്</div>
+    `;
   }
-} 
+}
 
 // --- DYNAMIC FULLSCREEN VIDEO PLAYER (DRIVE PREVIEW & MP4) ---
 function playVideoFullscreen(urlEncoded) {
@@ -115,22 +126,27 @@ function playVideoFullscreen(urlEncoded) {
   }
   const modal = document.getElementById('fullscreenVideoModal');
   const player = document.getElementById('fsVideoPlayer');
-  player.src = url;
-  modal.style.display = 'flex';
-  pushNavState();
+  if (player && modal) {
+    player.src = url;
+    modal.style.display = 'flex';
+    pushNavState();
+  }
 }
 
 function closeFullscreenVideo(triggerPop = true) {
   const modal = document.getElementById('fullscreenVideoModal');
   const player = document.getElementById('fsVideoPlayer');
-  player.src = '';
-  modal.style.display = 'none';
+  if (player) player.src = '';
+  if (modal) modal.style.display = 'none';
 }
 
 // --- ALARM REMINDER ---
 function openAlarmModal() {
-  document.getElementById('alarmModal').style.display = 'flex';
-  pushNavState();
+  const modal = document.getElementById('alarmModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    pushNavState();
+  }
 }
 
 function setDailyPrayerAlarm() {
@@ -242,11 +258,11 @@ function toggleTeacherRegCapBox() {
 // --- HARDWARE BACK BUTTON ---
 history.pushState({ page: 'home' }, '');
 window.addEventListener('popstate', function(e) {
-  if (document.getElementById('fullscreenVideoModal').style.display === 'flex') {
+  if (document.getElementById('fullscreenVideoModal')?.style.display === 'flex') {
     closeFullscreenVideo(false);
     return;
   }
-  if (document.getElementById('drawerOverlay').style.display === 'block') {
+  if (document.getElementById('drawerOverlay')?.style.display === 'block') {
     closeNavDrawer(false);
     return;
   }
@@ -268,7 +284,7 @@ window.addEventListener('popstate', function(e) {
     alert("സുരക്ഷ മുൻനിർത്തി അഡ്മിൻ/സദർ പോർട്ടൽ ലോഗ് ഔട്ട് ചെയ്തിരിക്കുന്നു.");
     return;
   }
-  if (document.getElementById('publicView').style.display === 'none') {
+  if (document.getElementById('publicView')?.style.display === 'none') {
     navigateHome(false);
     return;
   }
@@ -293,15 +309,16 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 const currMonth = activeLogicalDate.substring(0, 7);
-document.getElementById('tRepMonth').value = currMonth;
-document.getElementById('admRepMonth').value = currMonth;
-document.getElementById('sadrRepMonth').value = currMonth;
-document.getElementById('tDailyDate').value = activeLogicalDate;
-document.getElementById('admDailyDate').value = activeLogicalDate;
-document.getElementById('sadrDailyDate').value = activeLogicalDate;
+if (document.getElementById('tRepMonth')) document.getElementById('tRepMonth').value = currMonth;
+if (document.getElementById('admRepMonth')) document.getElementById('admRepMonth').value = currMonth;
+if (document.getElementById('sadrRepMonth')) document.getElementById('sadrRepMonth').value = currMonth;
+if (document.getElementById('tDailyDate')) document.getElementById('tDailyDate').value = activeLogicalDate;
+if (document.getElementById('admDailyDate')) document.getElementById('admDailyDate').value = activeLogicalDate;
+if (document.getElementById('sadrDailyDate')) document.getElementById('sadrDailyDate').value = activeLogicalDate;
 
 (function initAdminClassBoxes() {
   const cont = document.getElementById('adminClassCheckboxContainer');
+  if (!cont) return;
   let html = '';
   for(let i=1; i<=10; i++) {
     html += `<label class="class-checkbox-label"><input type="checkbox" class="adm-cls-chk" value="${i}" id="chkCls_${i}"> Cls ${i}</label>`;
@@ -365,8 +382,9 @@ setInterval(() => {
 
 function updateTopNavBtn() {
   const btn = document.getElementById('authBtn');
+  if (!btn) return;
   if (currentUser) {
-    const isPublicVisible = document.getElementById('publicView').style.display !== 'none';
+    const isPublicVisible = document.getElementById('publicView')?.style.display !== 'none';
     btn.innerText = isPublicVisible ? 'Portal' : 'Public Site';
   } else {
     btn.innerText = 'Login';
@@ -410,7 +428,8 @@ db.collection("teachers").onSnapshot(snapshot => {
     const updatedTeacher = dbTeachers.find(t => t.id === currentUser.data.id);
     if (updatedTeacher) {
       currentUser.data = updatedTeacher;
-      document.getElementById('tOnlineStatusToggle').checked = !!updatedTeacher.isOnline;
+      const tStatus = document.getElementById('tOnlineStatusToggle');
+      if (tStatus) tStatus.checked = !!updatedTeacher.isOnline;
       if (updatedTeacher.activeSessionDeviceId && updatedTeacher.activeSessionDeviceId !== currentDeviceId) {
         alert("മറ്റൊരു ഡിവൈസിൽ ഈ ടീച്ചർ അക്കൗണ്ട് ലോഗിൻ ചെയ്തിരിക്കുന്നു!");
         logout();
@@ -467,12 +486,14 @@ db.collection("settings").doc("config").onSnapshot(doc => {
       loadCoAdminSettingsUI();
     }
     if (data.aboutDesc) {
-      document.getElementById('displayAboutDesc').innerHTML = data.aboutDesc;
+      const descEl = document.getElementById('displayAboutDesc');
+      if (descEl) descEl.innerHTML = data.aboutDesc;
       const inputDesc = document.getElementById('adminAboutDesc');
       if (inputDesc) inputDesc.value = data.aboutDesc;
     }
     if (data.aboutAuth) {
-      document.getElementById('displayAboutAuth').innerHTML = data.aboutAuth;
+      const authEl = document.getElementById('displayAboutAuth');
+      if (authEl) authEl.innerHTML = data.aboutAuth;
       const inputAuth = document.getElementById('adminAboutAuth');
       if (inputAuth) inputAuth.value = data.aboutAuth;
     }
@@ -544,12 +565,14 @@ async function remoteForceLogout(role) {
 
 function openNavDrawer() {
   updateDrawerRoleMenu();
-  document.getElementById('drawerOverlay').style.display = 'block';
+  const drawer = document.getElementById('drawerOverlay');
+  if (drawer) drawer.style.display = 'block';
   pushNavState();
 }
 
 function closeNavDrawer(triggerPop = true) {
-  document.getElementById('drawerOverlay').style.display = 'none';
+  const drawer = document.getElementById('drawerOverlay');
+  if (drawer) drawer.style.display = 'none';
 }
 
 function navigateHome(triggerPop = true) {
@@ -564,6 +587,7 @@ function navigateHome(triggerPop = true) {
 function updateDrawerRoleMenu() {
   const sec = document.getElementById('drawerRoleSection');
   const items = document.getElementById('drawerRoleMenuItems');
+  if (!sec || !items) return;
   if (!currentUser) {
     sec.style.display = 'none';
     return;
@@ -606,6 +630,24 @@ function navigateRolePortal(role) {
   else if (role === 'teacher') loginAsTeacher(currentUser.data, false);
 }
 
+// --- അധ്യാപക / അഡ്മിൻ പോർട്ടൽ മോഡുലാർ കാർഡ് സ്വിച്ചിംഗ് ---
+function switchPortalTab(portalPrefix, sectionId, btnElement) {
+  const container = document.getElementById(portalPrefix + 'View');
+  if (!container) return;
+  const sections = container.querySelectorAll('.portal-section-card, [id^="' + portalPrefix + 'Sec"]');
+  sections.forEach(sec => sec.style.display = 'none');
+  
+  const target = document.getElementById(sectionId);
+  if (target) {
+    target.style.display = 'block';
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  const buttons = container.querySelectorAll('.portal-tab-pill');
+  buttons.forEach(b => b.classList.remove('active'));
+  if (btnElement) btnElement.classList.add('active');
+}
+
 function jumpToSection(secId) {
   closeNavDrawer(false);
   if (currentUser.role === 'admin' || currentUser.role === 'coadmin') loginAsAdmin(false);
@@ -613,7 +655,10 @@ function jumpToSection(secId) {
   else if (currentUser.role === 'sadr') loginAsSadr(false);
   setTimeout(() => {
     const el = document.getElementById(secId);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (el) {
+      el.style.display = 'block';
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   }, 150);
 }
 
@@ -771,6 +816,7 @@ function compressImage(file, maxWidth = 350, maxHeight = 350, quality = 0.72) {
 
 function previewSelectedImage(input, previewId) {
   const preview = document.getElementById(previewId);
+  if (!preview) return;
   if (input.files && input.files[0]) {
     const reader = new FileReader();
     reader.onload = e => {
@@ -1055,13 +1101,14 @@ function getWhatsAppActionHTML(student, prayerRecord, targetDate) {
 }
 
 function renderDailyTeacherView() {
-  const cls = document.getElementById('tDailyClass').value;
-  const date = document.getElementById('tDailyDate').value;
+  const cls = document.getElementById('tDailyClass')?.value;
+  const date = document.getElementById('tDailyDate')?.value;
   if (!cls || !date) return;
   let students = dbStudents.filter(s => s.class === cls);
   students = sortStudentsBoyFirst(students);
   const dayPrayers = dbPrayers.filter(p => p.date === date);
   const tbody = document.getElementById('tDailyPrayerTable');
+  if (!tbody) return;
   tbody.innerHTML = '';
   if (students.length === 0) {
     tbody.innerHTML = `<tr><td colspan="9" style="color:var(--text-muted);">No Students</td></tr>`;
@@ -1090,14 +1137,15 @@ function renderDailyTeacherView() {
 }
 
 function renderDailySadrView() {
-  const cls = document.getElementById('sadrDailyClass').value;
-  const date = document.getElementById('sadrDailyDate').value;
+  const cls = document.getElementById('sadrDailyClass')?.value;
+  const date = document.getElementById('sadrDailyDate')?.value;
   if (!date) return;
   let students = dbStudents;
   if (cls !== 'ALL') students = students.filter(s => s.class === cls);
   students = sortStudentsBoyFirst(students);
   const dayPrayers = dbPrayers.filter(p => p.date === date);
   const tbody = document.getElementById('sadrDailyPrayerTable');
+  if (!tbody) return;
   tbody.innerHTML = '';
   students.forEach((s, idx) => {
     const rec = dayPrayers.find(p => p.studentId === s.id);
@@ -1123,11 +1171,12 @@ function renderDailySadrView() {
 }
 
 function renderSadrStudentList() {
-  const cls = document.getElementById('sadrFilterClass').value;
+  const cls = document.getElementById('sadrFilterClass')?.value;
   let students = dbStudents;
   if (cls !== 'ALL') students = students.filter(s => s.class === cls);
   students = sortStudentsBoyFirst(students);
   const tbody = document.getElementById('sadrStudentTable');
+  if (!tbody) return;
   tbody.innerHTML = '';
   students.forEach((s, idx) => {
     tbody.innerHTML += `
@@ -1203,14 +1252,15 @@ function sendDirectBroadcastAction() {
 }
 
 function renderDailyAdminView() {
-  const cls = document.getElementById('admDailyClass').value;
-  const date = document.getElementById('admDailyDate').value;
+  const cls = document.getElementById('admDailyClass')?.value;
+  const date = document.getElementById('admDailyDate')?.value;
   if (!date) return;
   let students = dbStudents;
   if (cls !== 'ALL') students = students.filter(s => s.class === cls);
   students = sortStudentsBoyFirst(students);
   const dayPrayers = dbPrayers.filter(p => p.date === date);
   const tbody = document.getElementById('admDailyPrayerTable');
+  if (!tbody) return;
   tbody.innerHTML = '';
   students.forEach((s, idx) => {
     const rec = dayPrayers.find(p => p.studentId === s.id);
@@ -1360,10 +1410,11 @@ async function saveStudentByTeacher() {
 }
 
 function renderTeacherStudentList() {
-  const cls = document.getElementById('tFilterClass').value;
+  const cls = document.getElementById('tFilterClass')?.value;
   let students = dbStudents.filter(s => s.class === cls);
   students = sortStudentsBoyFirst(students);
   const tbody = document.getElementById('tStudentTable');
+  if (!tbody) return;
   tbody.innerHTML = '';
   students.forEach((s, idx) => {
     tbody.innerHTML += `
@@ -1384,11 +1435,12 @@ function renderTeacherStudentList() {
 }
 
 function renderAdminStudentList() {
-  const cls = document.getElementById('admFilterClass').value;
+  const cls = document.getElementById('admFilterClass')?.value;
   let students = dbStudents;
   if (cls !== 'ALL') students = students.filter(s => s.class === cls);
   students = sortStudentsBoyFirst(students);
   const tbody = document.getElementById('admStudentTable');
+  if (!tbody) return;
   tbody.innerHTML = '';
   students.forEach((s, idx) => {
     tbody.innerHTML += `
@@ -1596,6 +1648,7 @@ async function saveTeacherByAdmin() {
 
 function renderAdminTeachers() {
   const tbody = document.getElementById('admTeacherTable');
+  if (!tbody) return;
   tbody.innerHTML = '';
   dbTeachers.forEach(t => {
     const clsList = Array.isArray(t.classes) ? t.classes.join(', ') : (t.class || '');
@@ -2006,7 +2059,7 @@ function toggleReportTypeInputs(source) {
     repType = document.getElementById('admRepType').value;
     group = document.getElementById('admRepMonthGroup');
   }
-  group.style.display = repType === 'overall' ? 'none' : 'block';
+  if (group) group.style.display = repType === 'overall' ? 'none' : 'block';
 }
 
 function getProcessedReportData(source) {
@@ -2049,7 +2102,7 @@ function getProcessedReportData(source) {
         else nil++;
       });
     });
-    const totalScore = (jam * 5) + (ada * 3) + (qad * 1);
+    const totalScore = (jam * 5) + (totals.ada * 3) + (totals.qad * 1);
     tableData.push({
       roll: s.rollNo || (idx + 1),
       adm: s.adm,
@@ -2312,7 +2365,8 @@ function openLoginModal() {
 }
 
 function closeModal(id) {
-  document.getElementById(id).style.display = 'none';
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
 }
 
 function toggleLoginInputs() {
@@ -2322,6 +2376,7 @@ function toggleLoginInputs() {
 
 function loadTeacherSelect() {
   const s = document.getElementById('loginTeacherSelect');
+  if (!s) return;
   s.innerHTML = '<option value="">-- Select Teacher --</option>';
   dbTeachers.forEach(t => {
     const clsList = Array.isArray(t.classes) ? t.classes.join(', ') : (t.class || '');
@@ -2331,7 +2386,7 @@ function loadTeacherSelect() {
 
 function toggleAuthAction() {
   if (currentUser) {
-    const isPublicVisible = document.getElementById('publicView').style.display !== 'none';
+    const isPublicVisible = document.getElementById('publicView')?.style.display !== 'none';
     if (isPublicVisible) {
       if (currentUser.role === 'admin') loginAsAdmin(false);
       else if (currentUser.role === 'sadr') loginAsSadr(false);
@@ -2397,10 +2452,18 @@ function loginAsAdmin(persist = true) {
   document.getElementById('sadrView').style.display = 'none';
   document.getElementById('adminView').style.display = 'block';
   document.getElementById('adminPortalTitleDisplay').innerText = "RASHIDALI FAIZY (അഡ്മിൻ)";
-  ['admSecLock', 'admSecPhotos', 'admSecVideos', 'admSecDaily', 'admSecStudents', 'admSecTeachers', 'admSecReports', 'admSecPass', 'admSecSadrPass', 'admSecCoAdmin', 'admSecQuickEdit'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'block';
-  });
+  
+  // മൊത്തം ഒന്നിച്ചു കാണാതെ ആദ്യ ടാബ് മാത്രം ആക്ടീവ് ആക്കുന്നു
+  const defaultTabBtn = document.querySelector('#adminView .portal-tab-pill');
+  if (defaultTabBtn) {
+    defaultTabBtn.click();
+  } else {
+    ['admSecLock', 'admSecDaily', 'admSecStudents', 'admSecTeachers', 'admSecReports'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'block';
+    });
+  }
+
   updateTopNavBtn();
   renderAdminTeachers();
   renderAdminStudentList();
@@ -2476,6 +2539,11 @@ function loginAsTeacher(t, persist = true) {
   renderTeacherStudentList();
   renderDailyTeacherView();
   renderSessionManagementUI('teacher', t);
+
+  // അധ്യാപകൻ ലോഗിൻ ചെയ്യുമ്പോൾ ആദ്യ സെക്ഷൻ മാത്രം കാണിക്കുക
+  const defaultTabBtn = document.querySelector('#teacherView .portal-tab-pill');
+  if (defaultTabBtn) defaultTabBtn.click();
+
   closeModal('loginModal');
 }
 
@@ -2488,6 +2556,7 @@ function logout() {
 // --- TEACHER CONTACT MODAL ---
 function openTeachersContactModal() {
   const listDiv = document.getElementById('teachersContactList');
+  if (!listDiv) return;
   listDiv.innerHTML = `
     <div class="teacher-contact-card" style="border-left: 3.5px solid #d97706; background:#fffbeb;">
       <div class="avatar-lg" style="display:flex; align-items:center; justify-content:center; font-size:22px; background:#fef3c7;">👳‍♂️</div>
