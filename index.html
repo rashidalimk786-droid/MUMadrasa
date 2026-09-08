@@ -1425,7 +1425,6 @@ function refreshMainEntryBtnUI() {
 // --- DYNAMIC FULLSCREEN VIDEO PLAYER (DRIVE PREVIEW & MP4) ---
 function playVideoFullscreen(urlEncoded) {
   let url = decodeURIComponent(urlEncoded);
-  // ഗൂഗിൾ ഡ്രൈവ് ലിങ്ക് ആണെങ്കിൽ പ്രിവ്യൂ മോഡിലേക്ക് മാറ്റുന്നു
   if (url.includes("drive.google.com")) {
     const match = url.match(/[-\w]{25,}/);
     if (match) {
@@ -2233,14 +2232,12 @@ function switchLeaderboard(type, btn) {
 function renderLeaderboard() {
   const selectedClass = document.getElementById('leaderboardClassFilter')?.value || 'ALL';
   
-  // ഇന്ത്യൻ സമയം (IST) കൃത്യമായി എടുക്കുന്നു
   const now = new Date();
   const istOffset = 5.5 * 60 * 60 * 1000;
   const istDate = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000) + istOffset);
   const hours = istDate.getHours();
   const minutes = istDate.getMinutes();
 
-  // രാത്രി 8:30 (ഇശാഇന് ശേഷം) മാത്രമേ പുതിയ ദിവസത്തെ റാങ്ക് കാണിക്കൂ; അതുവരെ തലേ ദിവസത്തെ റാങ്ക് തുടരും
   let lbDateObj = new Date(istDate);
   if (hours < 20 || (hours === 20 && minutes < 30)) {
     lbDateObj.setDate(lbDateObj.getDate() - 1);
@@ -2342,12 +2339,6 @@ function renderLeaderboard() {
         </div>
       `).join('');
     };
-    if (boys.length > 1) html += renderSubList(boys);
-    if (girls.length > 1) html += renderSubList(girls);
-  }
-  container.innerHTML = html;
-}
-
     if (boys.length > 1) html += renderSubList(boys);
     if (girls.length > 1) html += renderSubList(girls);
   }
@@ -3370,7 +3361,7 @@ function getProcessedReportData(source) {
     sEntries.forEach(e => {
       [e.subh, e.dhuhr, e.asr, e.maghrib, e.isha].forEach(st => {
         if (st === 'ജമാഅത്ത്') jam++;
-        else if (st === 'അദാഅ്') ada++;
+        else if (st === 'അദാഅ്') totals.ada++;
         else if (st === 'ഖളാഅ്') qad++;
         else if (st === 'ഇളവ്') exc++;
         else nil++;
