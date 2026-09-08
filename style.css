@@ -81,6 +81,17 @@ body {
   align-items: center;
   border-bottom: 2px solid #047857;
 }
+
+/* ഇസ്ലാമിക് ലൈറ്റ് ബാക്ക്‌ഗ്രൗണ്ടോടു കൂടിയ പ്രീമിയം ഹെഡർ */
+.top-header-islamic {
+  background-color: #f7fee7;
+  background-image: radial-gradient(#047857 0.75px, transparent 0.75px), radial-gradient(#10b981 0.75px, #f7fee7 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  border-bottom: 2px solid #a7f3d0;
+  box-shadow: 0 4px 15px -3px rgba(4, 120, 87, 0.08);
+}
+
 .top-bar-left { display: flex; align-items: center; gap: 8px; }
 .hamburger-btn { background: transparent; border: none; color: #fff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 3px; }
 .top-bar h3 { font-size: 13.5px; font-weight: 800; letter-spacing: 0.5px; }
@@ -210,6 +221,18 @@ body {
 .rank-1 { background: #f59e0b; }
 .rank-2 { background: #64748b; }
 .rank-3 { background: #d97706; }
+
+/* പുതുക്കിയ ലീഡർബോർഡ് കാർഡുകൾ */
+.rank-card-gold {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border-left: 4px solid #f59e0b !important;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.15);
+}
+.rank-card-pink {
+  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+  border-left: 4px solid #ec4899 !important;
+  box-shadow: 0 3px 10px rgba(236, 72, 153, 0.15);
+}
 
 /* ഇൻപുട്ട് ഫീൽഡുകൾ */
 .form-group { margin-bottom: 12px; position: relative; }
