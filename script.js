@@ -91,9 +91,9 @@ if (topDateLabel) topDateLabel.innerText = activeLogicalDate;
 
 // --- കടും നിറവും കൃത്യമായ ടെക്സ്റ്റ് ലെയറിംഗുമുള്ള പുതിയ എൻട്രി ബട്ടൺ ---
 // രാവിലെ 8:30 AM വരെ തലേദിവസത്തെ തീയതി തന്നെ നൽകാനുള്ള ഫംഗ്ഷൻ
+// രാവിലെ 8:30 AM വരെ മുൻ ദിവസത്തെ ഡേറ്റ് നിലനിർത്താൻ
 function getEffectiveDate() {
     const d = new Date();
-    // രാവിലെ 8:30-ന് മുൻപാണെങ്കിൽ ഒരു ദിവസം പിന്നോട്ട് വെക്കുന്നു
     if (d.getHours() < 8 || (d.getHours() === 8 && d.getMinutes() < 30)) {
         d.setDate(d.getDate() - 1);
     }
@@ -103,35 +103,33 @@ function getEffectiveDate() {
 function refreshMainEntryBtnUI() {
     const now = new Date();
 
-    // 1. പ്രാബല്യത്തിലുള്ള തീയതി (രാവിലെ 8:30 വരെ മുൻ ദിവസത്തെ ഡേറ്റ്)
-    const effectiveDate = getEffectiveDate();
-    const day = String(effectiveDate.getDate()).padStart(2, '0');
-    const month = String(effectiveDate.getMonth() + 1).padStart(2, '0');
-    const year = effectiveDate.getFullYear();
-    const formattedDate = `${day}/${month}/${year}`;
+    // 1. തീയതി ഫോർമാറ്റ് (DD/MM/YYYY)
+    const effDate = getEffectiveDate();
+    const formattedDate = `${String(effDate.getDate()).padStart(2, '0')}/${String(effDate.getMonth() + 1).padStart(2, '0')}/${effDate.getFullYear()}`;
 
-    // 2. ഇന്നത്തെ ഓപ്പൺ സമയം (വൈകുന്നേരം 7:50 PM)
+    // 2. സമയക്രമം: വൈകുന്നേരം 7:50 PM മുതൽ രാവിലെ 8:00 AM വരെ
     let openTime = new Date(now);
     openTime.setHours(19, 50, 0, 0);
 
-    // 3. ക്ലോസ് സമയം (രാവിലെ 8:00 AM)
     let closeTime = new Date(now);
     closeTime.setHours(8, 0, 0, 0);
 
-    // രാത്രി 7:50 PM മുതൽ രാവിലെ 8:00 AM വരെയുള്ള വിൻഡോ കൃത്യമാക്കുന്നു
     if (now.getHours() >= 19 && (now.getHours() > 19 || now.getMinutes() >= 50)) {
-        // രാത്രി 7:50 PM കഴിഞ്ഞാൽ ക്ലോസ് ചെയ്യേണ്ടത് അടുത്ത ദിവസത്തെ 8 AM ആണ്
         closeTime.setDate(closeTime.getDate() + 1);
     } else if (now.getHours() < 8) {
-        // അർദ്ധരാത്രി മുതൽ രാവിലെ 8 AM വരെ ആണെങ്കിൽ ഓപ്പൺ ആയത് തലേദിവസം 7:50 PM ആണ്
         openTime.setDate(openTime.getDate() - 1);
     }
 
-    // നിലവിൽ എൻട്രി ഓപ്പൺ ആണോ എന്ന് പരിശോധിക്കുന്നു
-    const isOpen = (now >= openTime && now < closeTime);
+    // സമയപ്രകാരം ഓപ്പൺ ആണോ എന്ന് നോക്കുന്നു
+    const isTimeOpen = (now >= openTime && now < closeTime);
+
+    // അഡ്മിൻ പാനലിൽ നിന്നുള്ള അനുമതിയും (openCount > 0) സമയവും ഒരുമിച്ച് പരിശോധിക്കുന്നു
+    // (ഒരുപക്ഷേ openCount ഇല്ലെങ്കിൽ സമയത്തെ മാത്രം ആശ്രയിക്കും)
+    const hasAdminAccess = (typeof openCount !== 'undefined') ? (openCount > 0) : true;
+    const isOpen = isTimeOpen && hasAdminAccess;
 
     if (isOpen) {
-        // --- ഓപ്പൺ ആയിരിക്കുമ്പോൾ (രാവിലെ 8:00 AM-ന് ക്ലോസ് ആവാനുള്ള കൗണ്ട്ഡൗൺ) ---
+        // --- ഓപ്പൺ അവസ്ഥ (രാവിലെ 8:00 AM-ലേക്ക് കൗണ്ട്ഡൗൺ) ---
         const diffClose = Math.max(0, closeTime - now);
         const h = Math.floor(diffClose / (1000 * 60 * 60));
         const m = Math.floor((diffClose / (1000 * 60)) % 60);
@@ -142,25 +140,23 @@ function refreshMainEntryBtnUI() {
         btn.style.color = "#ffffff";
         btn.style.border = "none";
         txt.innerHTML = `
-            <div style="font-size: 16.5px; font-weight: 800; letter-spacing: 0.2px;">
+            <div style="font-size: 14px; font-weight: 800; line-height: 1.2;">
                 എന്റെ ഇന്നത്തെ നിസ്കാരം
             </div>
-            <div style="font-size: 11.5px; font-weight: 600; opacity: 0.9;">
+            <div style="font-size: 11px; font-weight: 600; opacity: 0.9; margin-top: 2px;">
                 തീയതി: ${formattedDate}
             </div>
-            <div style="font-size: 12px; font-weight: 600; opacity: 0.95; margin-top: 2px;">
+            <div style="font-size: 11px; font-weight: 600; opacity: 0.95; margin-top: 1px;">
                 🟢 Prayer Entry Open
             </div>
-            <div style="font-size: 11px; font-weight: 500; opacity: 0.9; margin-top: 2px;">
+            <div style="font-size: 10px; font-weight: 500; opacity: 0.85; margin-top: 1px;">
                 Closes in: ${h}h ${m}m ${s}s (8:00 AM)
             </div>
         `;
     } else {
-        // --- ക്ലോസ് ആയിരിക്കുമ്പോൾ (രാത്രി 7:50 PM-ന് ഓപ്പൺ ആവാനുള്ള കൗണ്ട്ഡൗൺ) ---
+        // --- ക്ലോസ്ഡ് അവസ്ഥ (7:50 PM-ലേക്ക് കൗണ്ട്ഡൗൺ) ---
         let nextOpen = new Date(now);
         nextOpen.setHours(19, 50, 0, 0);
-
-        // രാത്രി 7:50 കഴിഞ്ഞിട്ടാണ് ക്ലോസ് എങ്കിൽ അടുത്ത ദിവസത്തെ 7:50 PM കണക്കാക്കുന്നു
         if (now >= nextOpen) {
             nextOpen.setDate(nextOpen.getDate() + 1);
         }
@@ -175,24 +171,26 @@ function refreshMainEntryBtnUI() {
         btn.style.color = "#ffffff";
         btn.style.border = "none";
         txt.innerHTML = `
-            <div style="font-size: 16.5px; font-weight: 800; letter-spacing: 0.2px;">
+            <div style="font-size: 14px; font-weight: 800; line-height: 1.2;">
                 എന്റെ ഇന്നത്തെ നിസ്കാരം
             </div>
-            <div style="font-size: 11.5px; font-weight: 600; opacity: 0.9;">
+            <div style="font-size: 11px; font-weight: 600; opacity: 0.9; margin-top: 2px;">
                 തീയതി: ${formattedDate}
             </div>
-            <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.4px; margin-top: 2px;">
+            <div style="font-size: 11px; font-weight: 700; margin-top: 1px;">
                 🔴 Entry Closed (Open @ 7:50 PM)
             </div>
-            <div style="font-size: 11px; font-weight: 500; opacity: 0.85; margin-top: 2px;">
+            <div style="font-size: 10px; font-weight: 500; opacity: 0.85; margin-top: 1px;">
                 Opens in: ${h}h ${m}m ${s}s
             </div>
         `;
     }
 }
 
-// ടൈമറും ഡേറ്റും തനിയെ അപ്ഡേറ്റ് ആകാൻ താഴെയുള്ള വരി നൽകുക:
-setInterval(refreshMainEntryBtnUI, 1000);
+// ടൈമർ കൃത്യമായി ഓടാൻ (ഇത് ഇതിനകം ഫയലിൽ താഴെ ഇല്ലെങ്കിൽ മാത്രം നൽകുക)
+if (typeof timerInterval === 'undefined') {
+    var timerInterval = setInterval(refreshMainEntryBtnUI, 1000);
+}
 
 
 
