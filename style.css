@@ -5,7 +5,7 @@
   --gold: #f59e0b;
   --silver: #94a3b8;
   --bronze: #d97706;
-  --bg: #f1f5f9;
+  --bg: #f8fafc;
   --card-bg: #ffffff;
   --text: #0f172a;
   --text-muted: #64748b;
@@ -21,7 +21,7 @@
 }
 
 body {
-  background: #f8fafc;
+  background: #f1f5f9;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -33,7 +33,7 @@ body {
   width: 100%;
   max-width: 650px;
   background: #ffffff;
-  border-radius: 24px;
+  border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.08), 0 0 1px 1px rgba(0, 0, 0, 0.04);
   display: flex;
@@ -100,7 +100,6 @@ body {
   align-items: center;
   gap: 4px;
   white-space: nowrap;
-  transition: all 0.2s;
 }
 .btn-contact:active { transform: scale(0.96); }
 .btn-top {
@@ -119,7 +118,7 @@ body {
 
 .main-body { padding: 14px 12px; overflow-y: auto; max-height: 86vh; }
 
-/* HERO - ഇസ്ലാമിക് ആധുനിക കാർഡ് */
+/* HERO */
 .hero {
   text-align: center;
   position: relative;
@@ -249,7 +248,7 @@ body {
 }
 .leaderboard-scroll-box { max-height: 250px; overflow-y: auto; padding-right: 2px; }
 
-/* സൂപ്പർ Gen-Z ടോപ്പർ കാർഡുകൾ */
+/* Gen-Z ടോപ്പർ കാർഡുകൾ */
 .rank-item {
   display: flex;
   align-items: center;
@@ -264,34 +263,17 @@ body {
 }
 .rank-item:active { transform: scale(0.99); }
 
-/* BOY 1ST CARD (GOLD SPOTLIGHT) */
 .rank-card-gold {
   background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
   border: 1.5px solid #fcd34d !important;
   border-left: 5px solid #f59e0b !important;
   box-shadow: 0 6px 16px -2px rgba(245, 158, 11, 0.22) !important;
-  position: relative;
 }
-.rank-card-gold .avatar-sm {
-  width: 40px !important;
-  height: 40px !important;
-  border: 2px solid #f59e0b !important;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
-}
-
-/* GIRL 1ST CARD (PINK/ROSE SPOTLIGHT) */
 .rank-card-pink {
   background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%) !important;
   border: 1.5px solid #fbcfe8 !important;
   border-left: 5px solid #ec4899 !important;
   box-shadow: 0 6px 16px -2px rgba(236, 72, 153, 0.22) !important;
-  position: relative;
-}
-.rank-card-pink .avatar-sm {
-  width: 40px !important;
-  height: 40px !important;
-  border: 2px solid #ec4899 !important;
-  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
 }
 
 /* ഇൻപുട്ട് ഫീൽഡുകൾ */
@@ -330,7 +312,7 @@ input:focus, select:focus, textarea:focus {
 .suggestion-item { padding: 10px 12px; font-size: 12.5px; cursor: pointer; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; }
 .suggestion-item:hover { background: #ecfdf5; color: #064E3B; font-weight: bold; }
 
-/* നിസ്കാര പിൽസ് (Pills Selection) */
+/* നിസ്കാര പിൽസ് */
 .prayer-box { 
   background: #ffffff; 
   border: 1px solid #e2e8f0; 
@@ -393,8 +375,7 @@ input:focus, select:focus, textarea:focus {
   font-weight: 800 !important;
 }
 
-.btn-action { background: #0284c7; color: #fff; border: none; padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 700; transition: transform 0.15s; }
-.btn-action:active { transform: scale(0.95); }
+.btn-action { background: #0284c7; color: #fff; border: none; padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 700; }
 .btn-del { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 700; }
 .btn-wa { background: #25D366; color: #fff; border: none; padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
 
@@ -403,7 +384,19 @@ th, td { border: 1px solid #e2e8f0; padding: 7px 4px; text-align: center; }
 th { background: #f8fafc; font-weight: 800; color: #475569; }
 
 .footer { text-align: center; font-size: 11.5px; color: var(--text-muted); margin-top: 14px; padding: 12px; font-weight: 700; }
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 12px; z-index: 9999; }
+
+/* മോഡലുകൾ & ഡ്രോയർ (മറഞ്ഞുനിൽക്കാൻ display: none ചേർത്തത്) */
+.modal-overlay { 
+  display: none !important; 
+  position: fixed; 
+  inset: 0; 
+  background: rgba(15, 23, 42, 0.6); 
+  backdrop-filter: blur(4px); 
+  align-items: center; 
+  justify-content: center; 
+  padding: 12px; 
+  z-index: 9999; 
+}
 .avatar-sm { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 6px; border: 1px solid #cbd5e1; background: #e2e8f0; flex-shrink: 0; }
 .avatar-lg { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; margin-right: 10px; border: 2.5px solid var(--primary); background: #e2e8f0; flex-shrink: 0; }
 .photo-preview { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; border: 2px dashed #94a3b8; display: none; margin-top: 6px; }
@@ -415,6 +408,49 @@ th { background: #f8fafc; font-weight: 800; color: #475569; }
 .st-nil { background: #fee2e2; color: #b91c1c; }
 .st-exc { background: #f3e8ff; color: #6b21a8; }
 .st-na { background: #f1f5f9; color: #64748b; }
+
+.toggle-bar { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 8px 12px; border-radius: 10px; border: 1px solid #cbd5e1; margin-bottom: 10px; }
+.teacher-contact-card { display: flex; align-items: center; gap: 10px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px; border-radius: 10px; margin-bottom: 6px; }
+.instruction-card { background: #fffbeb; border: 1px solid #fef08a; border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
+.instruction-title { font-size: 12px; font-weight: 800; color: #b45309; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+.instruction-list { list-style: none; font-size: 11px; line-height: 1.6; color: #78350f; }
+
+/* ഡ്രോയർ തനിയെ തുറന്നുവരാതിരിക്കാൻ കൃത്യമായ സെറ്റിംഗ്സ് */
+.drawer-overlay { 
+  display: none !important; 
+  position: fixed; 
+  inset: 0; 
+  background: rgba(0,0,0,0.5); 
+  backdrop-filter: blur(2px); 
+  z-index: 99999; 
+}
+.drawer-content { 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 285px; 
+  height: 100%; 
+  background: #fff; 
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15); 
+  display: flex; 
+  flex-direction: column; 
+  animation: slideDrawer 0.22s ease-out; 
+}
+@keyframes slideDrawer { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+.drawer-header { background: #064E3B; color: #fff; padding: 18px 16px; display: flex; align-items: center; justify-content: space-between; }
+.drawer-menu-list { list-style: none; padding: 8px 0; overflow-y: auto; }
+.drawer-item { padding: 12px 18px; font-size: 13.5px; font-weight: 700; color: #334155; display: flex; align-items: center; gap: 12px; cursor: pointer; border-bottom: 1px solid #f8fafc; transition: all 0.2s; }
+.drawer-item:hover { background: #ecfdf5; color: #064E3B; }
+
+.class-checkbox-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 8px 0; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; }
+.class-checkbox-label { font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+.fullscreen-video-modal { position: fixed; inset: 0; background: #000; z-index: 100000; display: none !important; flex-direction: column; justify-content: center; align-items: center; }
+.fullscreen-video-modal iframe, .fullscreen-video-modal video { width: 100%; height: 85vh; border: none; }
+.close-fs-btn { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.25); color: #fff; border: none; border-radius: 50%; width: 38px; height: 38px; font-size: 20px; cursor: pointer; z-index: 100001; }
+.photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
+.photo-grid-item { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; }
+.photo-grid-item img { width: 100%; height: 110px; object-fit: cover; cursor: pointer; }
+.photo-grid-title { font-size: 11px; font-weight: 700; padding: 4px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .parent-verify-box {
   background: #fefce8;
@@ -442,9 +478,9 @@ th { background: #f8fafc; font-weight: 800; color: #475569; }
   line-height: 1.4;
 }
 
-.drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); z-index: 99999; }
-.drawer-content { position: absolute; top: 0; left: 0; width: 285px; height: 100%; background: #fff; box-shadow: 4px 0 20px rgba(0,0,0,0.15); display: flex; flex-direction: column; animation: slideDrawer 0.22s ease-out; }
-@keyframes slideDrawer { from { transform: translateX(-100%); } to { transform: translateX(0); } }
-.drawer-header { background: #064E3B; color: #fff; padding: 18px 16px; display: flex; align-items: center; justify-content: space-between; }
-.drawer-item { padding: 12px 18px; font-size: 13.5px; font-weight: 700; color: #334155; display: flex; align-items: center; gap: 12px; cursor: pointer; border-bottom: 1px solid #f8fafc; transition: all 0.2s; }
-.drawer-item:hover { background: #ecfdf5; color: #064E3B; }
+.session-badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: bold; }
+.session-online { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+.session-offline { background: #f1f5f9; color: #64748b; }
+.permission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; margin: 6px 0; }
+.permission-label { font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+.alert-box-cap { background: #fef2f2; border: 1px solid #f87171; color: #991b1b; padding: 8px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 700; margin-top: 6px; display: none; }
