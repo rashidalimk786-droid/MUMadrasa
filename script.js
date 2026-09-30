@@ -159,7 +159,7 @@ function refreshMainEntryBtnUI() {
 
     btnEl.innerHTML = `
       <div style="font-size: 15px; font-weight: 800; letter-spacing: 0.2px; line-height: 1.2;">
-        എന്റെ ഇന്നത്തെ നിസ്കാരം
+        എന്റെ ഇന്നത്തെ നിസ്കാരം ചെറിയ പ്രശ്നമുണ്ട് പരിഹരിക്കാം
       </div>
       <div style="font-size: 11.5px; font-weight: 600; opacity: 0.95; margin-top: 3px;">
         🟢 Prayer Entry Open (${formattedDate})
