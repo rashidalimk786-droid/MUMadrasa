@@ -41,6 +41,12 @@ body {
   position: relative;
 }
 
+/* ആഡ്സെൻസ് ഒഴിഞ്ഞ ബോക്സുകൾ തനിയെ വരാതിരിക്കാൻ */
+ins.adsbygoogle[data-ad-status="unfilled"],
+ins.adsbygoogle:empty {
+  display: none !important;
+}
+
 /* TICKER */
 .marquee-container {
   background: #022c22;
@@ -83,7 +89,18 @@ body {
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 .top-bar-left { display: flex; align-items: center; gap: 10px; }
-.hamburger-btn { background: transparent; border: none; color: #ffffff; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 2px; }
+.hamburger-btn { 
+  background: transparent; 
+  border: none; 
+  color: #ffffff; 
+  font-size: 22px; 
+  cursor: pointer; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 4px; 
+}
+.hamburger-btn:active { transform: scale(0.92); }
 .top-bar h3 { font-size: 14px; font-weight: 800; letter-spacing: 0.3px; color: #ffffff !important; }
 .top-actions { display: flex; gap: 6px; align-items: center; }
 .btn-contact {
@@ -165,7 +182,7 @@ body {
   border-radius: 20px;
 }
 
-/* ആനിമേഷൻ ഉള്ള മെയിൻ ബട്ടൺ */
+/* പൾസ് ബട്ടൺ */
 @keyframes pulse-glow {
   0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(6, 78, 59, 0.45); }
   70% { transform: scale(1.015); box-shadow: 0 0 0 12px rgba(6, 78, 59, 0); }
@@ -259,10 +276,7 @@ body {
   margin-bottom: 8px;
   font-size: 12px;
   border: 1px solid #f1f5f9;
-  transition: transform 0.2s;
 }
-.rank-item:active { transform: scale(0.99); }
-
 .rank-card-gold {
   background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
   border: 1.5px solid #fcd34d !important;
@@ -385,9 +399,9 @@ th { background: #f8fafc; font-weight: 800; color: #475569; }
 
 .footer { text-align: center; font-size: 11.5px; color: var(--text-muted); margin-top: 14px; padding: 12px; font-weight: 700; }
 
-/* മോഡലുകൾ & ഡ്രോയർ (മറഞ്ഞുനിൽക്കാൻ display: none ചേർത്തത്) */
+/* മോഡൽ പോപ്പ്-അപ്പുകൾ */
 .modal-overlay { 
-  display: none !important; 
+  display: none; 
   position: fixed; 
   inset: 0; 
   background: rgba(15, 23, 42, 0.6); 
@@ -397,6 +411,7 @@ th { background: #f8fafc; font-weight: 800; color: #475569; }
   padding: 12px; 
   z-index: 9999; 
 }
+
 .avatar-sm { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 6px; border: 1px solid #cbd5e1; background: #e2e8f0; flex-shrink: 0; }
 .avatar-lg { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; margin-right: 10px; border: 2.5px solid var(--primary); background: #e2e8f0; flex-shrink: 0; }
 .photo-preview { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; border: 2px dashed #94a3b8; display: none; margin-top: 6px; }
@@ -415,9 +430,9 @@ th { background: #f8fafc; font-weight: 800; color: #475569; }
 .instruction-title { font-size: 12px; font-weight: 800; color: #b45309; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
 .instruction-list { list-style: none; font-size: 11px; line-height: 1.6; color: #78350f; }
 
-/* ഡ്രോയർ തനിയെ തുറന്നുവരാതിരിക്കാൻ കൃത്യമായ സെറ്റിംഗ്സ് */
+/* സൈഡ് ഡ്രോയർ മെനു (കൃത്യമായി പ്രവർത്തിക്കുന്ന രീതിയിൽ) */
 .drawer-overlay { 
-  display: none !important; 
+  display: none; 
   position: fixed; 
   inset: 0; 
   background: rgba(0,0,0,0.5); 
@@ -430,7 +445,7 @@ th { background: #f8fafc; font-weight: 800; color: #475569; }
   left: 0; 
   width: 285px; 
   height: 100%; 
-  background: #fff; 
+  background: #ffffff; 
   box-shadow: 4px 0 20px rgba(0,0,0,0.15); 
   display: flex; 
   flex-direction: column; 
@@ -444,7 +459,7 @@ th { background: #f8fafc; font-weight: 800; color: #475569; }
 
 .class-checkbox-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 8px 0; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; }
 .class-checkbox-label { font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 4px; cursor: pointer; }
-.fullscreen-video-modal { position: fixed; inset: 0; background: #000; z-index: 100000; display: none !important; flex-direction: column; justify-content: center; align-items: center; }
+.fullscreen-video-modal { position: fixed; inset: 0; background: #000; z-index: 100000; display: none; flex-direction: column; justify-content: center; align-items: center; }
 .fullscreen-video-modal iframe, .fullscreen-video-modal video { width: 100%; height: 85vh; border: none; }
 .close-fs-btn { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.25); color: #fff; border: none; border-radius: 50%; width: 38px; height: 38px; font-size: 20px; cursor: pointer; z-index: 100001; }
 .photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
