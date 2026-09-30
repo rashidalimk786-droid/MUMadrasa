@@ -119,12 +119,12 @@ function refreshMainEntryBtnUI() {
   const formattedDate = `${String(effDate.getDate()).padStart(2, '0')}/${String(effDate.getMonth() + 1).padStart(2, '0')}/${effDate.getFullYear()}`;
 
   let openTime = new Date(now);
-  openTime.setHours(19, 50, 0, 0);
+  openTime.setHours(19, 30, 0, 0);
 
   let closeTime = new Date(now);
   closeTime.setHours(8, 0, 0, 0);
 
-  if (now.getHours() >= 19 && (now.getHours() > 19 || now.getMinutes() >= 50)) {
+  if (now.getHours() >= 19 && (now.getHours() > 19 || now.getMinutes() >= 30)) {
     closeTime.setDate(closeTime.getDate() + 1);
   } else if (now.getHours() < 8) {
     openTime.setDate(openTime.getDate() - 1);
