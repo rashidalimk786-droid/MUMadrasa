@@ -196,7 +196,7 @@ function refreshMainEntryBtnUI() {
         എന്റെ ഇന്നത്തെ നിസ്കാരം
       </div>
       <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.3px; margin-top: 3px;">
-        🔴 Entry Closed (Open @ 7:30 PM)
+        🔴 Entry Closed (Open @ 7:30 PM ചെറിയ പ്രശ്നമുണ്ട് പരിഹരിക്കാം)
       </div>
       <div style="font-size: 10.5px; font-weight: 500; opacity: 0.85; margin-top: 1px;">
         Opens in: ${h}h ${m}m ${s}s | Date: ${formattedDate}
