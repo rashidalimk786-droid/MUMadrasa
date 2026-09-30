@@ -159,7 +159,7 @@ function refreshMainEntryBtnUI() {
 
     btnEl.innerHTML = `
       <div style="font-size: 15px; font-weight: 800; letter-spacing: 0.2px; line-height: 1.2;">
-        എന്റെ ഇന്നത്തെ നിസ്കാരം ചെറിയ പ്രശ്നമുണ്ട് പരിഹരിക്കാം
+        എന്റെ ഇന്നത്തെ നിസ്കാരം 
       </div>
       <div style="font-size: 11.5px; font-weight: 600; opacity: 0.95; margin-top: 3px;">
         🟢 Prayer Entry Open (${formattedDate})
@@ -196,7 +196,7 @@ function refreshMainEntryBtnUI() {
         എന്റെ ഇന്നത്തെ നിസ്കാരം
       </div>
       <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.3px; margin-top: 3px;">
-        🔴 Entry Closed (Open @ 7:30 PM ചെറിയ പ്രശ്നമുണ്ട് പരിഹരിക്കാം)
+        🔴 Entry Closed (Open @ 7:30 PM )
       </div>
       <div style="font-size: 10.5px; font-weight: 500; opacity: 0.85; margin-top: 1px;">
         Opens in: ${h}h ${m}m ${s}s | Date: ${formattedDate}
