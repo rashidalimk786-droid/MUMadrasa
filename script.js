@@ -170,7 +170,7 @@ function refreshMainEntryBtnUI() {
     `;
   } else {
     let nextOpen = new Date(now);
-    nextOpen.setHours(19, 50, 0, 0);
+    nextOpen.setHours(19, 30, 0, 0);
     if (now >= nextOpen) {
       nextOpen.setDate(nextOpen.getDate() + 1);
     }
@@ -188,7 +188,7 @@ function refreshMainEntryBtnUI() {
     btnEl.style.height = "auto";
     btnEl.style.lineHeight = "1.3";
     btnEl.onclick = function() {
-      alert("ഇന്നത്തെ നിസ്കാര എൻട്രി ഇപ്പോൾ ക്ലോസ്ഡ് ആണ്. വൈകുന്നേരം 7:50 PM-ന് ഓപ്പൺ ആകുന്നതാണ്.");
+      alert("ഇന്നത്തെ നിസ്കാര എൻട്രി ഇപ്പോൾ ക്ലോസ്ഡ് ആണ്. വൈകുന്നേരം 7:30 PM-ന് ഓപ്പൺ ആകുന്നതാണ്.");
     };
 
     btnEl.innerHTML = `
@@ -196,7 +196,7 @@ function refreshMainEntryBtnUI() {
         എന്റെ ഇന്നത്തെ നിസ്കാരം
       </div>
       <div style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.3px; margin-top: 3px;">
-        🔴 Entry Closed (Open @ 7:50 PM)
+        🔴 Entry Closed (Open @ 7:30 PM)
       </div>
       <div style="font-size: 10.5px; font-weight: 500; opacity: 0.85; margin-top: 1px;">
         Opens in: ${h}h ${m}m ${s}s | Date: ${formattedDate}
