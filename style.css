@@ -214,9 +214,10 @@ ins.adsbygoogle:empty {
 }
 
 .btn-entry-closed {
-  background: #fef2f2 !important;
-  color: #dc2626 !important;
-  border: 1px solid #fecaca !important;
+  background: #b91c1c !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 12px;
   animation: none;
 }
 
