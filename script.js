@@ -1033,7 +1033,8 @@ function switchLeaderboard(type, btn) {
   activeLeaderboardTab = type;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const headers = { daily: '🏆 Daily Top Rankers', weekly: '🏆 Weekly Top Rankers', monthly: '🏆 Monthly Top Rankers' };
+  const headers = { daily: '🏆 Daily Top Rankers', weekly: '🏆 Weekly Top Rankers', monthly: '🏆 Monthly Top Rankers', all: '🏆 All Time Top Rankers' };
+
   document.getElementById('rankTitleHeader').innerText = headers[type];
   renderLeaderboard();
 }
@@ -1080,7 +1081,10 @@ function renderLeaderboard() {
     const mStr = targetDate.substring(0, 7);
     filteredPrayers = dbPrayers.filter(e => e.date && e.date.startsWith(mStr));
   }
-
+    else if (activeLeaderboardTab === 'all') {
+        filteredPrayers = dbPrayers;
+    }
+  
   const map = {};
   filteredPrayers.forEach(e => {
     if (!map[e.studentId]) map[e.studentId] = { jam: 0, ada: 0, qad: 0, totalScore: 0 };
